@@ -15,7 +15,6 @@ namespace Dungeon_of_hell.Engine
 {
     public class EngineViewModel : ViewModel,IEngine
     {
-		public Dictionary<string, Key> KeyBindings { get; set; }
 		public bool InGame { get; set; }
 		DispatcherTimer timer1;
         TimeSpan time;
@@ -23,12 +22,17 @@ namespace Dungeon_of_hell.Engine
         Game game;
 		private Canvas canvas;
 		public Canvas Canvas { get { return canvas; } set { SetProperty(ref canvas, value); } }
-
 		public EngineViewModel()
         {
-            Name = "Engine";
+			Name = "Engine";
 			SetDafaults();
 			StartGame();
+			//TODO SA: Párhuzamositani a bemeneteket
+			//KeydownCommand = new RelayCommand<KeyEventArgs>(Keydown);
+		}
+		public override void KeyDown(object sender,KeyEventArgs e)
+        {
+			game.Player.Move(e.Key, game.map, game.mapX, game.mapY);
 		}
 		private void StartGame()
 		{
@@ -57,16 +61,7 @@ namespace Dungeon_of_hell.Engine
 			Canvas.Background = Brushes.Gray;
 		}
 
-		private void Window_Loaded(object sender, RoutedEventArgs e)
-		{
-			//TODO SA: Párhuzamositani a bemeneteket
-			//this.KeyDown += new KeyEventHandler(MainWindow_KeyDown);
-		}
 
-		void MainWindow_KeyDown(object sender, KeyEventArgs e)
-		{
-			game.Player.Move(e.Key, game.map, game.mapX, game.mapY);
-		}
 
 
 	}

@@ -5,8 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Dungeon_of_hell.Engine"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             Name="Content"
+             >
     <Grid>
-		<ContentPresenter Content="{Binding Canvas}"/>
+        <ContentPresenter Content="{Binding Canvas}"/>
 	</Grid>
 </UserControl>

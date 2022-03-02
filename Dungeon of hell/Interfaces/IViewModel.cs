@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Dungeon_of_hell
 {
@@ -14,6 +15,7 @@ namespace Dungeon_of_hell
         public event Action clearsecondviewEvent;
         public event Func<string, string, object> getviewpropertyEvent;
         public event Action<string, string,object> updateviewpropertyEvent;
+        public abstract void KeyDown(object sender, KeyEventArgs e);
         /// <summary>
         /// Call event.
         /// </summary>

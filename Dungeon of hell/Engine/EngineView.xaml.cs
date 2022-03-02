@@ -25,6 +25,7 @@ namespace Dungeon_of_hell.Engine
 		public EngineView()
 		{
 			InitializeComponent();
+		
 		}
 
 	}

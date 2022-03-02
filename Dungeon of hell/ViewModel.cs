@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 
 namespace Dungeon_of_hell
 {
-    public class ViewModel : ObservableObject,IViewModel
+    public abstract class ViewModel : ObservableObject,IViewModel
     {
         public string Name { get; set; }
         public event Action<string> changeprimaryviewEvent;
@@ -35,6 +37,8 @@ namespace Dungeon_of_hell
         {
             return (T)getviewpropertyEvent?.Invoke(viewname, property);
         }
+
+        public abstract void KeyDown(object sender, KeyEventArgs e);
 
         public void UpdateViewProperty(string viewname, string property, object value)
         {

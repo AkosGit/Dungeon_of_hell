@@ -27,5 +27,10 @@ namespace Dungeon_of_hell
 
         public ICommand changeView { get; set; }
         public ICommand PropertyTest { get; set; }
+
+        public override void KeyDown(object sender, KeyEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

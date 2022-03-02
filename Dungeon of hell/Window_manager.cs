@@ -14,10 +14,23 @@ using System.Windows;
 using System.Windows.Markup;
 using System.Media;
 using System.Windows.Media;
+using System.Windows.Input;
+
 namespace Dungeon_of_hell
 {
     public class Window_manager : ObservableObject, IWindowManager
     {
+        public void KeyDown(object sender, KeyEventArgs e)
+        {
+            if (SecondaryViewModel == null)
+            {
+                viewModels[GetindexByName(PrimaryViewModel.Name)].KeyDown(sender, e);
+            }
+            else
+            {
+                viewModels[GetindexByName(SecondaryViewModel.Name)].KeyDown(sender, e);
+            }
+        }
         public Window_manager()
         {
             viewModels = new List<IViewModel>();
