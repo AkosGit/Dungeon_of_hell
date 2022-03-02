@@ -32,9 +32,6 @@ namespace Dungeon_of_hell.Engine
 		}
 		private void StartGame()
 		{
-			Canvas canvas  = new Canvas();
-			game = new Game(Canvas);
-
 			StopTimer = false;
 
 			time = TimeSpan.FromDays(0);
@@ -52,9 +49,12 @@ namespace Dungeon_of_hell.Engine
 		}
 		private void SetDafaults()
 		{
-			canvas.Width = 650;
-			canvas.Height = 550;
-			canvas.Background = Brushes.Gray;
+			canvas = new Canvas();
+			game = new Game(Canvas);
+
+			Canvas.Width = 650;
+			Canvas.Height = 500;
+			Canvas.Background = Brushes.Gray;
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
