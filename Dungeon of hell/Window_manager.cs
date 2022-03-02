@@ -16,9 +16,9 @@ using System.Media;
 using System.Windows.Media;
 namespace Dungeon_of_hell
 {
-    public class Dungeon_of_hell : ObservableObject, IWindowManager
+    public class Window_manager : ObservableObject, IWindowManager
     {
-        public Dungeon_of_hell()
+        public Window_manager()
         {
             viewModels = new List<IViewModel>();
 

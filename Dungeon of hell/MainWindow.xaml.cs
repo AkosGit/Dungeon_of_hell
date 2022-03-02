@@ -23,7 +23,7 @@ namespace Dungeon_of_hell
     {
         public MainWindow()
         {
-            Dungeon_of_hell manager = new Dungeon_of_hell();
+            Window_manager manager = new Window_manager();
             InitializeComponent();
             DataContext = manager;
             IViewModel engine = new EngineViewModel();
