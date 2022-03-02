@@ -1,0 +1,49 @@
+﻿DispatcherTimer timer1;
+		TimeSpan time;
+		Boolean StopTimer;
+		Game game;
+
+
+		public MainWindow()
+		{
+			InitializeComponent();
+			SetDafaults();
+			StartGame();
+		}
+
+		private void StartGame()
+		{
+			game = new Game(canvas);
+
+			StopTimer = false;
+
+			time = TimeSpan.FromDays(0);
+			timer1 = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 15), DispatcherPriority.Normal, delegate
+			{
+				if (StopTimer)
+				{
+					MessageBox.Show("Vége");
+				}
+				time = time.Add(TimeSpan.FromMilliseconds(1));
+				game.DrawTurn();
+			}, Application.Current.Dispatcher);
+
+			timer1.Start();
+		}
+		private void SetDafaults()
+		{
+			this.Width = 650;
+			this.Height = 550;
+			this.Background = Brushes.Gray;
+		}
+
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
+			//TODO SA: Párhuzamositani a bemeneteket
+			this.KeyDown += new KeyEventHandler(MainWindow_KeyDown);
+		}
+
+		void MainWindow_KeyDown(object sender, KeyEventArgs e)
+		{
+			game.Player.Move(e.Key, game.map, game.mapX, game.mapY);
+		}
