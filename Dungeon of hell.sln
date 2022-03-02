@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31727.386
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dungeon of hell", "Dungeon of hell\Dungeon of hell.csproj", "{042190AC-04C9-42ED-B0D1-0CF23F565D86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dungeon of hell", "Dungeon of hell\Dungeon of hell.csproj", "{042190AC-04C9-42ED-B0D1-0CF23F565D86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Raycasting Engine", "Raycasting Engine\Raycasting Engine.csproj", "{51B93F8A-5C07-4FC6-ABE7-40FF55817855}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Raycasting Engine", "Raycasting Engine\Raycasting Engine.csproj", "{51B93F8A-5C07-4FC6-ABE7-40FF55817855}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,12 +1,14 @@
-﻿<Window x:Class="Dungeon_of_hell.MainWindow"
+﻿<Window x:Class="Window_Manager.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Dungeon_of_hell"
+        xmlns:local="clr-namespace:Window_Manager"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <ContentControl Content="{Binding PrimaryViewModel,UpdateSourceTrigger=PropertyChanged}" Name="Primary"/>
+        <ContentControl Content="{Binding SecondaryViewModel,UpdateSourceTrigger=PropertyChanged}"  /> 
     </Grid>
+
 </Window>
