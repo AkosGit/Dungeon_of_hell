@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace Window_Manager
+namespace Dungeon_of_hell
 {
     public static class Audio_player
     {

@@ -12,8 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Dungeon_of_hell.Engine;
 
-namespace Window_Manager
+namespace Dungeon_of_hell
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -22,15 +23,12 @@ namespace Window_Manager
     {
         public MainWindow()
         {
-            Window_manager manager = new Window_manager();
+            Dungeon_of_hell manager = new Dungeon_of_hell();
             InitializeComponent();
             DataContext = manager;
-            IViewModel home = new HomeViewModel();
-            IViewModel home2 = new OverlayViewModel(); 
-            manager.AddView(home,typeof(HomeView));
-            manager.AddView(home2,typeof(Overlay));
-            manager.ChangePrimaryView("home");
-
+            IViewModel engine = new EngineViewModel();
+            manager.AddView(engine, typeof(EngineView));
+            manager.ChangePrimaryView("Engine");
         }
     }
 }

@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Window_Manager
+namespace Dungeon_of_hell
 {
     /// <summary>
     /// Interaction logic for HomeView.xaml

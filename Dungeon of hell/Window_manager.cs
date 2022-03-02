@@ -14,11 +14,11 @@ using System.Windows;
 using System.Windows.Markup;
 using System.Media;
 using System.Windows.Media;
-namespace Window_Manager
+namespace Dungeon_of_hell
 {
-    public class Window_manager : ObservableObject, IWindowManager
+    public class Dungeon_of_hell : ObservableObject, IWindowManager
     {
-        public Window_manager()
+        public Dungeon_of_hell()
         {
             viewModels = new List<IViewModel>();
 

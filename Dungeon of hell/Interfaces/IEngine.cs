@@ -5,16 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Window_Manager
+namespace Dungeon_of_hell
 {
     public interface IEngine
     {
         //used in settings for deciding to show the main menu or not
-        public static bool InGame { get; set; }
-        public int PlayerX { get; set; }
-        public int PlayerY { get; set; }
-        public int CurrentLevel { get; set; }
-        public int Score { get; set; }
+        public bool InGame { get; set; }
         //store keybindings the function as key
         public Dictionary<string, Key> KeyBindings { get; set; }
     }

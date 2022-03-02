@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Window_Manager
+namespace Dungeon_of_hell
 {
     public interface IMinigame
     {

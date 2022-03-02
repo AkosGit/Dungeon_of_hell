@@ -6,14 +6,14 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 
-namespace Window_Manager
+namespace Dungeon_of_hell
 {
     public class OverlayViewModel : ViewModel
     {
     
         public OverlayViewModel()
         {
-            Name = "home2";
+            Name = "Overlay";
             changeView = new RelayCommand(() => {
                 ClearSecondView();
             });
