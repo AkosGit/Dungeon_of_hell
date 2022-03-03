@@ -13,18 +13,19 @@ namespace Raycasting_Engine
 		double x;
 		double y;
 
-		int Type;
+		int type;
 
 		public int GridX { get => gridX; set => gridX = value; }
 		public int GridY { get => gridY; set => gridY = value; }
 		public double X { get => x; set => x = value; }
 		public double Y { get => y; set => y = value; }
+		public int Type { get => type; set => type = value; }
 
 		public GameObject(int gridX, int gridY, Canvas canvas, int Type = 0)
 		{
 			this.gridX = gridX;
 			this.gridY = gridY;
-			this.Type = Type;
+			this.type = Type;
 			this.canvas = canvas;
 		}
 		public void DrawRectangle(int height, int width, double x, double y, Brush brush, double a = 0, double rX = 0, double rY = 0)

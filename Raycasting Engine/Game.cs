@@ -14,40 +14,47 @@ namespace Raycasting_Engine
 		const double DR = 0.0174533;
 
 		const int MaxL = 16;
-		const int MoveRight = 0;
+		const int MoveRight = 5;
 
 		protected Canvas canvas;
 
 		Player player;
-		public int[] map;
-		int[] All_Textures;
+		public GameObject[] map;
 		public int mapX;
 		public int mapY;
 		public int mapS;
+		GameObject Wall;
+		GameObject Wall2;
+		GameObject Air;
+		Color shadow;
 
 		public Player Player { get => player; set => player = value; }
 
 		public Game(Canvas canvas)
 		{
+			Wall = new Wall(0, 0, Color.FromArgb(255, 130, 160, 255), canvas, 1);
+			Wall2 = new Wall(0, 0, Color.FromArgb(255, 226, 107, 139), canvas, 1);
+			Air = new GameObject(0, 0, canvas);
+			shadow = Color.FromArgb(50, 0, 0, 0);
 			this.canvas = canvas;
-			map = new int[]
+			map = new GameObject[]
 			{
-				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-				1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,
-				1, 0, 0, 1, 0, 2, 0, 1, 0, 0, 0, 1, 0, 2, 0, 1,
-				1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1,
-				1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1,
-				1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1,
-				1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-				1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1,
-				1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,
-				1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,
-				1, 0, 0, 1, 0, 2, 0, 1, 0, 0, 0, 1, 0, 2, 0, 1,
-				1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1,
-				1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1,
-				1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1,
-				1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+				Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall,
+				Wall, Air, Air, Air, Air, Air, Air, Wall, Air, Air, Air, Air, Air, Air, Air, Wall,
+				Wall, Air, Air, Wall2, Air, Wall, Air, Wall, Air, Air, Air, Wall, Air, Wall2, Air, Wall,
+				Wall, Air, Wall, Wall, Air, Air, Air, Wall, Air, Air, Wall, Wall, Air, Air, Air, Wall,
+				Wall, Air, Wall, Air, Air, Air, Air, Wall, Air, Air, Wall, Air, Air, Air, Air, Wall,
+				Wall, Air, Wall, Air, Air, Air, Air, Wall, Air, Air, Wall, Air, Air, Air, Air, Wall,
+				Wall, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Wall,
+				Wall, Wall, Air, Wall, Wall, Wall, Wall, Wall, Air, Wall, Wall, Wall, Wall, Wall, Wall, Wall,
+				Wall, Air, Air, Air, Air, Air, Air, Wall, Air, Air, Air, Air, Air, Air, Air, Wall,
+				Wall, Air, Air, Air, Air, Air, Air, Wall, Air, Air, Air, Air, Air, Air, Air, Wall2,
+				Wall, Air, Air, Wall, Air, Wall, Air, Wall, Air, Air, Air, Wall, Air, Wall, Air, Wall2,
+				Wall, Air, Wall, Wall, Air, Air, Air, Wall, Air, Air, Wall, Wall, Air, Air, Air, Wall2,
+				Wall, Air, Wall, Air, Air, Air, Air, Wall, Air, Air, Wall, Air, Air, Air, Air, Wall2,
+				Wall, Air, Wall, Air, Air, Air, Air, Wall, Air, Air, Wall, Air, Air, Air, Air, Wall,
+				Wall, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Wall,
+				Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall,
 			};
 			mapX = 16;
 			mapY = 16;
@@ -67,7 +74,7 @@ namespace Raycasting_Engine
 			canvas.Children.Clear();
 			//drawMap2D();
 			drawRays3D();
-			//player.DrawPayer();
+			//player.DrawPayer
 		}
 
 		private void drawMap2D()
@@ -78,20 +85,23 @@ namespace Raycasting_Engine
 				for (int x = 0; x < mapX; x++)
 				{
 					Brush color;
-					if (map[y * mapY + x] > 0) color = Brushes.White; else color = Brushes.Black;
+					if (map[y * mapY + x].Type > 0) color = Brushes.White; else color = Brushes.Black;
 					xo = x * mapS; yo = y * mapS;
-					DrawRectangle(xo + 1, yo + 1, xo + 1, yo + mapS - 1, xo + mapS - 1, yo + mapS - 1, xo + mapS - 1, yo + 1, color, 0);
+					DrawRectangle(xo + 1, yo + 1, xo + 1, yo + mapS - 1, xo + mapS - 1, yo + mapS - 1, xo + mapS - 1, yo + 1, color, new SolidColorBrush(Colors.Transparent), 0);
 				}
 			}
 		}
 
 		void drawRays3D()
 		{
-			int r, mx, my, mp, dof, typeH, typeV; double rx, ry, ra, xo, yo, disT;
+			int r, mx, my, mp, dof, typeH, typeV, mpH, mpV; double rx, ry, ra, xo, yo, disT;
 			yo = 0;
 			xo = 0;
 			rx = Player.X;
 			ry = player.Y;
+			mp = 0;
+			mpH = 0;
+			mpV = 0;
 			disT = 0;
 			typeH = 0;
 			typeV = 0;
@@ -116,9 +126,9 @@ namespace Raycasting_Engine
 				while (dof < MaxL)
 				{
 					mx = (int)(rx) >> 6; my = (int)(ry) >> 6; mp = my * mapX + mx;
-					if (mp > 0 && mp < mapX * mapY && map[mp] > 0)
+					if (mp > 0 && mp < mapX * mapY && map[mp].Type > 0)
 					{
-						if (map[mp] == 1 || map[mp] == 2) { hx = rx; hy = ry; disH = Distance(player.X, player.Y, hx, hy, ra); typeH = map[mp]; dof = MaxL; }
+						if (map[mp].Type == 1) { hx = rx; hy = ry; disH = Distance(player.X, player.Y, hx, hy, ra); typeH = map[mp].Type; mpH = mp; dof = MaxL; }
 						else { enemy = true; me = mp; }
 					}
 					else { rx += xo; ry += yo; dof += 1; }
@@ -138,12 +148,14 @@ namespace Raycasting_Engine
 				while (dof < MaxL)
 				{
 					mx = (int)(rx) >> 6; my = (int)(ry) >> 6; mp = my * mapX + mx;
-					if (mp > 0 && mp < mapX * mapY && map[mp] > 0) { vx = rx; vy = ry; disV = Distance(player.X, player.Y, vx, vy, ra); typeV = map[mp]; dof = MaxL; }
+					if (mp > 0 && mp < mapX * mapY && map[mp].Type > 0) { vx = rx; vy = ry; disV = Distance(player.X, player.Y, vx, vy, ra); typeV = map[mp].Type; mpV = mp; dof = MaxL; }
 					else { rx += xo; ry += yo; dof += 1; }
 				}
 				Color color = Colors.Transparent;
-				if (disV < disH) { rx = vx; ry = vy; disT = disV; color = Colors.Blue; }
-				if (disV > disH) { rx = hx; ry = hy; disT = disH; color = Colors.CornflowerBlue; }
+				Brush brush = Brushes.Transparent;
+				Brush addedShadow = Brushes.Transparent;
+				if (disV < disH) { rx = vx; ry = vy; disT = disV; color = Colors.Blue; brush = (map[mpV] as Wall).TextureA; addedShadow = new SolidColorBrush(shadow); }
+				if (disV > disH) { rx = hx; ry = hy; disT = disH; color = Colors.CornflowerBlue; brush = (map[mpH] as Wall).TextureA; }
 				//DrawLineFromPlayer(rx, ry, color, 2);
 				ra += DR; if (ra < 0) { ra += 2 * PI; }
 				if (ra > 2 * PI) { ra -= 2 * PI; }
@@ -154,8 +166,8 @@ namespace Raycasting_Engine
 				disT = disT * Math.Cos(ca);
 				double lineH = (mapS * 450) / disT; if (lineH > 450) { lineH = 450; }
 				double lineO = 250 - lineH / 2;
-				DrawLine(r * 8 + MoveRight, lineO, r * 8 + MoveRight, lineH + lineO, color, 8);
-				//DrawRectangle(r * 8 + 530 - 4, lineO, r * 8 + 530 + 4, lineO, r * 8 + 530 + 4, lineH + lineO, r * 8 + 530 - 4, lineH + lineO, Brushes.Red, 0);
+				//DrawLine(r * 8 + MoveRight, lineO, r * 8 + MoveRight, lineH + lineO, color, 8);
+				DrawRectangle(r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
 
 
 			}
@@ -183,7 +195,7 @@ namespace Raycasting_Engine
 			canvas.Children.Add(rect);
 
 		}
-		public void DrawRectangle(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, Brush color, double thickness)
+		public void DrawRectangle(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, Brush color, Brush shadow, double thickness = 0)
 		{
 			Polygon myPolygon = new Polygon();
 			myPolygon.Stroke = color;
@@ -191,17 +203,30 @@ namespace Raycasting_Engine
 			myPolygon.StrokeThickness = thickness;
 			myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
 			myPolygon.VerticalAlignment = VerticalAlignment.Center;
+
+			Polygon myPolygon2 = new Polygon();
+			myPolygon2.Stroke = shadow;
+			myPolygon2.Fill = shadow;
+			myPolygon2.StrokeThickness = thickness;
+			myPolygon2.HorizontalAlignment = HorizontalAlignment.Left;
+			myPolygon2.VerticalAlignment = VerticalAlignment.Center;
+
 			Point Point1 = new Point(x1, y1);
 			Point Point2 = new Point(x2, y2);
 			Point Point3 = new Point(x3, y3);
 			Point Point4 = new Point(x4, y4);
+
 			PointCollection myPointCollection = new PointCollection();
 			myPointCollection.Add(Point1);
 			myPointCollection.Add(Point2);
 			myPointCollection.Add(Point3);
 			myPointCollection.Add(Point4);
+
 			myPolygon.Points = myPointCollection;
+			myPolygon2.Points = myPointCollection;
+
 			canvas.Children.Add(myPolygon);
+			canvas.Children.Add(myPolygon2);
 		}
 		public void DrawLineFromPlayer(double x, double y, Color color, double thickness)
 		{

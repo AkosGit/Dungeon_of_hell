@@ -47,7 +47,7 @@ namespace Raycasting_Engine
 			l.Y2 = p2.Y;
 			canvas.Children.Add(l);
 		}
-		public void Move(Key k, int[] map, int mapX, int mapY)
+		public void Move(Key k, GameObject[] map, int mapX, int mapY)
 		{
 			int xo = 0; if (dx < 0) { xo = -20; } else xo = 20;
 			int yo = 0; if (dy < 0) { yo = -20; } else yo = 20;
@@ -56,8 +56,8 @@ namespace Raycasting_Engine
 			switch (k)
 			{
 				case Key.W:
-					if (map[ipy * mapY + ipx_P_xo] == 0) X += dx;
-					if (map[ipy_P_yo * mapY + ipx] == 0) Y += dy;
+					if (map[ipy * mapY + ipx_P_xo].Type == 0) X += dx;
+					if (map[ipy_P_yo * mapY + ipx].Type == 0) Y += dy;
 					return;
 				case Key.A:
 					a -= 0.1; if (a < 0) a += 2 * PI;
@@ -65,8 +65,8 @@ namespace Raycasting_Engine
 					dy = Math.Sin(a) * 5;
 					return;
 				case Key.S:
-					if (map[ipy * mapY + ipx_M_xo] == 0) X -= dx;
-					if (map[ipy_M_yo * mapY + ipx] == 0) Y -= dy;
+					if (map[ipy * mapY + ipx_M_xo].Type == 0) X -= dx;
+					if (map[ipy_M_yo * mapY + ipx].Type == 0) Y -= dy;
 					return;
 				case Key.D:
 					a += 0.1; if (a > 2 * PI) a -= 2 * PI;

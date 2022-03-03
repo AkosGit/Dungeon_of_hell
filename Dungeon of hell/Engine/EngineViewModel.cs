@@ -56,7 +56,7 @@ namespace Dungeon_of_hell.Engine
 			canvas = new Canvas();
 			game = new Game(Canvas);
 
-			Canvas.Width = 650;
+			Canvas.Width = 722;
 			Canvas.Height = 500;
 			Canvas.Background = Brushes.Gray;
 		}
