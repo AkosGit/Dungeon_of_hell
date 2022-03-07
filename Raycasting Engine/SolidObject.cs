@@ -16,8 +16,8 @@ namespace Raycasting_Engine
 
 
 
-		public SolidObject(int gridX, int gridY, Color A, Canvas canvas, int Type = 0) 
-			: base(gridX, gridY, canvas, Type)
+		public SolidObject(int gridX, int gridY, Color A, int Type = 0) 
+			: base(gridX, gridY, Type)
 		{
 			textureA = new SolidColorBrush(A);
 		}

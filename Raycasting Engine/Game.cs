@@ -13,9 +13,7 @@ namespace Raycasting_Engine
 		const double P3 = 3 * PI / 2;
 		const double DR = 0.0174533;
 
-		const int MaxL = 16;
 		const int MoveRight = 5;
-
 		protected Canvas canvas;
 
 		Player player;
@@ -23,44 +21,30 @@ namespace Raycasting_Engine
 		public int mapX;
 		public int mapY;
 		public int mapS;
-		GameObject Wall;
-		GameObject Wall2;
-		GameObject Air;
+		int MaxL;
 		Color shadow;
 
 		public Player Player { get => player; set => player = value; }
 
-		public Game(Canvas canvas)
+		public Game(Canvas canvas, Map mainmap = null)
 		{
-			Wall = new SolidObject(0, 0, Color.FromArgb(255, 130, 160, 255), canvas, 1);
-			Wall2 = new SolidObject(0, 0, Color.FromArgb(255, 226, 107, 139), canvas, 1);
-			Air = new GameObject(0, 0, canvas);
+			DefaultMap Defmap = new DefaultMap();
 			shadow = Color.FromArgb(50, 0, 0, 0);
 			this.canvas = canvas;
-			map = new GameObject[]
-			{
-				Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall,
-				Wall, Air, Air, Air, Air, Air, Air, Wall, Air, Air, Air, Air, Air, Air, Air, Wall,
-				Wall, Air, Air, Wall2, Air, Wall, Air, Wall, Air, Air, Air, Wall, Air, Wall2, Air, Wall,
-				Wall, Air, Wall, Wall, Air, Air, Air, Wall, Air, Air, Wall, Wall, Air, Air, Air, Wall,
-				Wall, Air, Wall, Air, Air, Air, Air, Wall, Air, Air, Wall, Air, Air, Air, Air, Wall,
-				Wall, Air, Wall, Air, Air, Air, Air, Wall, Air, Air, Wall, Air, Air, Air, Air, Wall,
-				Wall, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Wall,
-				Wall, Wall, Air, Wall, Wall, Wall, Wall, Wall, Air, Wall, Wall, Wall, Wall, Wall, Wall, Wall,
-				Wall, Air, Air, Air, Air, Air, Air, Wall, Air, Air, Air, Air, Air, Air, Air, Wall,
-				Wall, Air, Air, Air, Air, Air, Air, Wall, Air, Air, Air, Air, Air, Air, Air, Wall2,
-				Wall, Air, Air, Wall, Air, Wall, Air, Wall, Air, Air, Air, Wall, Air, Wall, Air, Wall2,
-				Wall, Air, Wall, Wall, Air, Air, Air, Wall, Air, Air, Wall, Wall, Air, Air, Air, Wall2,
-				Wall, Air, Wall, Air, Air, Air, Air, Wall, Air, Air, Wall, Air, Air, Air, Air, Wall2,
-				Wall, Air, Wall, Air, Air, Air, Air, Wall, Air, Air, Wall, Air, Air, Air, Air, Wall,
-				Wall, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Air, Wall,
-				Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall, Wall,
-			};
-			mapX = 16;
-			mapY = 16;
-			mapS = 64;
+			if (mainmap == null) mainmap = Defmap.map;
 
+			MapGameMaptogame(mainmap);
 			SetDefaultThing();
+			
+		}
+
+		private void MapGameMaptogame(Map mainmap)
+		{
+			map = mainmap.map;
+			MaxL = mainmap.MaxL;
+			mapX = mainmap.mapX;
+			mapY = mainmap.mapY;
+			mapS = mainmap.mapS;
 		}
 
 		private void SetDefaultThing()

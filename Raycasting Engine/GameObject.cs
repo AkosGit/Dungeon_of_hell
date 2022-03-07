@@ -6,7 +6,6 @@ namespace Raycasting_Engine
 {
 	public class GameObject
 	{
-		protected Canvas canvas;
 		protected int mapS;
 		int gridX;
 		int gridY;
@@ -21,27 +20,11 @@ namespace Raycasting_Engine
 		public double Y { get => y; set => y = value; }
 		public int Type { get => type; set => type = value; }
 
-		public GameObject(int gridX, int gridY, Canvas canvas, int Type = 0)
+		public GameObject(int gridX, int gridY, int Type = 0)
 		{
 			this.gridX = gridX;
 			this.gridY = gridY;
 			this.type = Type;
-			this.canvas = canvas;
-		}
-		public void DrawRectangle(int height, int width, double x, double y, Brush brush, double a = 0, double rX = 0, double rY = 0)
-		{
-			System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle
-			{
-				Stroke = brush,
-				StrokeThickness = 2,
-				Fill = brush,
-				Height = height,
-				Width = width
-			};
-
-			Canvas.SetLeft(rect, x);
-			Canvas.SetTop(rect, y);
-			canvas.Children.Add(rect);
 		}
 	}
 }

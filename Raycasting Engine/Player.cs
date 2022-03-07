@@ -14,6 +14,7 @@ namespace Raycasting_Engine
 {
 	public class Player : GameObject
 	{
+		Canvas canvas;
 		const double PI = 3.1415926535;
 		double dx;
 		double dy;
@@ -23,7 +24,7 @@ namespace Raycasting_Engine
 		public Point Pxy { get => new Point(X, Y); }
 
 		public Player(int gridX, int gridY, Canvas canvas, int mapS, int type = 99)
-			: base(gridX, gridY, canvas)
+			: base(gridX, gridY)
 		{
 			X = gridX * mapS;
 			Y = gridY * mapS;
@@ -77,6 +78,22 @@ namespace Raycasting_Engine
 					return;
 			}
 
+		}
+
+		public void DrawRectangle(int height, int width, double x, double y, Brush brush, double a = 0, double rX = 0, double rY = 0)
+		{
+			System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle
+			{
+				Stroke = brush,
+				StrokeThickness = 2,
+				Fill = brush,
+				Height = height,
+				Width = width
+			};
+
+			Canvas.SetLeft(rect, x);
+			Canvas.SetTop(rect, y);
+			canvas.Children.Add(rect);
 		}
 	}
 }
