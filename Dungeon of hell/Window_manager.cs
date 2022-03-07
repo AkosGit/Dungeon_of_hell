@@ -34,14 +34,19 @@ namespace Dungeon_of_hell
         public Window_manager()
         {
             viewModels = new List<IViewModel>();
-
+            GlobalSettings.Settings = new globalSettings();
+            //Location: %APPDATA%\DungeonOfHell
+            FILEPATH = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\DungeonOfHell";
+            Directory.CreateDirectory(FILEPATH);
+            LoadStates();
+            
         }
         private IViewModel primaryviewmodel;
         public IViewModel PrimaryViewModel { get { return primaryviewmodel; } set { SetProperty(ref primaryviewmodel, value); } }
         private IViewModel secondaryviewmodel;
         public IViewModel SecondaryViewModel { get { return secondaryviewmodel; } set { SetProperty(ref secondaryviewmodel, value); } }
         public List<IViewModel> viewModels { get; set; }
-        const string FILEPATH = "C:\\Users\\Akos\\Documents";
+        public string FILEPATH { get; set; }
 
         public void AddView(IViewModel view ,Type viewType)
         {
@@ -117,77 +122,49 @@ namespace Dungeon_of_hell
             if (propertyInfo == null) { throw new ArgumentNullException("The property doesn't exists!"); }
             propertyInfo.SetValue(viewModels[index], Convert.ChangeType(value, propertyInfo.PropertyType), null);
         }
-        void Write<T>(string path, T contents) { File.WriteAllText(path, JsonSerializer.Serialize(contents)); }
+        void Write<T>(string path, T contents) {
+            /*FileStream file =File.Open(path, FileMode.Create);
+            byte[] content = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(contents));
+            file.Write(content,0,content.Length);
+            file.Flush();
+            file.Close();*/
+            //File.Delete(path);
+            File.WriteAllText(path, JsonSerializer.Serialize(contents));
+        }
         public void SaveStates()
         {
-            //TODO: save global settings
+            string path = $"{FILEPATH}\\GlobalSettings.json";
+            Write(path, GlobalSettings.Settings);
             foreach (IViewModel model  in viewModels)
             {
-                string path = $"{FILEPATH}/{model.Name}.json";
-                if(model is IEngine) { Write(path, (IEngine)model); }
+                path = $"{FILEPATH}\\{model.Name}.json";
+                if(model is ISingleplayer) { Write(path, (ISingleplayer)model); }
                 if (model is IMinigame) { Write(path, (IMinigame)model); }
             }
         }
-        T Read<T>(string path) { return JsonSerializer.Deserialize<T>(File.ReadAllText(path)); }
+        object Read(string path, Type type) { return JsonSerializer.Deserialize(File.ReadAllText(path),type); }
         public void LoadStates()
         {
-            for (int i = 0; i < viewModels.Count; i++)
+            string path = $"{FILEPATH}\\GlobalSettings.json";
+            if (File.Exists(path))
             {
-                string path = $"{FILEPATH}/{viewModels[i].Name}.json";
-                if (File.Exists(path))
-                {
-                    if (viewModels[i] is IEngine) { viewModels[i]=(IViewModel) Read<IEngine>(path); }
-                    if (viewModels[i] is IMinigame) { viewModels[i] = (IViewModel)Read<IMinigame>(path); }
-                }
-            }
-        }
-        void Read2(string path,Type type)
-        {
-            string[] jsons = JsonSerializer.Deserialize<string[]>(File.ReadAllText(path));
-            FieldInfo[] fields = type.GetFields(BindingFlags.Static | BindingFlags.Public);
-            for (int i = 0; i < fields.Length; i++)
-            {
-                fields[i].SetValue(JsonSerializer.Deserialize(File.ReadAllText(path), fields[i].FieldType),null);
-            }
-        }
-        public void LoadStates2()
-        {
-            if (File.Exists(FILEPATH + "/globalSettings.json"))
-            {
-                Read2(FILEPATH + "/globalSettings.json",typeof(GlobalSettings));
+                GlobalSettings.Settings = (globalSettings)Read(path,typeof(globalSettings));
             }
             for (int i = 0; i < viewModels.Count; i++)
             {
-                string path = $"{FILEPATH}/{viewModels[i].Name}.json";
+                path = $"{FILEPATH}\\{viewModels[i].Name}.json";
                 if (File.Exists(path))
                 {
-                    Read2(path, viewModels[i].GetType());
+                    if (viewModels[i] is ISingleplayer || viewModels[i] is IMinigame) 
+                    { 
+                        viewModels[i]=(IViewModel) Read(path, viewModels[i].GetType()); 
+                    }
                 }
             }
         }
-        void Write(FieldInfo[] fields, string path)
+        public void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            string[] jsons = new string[fields.Length];
-            for (int i = 0; i < fields.Length; i++)
-            {
-                string json = JsonSerializer.Serialize(fields[i].GetValue(null));
-                jsons[i] = json;
-            }
-            File.WriteAllText(path, JsonSerializer.Serialize(jsons));
-        }
-        public void SaveState2()
-        {
-            Type t = typeof(GlobalSettings);
-            FieldInfo[] fields = t.GetFields(BindingFlags.Static | BindingFlags.Public);
-            Write(fields, $"{FILEPATH}/globalSettings.json");
-            foreach (IViewModel model in viewModels)
-            {
-                string path = $"{FILEPATH}/{model.Name}.json";
-                t = model.GetType();
-                if (model is IEngine) { Write(path, t.GetFields(BindingFlags.Public)); }
-                if (model is IMinigame) { Write(path, t.GetFields(BindingFlags.Public)); }
-            }
-
+            SaveStates();
         }
     }  
 }

@@ -24,17 +24,17 @@ namespace Dungeon_of_hell
     {
         public MainWindow()
         {
+
             Window_manager manager = new Window_manager();
             InitializeComponent();
             DataContext = manager;
-
+            Closing += manager.OnWindowClosing;
 			IViewModel engine = new EngineViewModel();
 			manager.AddView(engine, typeof(EngineView));
 
 			IViewModel singleplayer = new SinglePlayerViewModel();
             manager.AddView(singleplayer, typeof(SinglePlayerView));
 			
-            
             //manager.ChangePrimaryView("Engine");
 
             manager.ChangePrimaryView("Singleplayer");

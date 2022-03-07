@@ -14,7 +14,7 @@
     </i:Interaction.Triggers>
     <Grid>
         <ContentControl Content="{Binding PrimaryViewModel,UpdateSourceTrigger=PropertyChanged}" Name="Primary"/>
-        <ContentControl Content="{Binding SecondaryViewModel,UpdateSourceTrigger=PropertyChanged}"  /> 
+        <ContentControl Content="{Binding SecondaryViewModel,UpdateSourceTrigger=PropertyChanged}" /> 
     </Grid>
 
 </Window>

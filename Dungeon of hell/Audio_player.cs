@@ -17,7 +17,7 @@ namespace Dungeon_of_hell
         public static void PlaySound(string path)
         {
             mediaplayer.Open(new Uri(path));
-            mediaplayer.Volume = GlobalSettings.Volume / 100.0f;
+            mediaplayer.Volume = GlobalSettings.Settings.Volume / 100.0f;
             mediaplayer.Play();
         }
         public static void StopPlayback()
