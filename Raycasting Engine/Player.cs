@@ -12,9 +12,8 @@ using System.Windows.Threading;
 
 namespace Raycasting_Engine
 {
-	public class Player : GameObject
+	public class Player : EntityObject
 	{
-		Canvas canvas;
 		const double PI = 3.1415926535;
 		double dx;
 		double dy;
@@ -23,8 +22,8 @@ namespace Raycasting_Engine
 		public double A { get => a; set => a = value; }
 		public Point Pxy { get => new Point(X, Y); }
 
-		public Player(int gridX, int gridY, Canvas canvas, int mapS, int type = 99)
-			: base(gridX, gridY)
+		public Player(int gridX, int gridY, Canvas canvas, int mapS, bool isSolid = false)
+			: base(gridX, gridY, canvas, mapS, isSolid)
 		{
 			X = gridX * mapS;
 			Y = gridY * mapS;
@@ -57,8 +56,8 @@ namespace Raycasting_Engine
 			switch (k)
 			{
 				case Key.W:
-					if (map[ipy * mapY + ipx_P_xo].Type == 0) X += dx;
-					if (map[ipy_P_yo * mapY + ipx].Type == 0) Y += dy;
+					if (map[ipy * mapY + ipx_P_xo].IsSolid) X += dx;
+					if (map[ipy_P_yo * mapY + ipx].IsSolid) Y += dy;
 					return;
 				case Key.A:
 					a -= 0.1; if (a < 0) a += 2 * PI;
@@ -66,8 +65,8 @@ namespace Raycasting_Engine
 					dy = Math.Sin(a) * 5;
 					return;
 				case Key.S:
-					if (map[ipy * mapY + ipx_M_xo].Type == 0) X -= dx;
-					if (map[ipy_M_yo * mapY + ipx].Type == 0) Y -= dy;
+					if (map[ipy * mapY + ipx_M_xo].IsSolid) X -= dx;
+					if (map[ipy_M_yo * mapY + ipx].IsSolid) Y -= dy;
 					return;
 				case Key.D:
 					a += 0.1; if (a > 2 * PI) a -= 2 * PI;

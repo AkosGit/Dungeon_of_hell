@@ -69,7 +69,7 @@ namespace Raycasting_Engine
 				for (int x = 0; x < mapX; x++)
 				{
 					Brush color;
-					if (map[y * mapY + x].Type > 0) color = Brushes.White; else color = Brushes.Black;
+					if (map[y * mapY + x].IsSolid) color = Brushes.White; else color = Brushes.Black;
 					xo = x * mapS; yo = y * mapS;
 					DrawRectangle(xo + 1, yo + 1, xo + 1, yo + mapS - 1, xo + mapS - 1, yo + mapS - 1, xo + mapS - 1, yo + 1, color, new SolidColorBrush(Colors.Transparent), 0);
 				}
@@ -78,7 +78,8 @@ namespace Raycasting_Engine
 
 		void drawRays3D()
 		{
-			int r, mx, my, mp, dof, typeH, typeV, mpH, mpV; double rx, ry, ra, xo, yo, disT;
+			int r, mx, my, mp, dof, mpH, mpV; double rx, ry, ra, xo, yo, disT;
+			bool typeH, typeV;
 			yo = 0;
 			xo = 0;
 			rx = Player.X;
@@ -87,16 +88,14 @@ namespace Raycasting_Engine
 			mpH = 0;
 			mpV = 0;
 			disT = 0;
-			typeH = 0;
-			typeV = 0;
-			bool enemy = false;
+			typeH = false;
+			typeV = false;
 			int me;
 
 			ra = player.A - DR * 40; if (ra < 0) { ra += 2 * PI; }
 			if (ra > 2 * PI) { ra -= 2 * PI; }
 			for (r = 0; r < 80; r++)
 			{
-				enemy = false;
 				//---Check Horizontal Lines---
 				dof = 0;
 				double disH = 1000000000;
@@ -110,10 +109,10 @@ namespace Raycasting_Engine
 				while (dof < MaxL)
 				{
 					mx = (int)(rx) >> 6; my = (int)(ry) >> 6; mp = my * mapX + mx;
-					if (mp > 0 && mp < mapX * mapY && map[mp].Type > 0)
+					if (mp > 0 && mp < mapX * mapY && map[mp].IsSolid)
 					{
-						if (map[mp].Type == 1) { hx = rx; hy = ry; disH = Distance(player.X, player.Y, hx, hy, ra); typeH = map[mp].Type; mpH = mp; dof = MaxL; }
-						else { enemy = true; me = mp; }
+						if (map[mp].IsSolid) { hx = rx; hy = ry; disH = Distance(player.X, player.Y, hx, hy, ra); typeH = map[mp].IsSolid; mpH = mp; dof = MaxL; }
+						else {me = mp; }
 					}
 					else { rx += xo; ry += yo; dof += 1; }
 				}
@@ -132,7 +131,7 @@ namespace Raycasting_Engine
 				while (dof < MaxL)
 				{
 					mx = (int)(rx) >> 6; my = (int)(ry) >> 6; mp = my * mapX + mx;
-					if (mp > 0 && mp < mapX * mapY && map[mp].Type > 0) { vx = rx; vy = ry; disV = Distance(player.X, player.Y, vx, vy, ra); typeV = map[mp].Type; mpV = mp; dof = MaxL; }
+					if (mp > 0 && mp < mapX * mapY && map[mp].IsSolid) { vx = rx; vy = ry; disV = Distance(player.X, player.Y, vx, vy, ra); typeV = map[mp].IsSolid; mpV = mp; dof = MaxL; }
 					else { rx += xo; ry += yo; dof += 1; }
 				}
 				Color color = Colors.Transparent;

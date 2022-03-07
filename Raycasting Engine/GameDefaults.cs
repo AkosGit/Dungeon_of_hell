@@ -24,9 +24,9 @@ namespace Raycasting_Engine
 
 		public DefaultMap()
 		{
-			Wall = new SolidObject(0, 0, Color.FromArgb(255, 130, 160, 255), 1);
-			Wall2 = new SolidObject(0, 0, Color.FromArgb(255, 226, 107, 139), 1);
-			Air = new GameObject(0, 0);
+			Wall = new SolidObject(0, 0, Color.FromArgb(255, 130, 160, 255), true);
+			Wall2 = new SolidObject(0, 0, Color.FromArgb(255, 226, 107, 139), true);
+			Air = new GameObject(false);
 			
 			gamemap = new GameObject[]
 			{

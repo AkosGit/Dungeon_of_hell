@@ -10,14 +10,14 @@ namespace Raycasting_Engine
 {
 	class SolidObject : GameObject
 	{
+		string name;
+		public string Name { get => name; set => name = value; }
+
 		Brush textureA;
 		public Brush TextureA { get => textureA; set => textureA = value; }
 
-
-
-
-		public SolidObject(int gridX, int gridY, Color A, int Type = 0) 
-			: base(gridX, gridY, Type)
+		public SolidObject(int gridX, int gridY, Color A, bool isSolid = false) 
+			: base(isSolid)
 		{
 			textureA = new SolidColorBrush(A);
 		}
