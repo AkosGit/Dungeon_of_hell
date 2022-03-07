@@ -32,8 +32,8 @@ namespace Raycasting_Engine
 
 		public Game(Canvas canvas)
 		{
-			Wall = new Wall(0, 0, Color.FromArgb(255, 130, 160, 255), canvas, 1);
-			Wall2 = new Wall(0, 0, Color.FromArgb(255, 226, 107, 139), canvas, 1);
+			Wall = new SolidObject(0, 0, Color.FromArgb(255, 130, 160, 255), canvas, 1);
+			Wall2 = new SolidObject(0, 0, Color.FromArgb(255, 226, 107, 139), canvas, 1);
 			Air = new GameObject(0, 0, canvas);
 			shadow = Color.FromArgb(50, 0, 0, 0);
 			this.canvas = canvas;
@@ -154,8 +154,8 @@ namespace Raycasting_Engine
 				Color color = Colors.Transparent;
 				Brush brush = Brushes.Transparent;
 				Brush addedShadow = Brushes.Transparent;
-				if (disV < disH) { rx = vx; ry = vy; disT = disV; color = Colors.Blue; brush = (map[mpV] as Wall).TextureA; addedShadow = new SolidColorBrush(shadow); }
-				if (disV > disH) { rx = hx; ry = hy; disT = disH; color = Colors.CornflowerBlue; brush = (map[mpH] as Wall).TextureA; }
+				if (disV < disH) { rx = vx; ry = vy; disT = disV; color = Colors.Blue; brush = (map[mpV] as SolidObject).TextureA; addedShadow = new SolidColorBrush(shadow); }
+				if (disV > disH) { rx = hx; ry = hy; disT = disH; color = Colors.CornflowerBlue; brush = (map[mpH] as SolidObject).TextureA; }
 				//DrawLineFromPlayer(rx, ry, color, 2);
 				ra += DR; if (ra < 0) { ra += 2 * PI; }
 				if (ra > 2 * PI) { ra -= 2 * PI; }

@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace Raycasting_Engine
 {
-	class Wall : GameObject
+	class SolidObject : GameObject
 	{
 		Brush textureA;
 		public Brush TextureA { get => textureA; set => textureA = value; }
@@ -16,7 +16,7 @@ namespace Raycasting_Engine
 
 
 
-		public Wall(int gridX, int gridY, Color A, Canvas canvas, int Type = 0) 
+		public SolidObject(int gridX, int gridY, Color A, Canvas canvas, int Type = 0) 
 			: base(gridX, gridY, canvas, Type)
 		{
 			textureA = new SolidColorBrush(A);
