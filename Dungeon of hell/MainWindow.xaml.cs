@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Dungeon_of_hell.Engine;
+using Dungeon_of_hell.SinglePlayer;
 
 namespace Dungeon_of_hell
 {
@@ -26,9 +27,17 @@ namespace Dungeon_of_hell
             Window_manager manager = new Window_manager();
             InitializeComponent();
             DataContext = manager;
-            IViewModel engine = new EngineViewModel();
-            manager.AddView(engine, typeof(EngineView));
-            manager.ChangePrimaryView("Engine");
+
+			IViewModel engine = new EngineViewModel();
+			manager.AddView(engine, typeof(EngineView));
+
+			IViewModel singleplayer = new SinglePlayerViewModel();
+            manager.AddView(singleplayer, typeof(SinglePlayerView));
+			
+            
+            //manager.ChangePrimaryView("Engine");
+
+            manager.ChangePrimaryView("Singleplayer");
         }
     }
 }
