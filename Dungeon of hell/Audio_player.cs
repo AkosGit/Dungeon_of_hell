@@ -12,9 +12,11 @@ namespace Dungeon_of_hell
     {
         MediaPlayer mediaplayer;
         //The max distance will determine how loud the sound is going to be, 0 will be the loudest
+        //If distance is -1 volume will be mute 
         const float MAXDISTANCE=10f;
         public Audio_player(string path, int distance = 0)
         {
+
             mediaplayer = new MediaPlayer();
             mediaplayer.Open(new Uri(path));
             mediaplayer.Play();
@@ -22,6 +24,7 @@ namespace Dungeon_of_hell
         }
         float CalculateVolume(float distance)
         {
+            if (distance == -1) { return 0f; }
             if(distance > MAXDISTANCE)
             {
                 throw new InvalidOperationException("Distance is bigger than the maximum!");

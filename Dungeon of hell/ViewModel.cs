@@ -12,12 +12,28 @@ namespace Dungeon_of_hell
     public abstract class ViewModel : ObservableObject,IViewModel
     {
         public string Name { get; set; }
+        public object ViewId { get; set; }
         public event Action<string> changeprimaryviewEvent;
         public event Action<string> changesecondaryviewEvent;
         public event Action clearsecondviewEvent;
         public event Func<string, string, object> getviewpropertyEvent;
         public event Action<string, string, object> updateviewpropertyEvent;
+        public event Action<IViewModel, Type> addview;
+        public event Action<string> removeview;
+        public event Func<string,bool> viewexists;
 
+        public void AddView(IViewModel model, Type typeofview)
+        {
+            addview?.Invoke(model, typeofview);
+        }
+        public void RemoveView(string viewname)
+        {
+            removeview?.Invoke(viewname);
+        }
+        public bool ViewExists(string viewname)
+        {
+            return (bool)(viewexists?.Invoke(viewname));
+        }
         public void ChangePrimaryView(string viewname)
         {
             changeprimaryviewEvent?.Invoke(viewname);
@@ -39,6 +55,8 @@ namespace Dungeon_of_hell
         }
 
         public abstract void KeyDown(object sender, KeyEventArgs e);
+
+
 
         public void UpdateViewProperty(string viewname, string property, object value)
         {

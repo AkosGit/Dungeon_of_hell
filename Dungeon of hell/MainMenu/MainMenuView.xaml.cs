@@ -17,9 +17,9 @@ namespace Dungeon_of_hell
     /// <summary>
     /// Interaction logic for HomeView.xaml
     /// </summary>
-    public partial class Overlay : UserControl
+    public partial class MainMenuView : UserControl
     {
-        public Overlay()
+        public MainMenuView()
         {
             InitializeComponent();
         }

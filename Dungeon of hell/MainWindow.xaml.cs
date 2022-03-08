@@ -29,15 +29,9 @@ namespace Dungeon_of_hell
             InitializeComponent();
             DataContext = manager;
             Closing += manager.OnWindowClosing;
-			IViewModel engine = new EngineViewModel();
-			manager.AddView(engine, typeof(EngineView));
-
-			IViewModel singleplayer = new SinglePlayerViewModel();
-            manager.AddView(singleplayer, typeof(SinglePlayerView));
-			
-            //manager.ChangePrimaryView("Engine");
-
-            manager.ChangePrimaryView("Singleplayer");
+			manager.AddView(new MainMenuViewModel(), typeof(MainMenuView));
+            manager.AddView(new SettingsViewModel(), typeof(SettingsView));
+            manager.ChangePrimaryView("MainMenu");
         }
     }
 }
