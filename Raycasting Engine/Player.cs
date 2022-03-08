@@ -21,32 +21,19 @@ namespace Raycasting_Engine
 
 		public double A { get => a; set => a = value; }
 		public Point Pxy { get => new Point(X, Y); }
+		public double Dx { get => dx; set => dx = value; }
+		public double Dy { get => dy; set => dy = value; }
 
-		public Player(int gridX, int gridY, Canvas canvas, int mapS, bool isSolid = false)
-			: base(gridX, gridY, canvas, mapS, isSolid)
+		public Player(int gridX, int gridY,  int mapS, bool isSolid = false, int a = 0)
+			: base(gridX, gridY, mapS, isSolid)
 		{
 			X = gridX * mapS;
 			Y = gridY * mapS;
-			a = 0;
-			dx = Math.Cos((PI / 180) * a);
-			dy = Math.Sin((PI / 180) * a);
+			this.a = a;
+			dx = Math.Cos((PI / 180) * this.a);
+			dy = Math.Sin((PI / 180) * this.a);
 		}
 
-		public void DrawPayer()
-		{
-			DrawRectangle(10, 10, X - 5, Y - 5, Brushes.Blue);
-
-			Point p1 = new Point(X, Y);
-			Point p2 = new Point(X + dx * 5, Y + dy * 5);
-			Line l = new Line();
-			l.Stroke = new SolidColorBrush(Colors.Blue);
-			l.StrokeThickness = 2.0;
-			l.X1 = p1.X;
-			l.X2 = p2.X;
-			l.Y1 = p1.Y;
-			l.Y2 = p2.Y;
-			canvas.Children.Add(l);
-		}
 		public void Move(Key k, GameObject[] map, int mapX, int mapY)
 		{
 			int xo = 0; if (dx < 0) { xo = -20; } else xo = 20;
@@ -77,22 +64,6 @@ namespace Raycasting_Engine
 					return;
 			}
 
-		}
-
-		public void DrawRectangle(int height, int width, double x, double y, Brush brush, double a = 0, double rX = 0, double rY = 0)
-		{
-			Rectangle rect = new Rectangle
-			{
-				Stroke = brush,
-				StrokeThickness = 2,
-				Fill = brush,
-				Height = height,
-				Width = width
-			};
-
-			Canvas.SetLeft(rect, x);
-			Canvas.SetTop(rect, y);
-			canvas.Children.Add(rect);
 		}
 	}
 }

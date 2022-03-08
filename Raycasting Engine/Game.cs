@@ -16,12 +16,12 @@ namespace Raycasting_Engine
 		const int MoveRight = 5;
 		protected Canvas canvas;
 
-		Player player;
+		protected Player player;
 		public GameObject[] map;
 		public int mapX;
 		public int mapY;
 		public int mapS;
-		int MaxL;
+		protected int MaxL;
 		Color shadow;
 
 		public Player Player { get => player; set => player = value; }
@@ -32,34 +32,30 @@ namespace Raycasting_Engine
 			this.canvas = canvas;
 			if (mainmap == null) mainmap = new Map();
 
-			MapGameMaptogame(mainmap);
-			SetDefaultThing();
+			LoadMapToInGameMap(mainmap);
 			
 		}
 
-		private void MapGameMaptogame(Map mainmap)
+		protected void LoadMapToInGameMap(Map map)
 		{
-			map = mainmap.map;
-			MaxL = mainmap.MaxL;
-			mapX = mainmap.mapX;
-			mapY = mainmap.mapY;
-			mapS = mainmap.mapS;
-		}
+			this.map = map.map;
+			MaxL = map.MaxL;
+			mapX = map.MapX;
+			mapY = map.MapY;
+			mapS = map.MapS;
 
-		private void SetDefaultThing()
-		{
-			player = new Player(5, 5, canvas, mapS);
-			//player.DrawPayer();
+			this.player = map.Player;
 		}
 
 		public void DrawTurn()
 		{
 			canvas.Children.Clear();
 			//drawMap2D();
-			drawRays3D();
 			//player.DrawPayer
+			drawRays3D();
 		}
 
+		#region 2D
 		private void drawMap2D()
 		{
 			double xo, yo;
@@ -74,7 +70,35 @@ namespace Raycasting_Engine
 				}
 			}
 		}
+		public void DrawPayer()
+		{
+			Rectangle rect = new Rectangle
+			{
+				Stroke = Brushes.Blue,
+				StrokeThickness = 2,
+				Fill = Brushes.Blue,
+				Height = 10,
+				Width = 10
+			};
 
+			Canvas.SetLeft(rect, player.Pxy.X - 5);
+			Canvas.SetTop(rect, player.Pxy.Y - 5);
+			canvas.Children.Add(rect);
+
+			Point p1 = new Point(player.Pxy.X, player.Pxy.Y);
+			Point p2 = new Point(player.Pxy.X + player.Dx * 5, player.Pxy.Y + player.Dy * 5);
+			Line l = new Line();
+			l.Stroke = new SolidColorBrush(Colors.Blue);
+			l.StrokeThickness = 2.0;
+			l.X1 = p1.X;
+			l.X2 = p2.X;
+			l.Y1 = p1.Y;
+			l.Y2 = p2.Y;
+			canvas.Children.Add(l);
+		}
+		#endregion
+
+		#region 3D
 		void drawRays3D()
 		{
 			int r, mx, my, mp, dof, mpH, mpV; double rx, ry, ra, xo, yo, disT;
@@ -146,7 +170,7 @@ namespace Raycasting_Engine
 				double ca = player.A - ra; if (ca < 0) { ca += 2 * PI; }
 				if (ca > 2 * PI) { ca -= 2 * PI; }
 				disT = disT * Math.Cos(ca);
-				double lineH = (mapS * 450) / disT; if (lineH > 450) { lineH = 450; }
+				double lineH = mapS * 450 / disT; if (lineH > 450) { lineH = 450; }
 				double lineO = 250 - lineH / 2;
 				//DrawLine(r * 8 + MoveRight, lineO, r * 8 + MoveRight, lineH + lineO, color, 8);
 				DrawRectangle(r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
@@ -159,7 +183,9 @@ namespace Raycasting_Engine
 		{
 			return Math.Sqrt(Math.Pow(bx - ax, 2) + Math.Pow(by - ay, 2));
 		}
+		#endregion
 
+		#region Default shapes drawing
 		// ToDO SA: Kitenni a rajzolást külön osztályba
 		public void DrawRectangle(int height, int width, int x, int y, Brush brush)
 		{
@@ -237,6 +263,8 @@ namespace Raycasting_Engine
 			l.Y2 = p2.Y;
 			canvas.Children.Add(l);
 		}
+
+		#endregion
 	}
 }
 

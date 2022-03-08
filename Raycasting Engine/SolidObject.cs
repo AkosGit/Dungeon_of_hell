@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace Raycasting_Engine
 {
-	class SolidObject : GameObject
+	public class SolidObject : GameObject
 	{
 		string name;
 		public string Name { get => name; set => name = value; }

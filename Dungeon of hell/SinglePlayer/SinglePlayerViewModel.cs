@@ -19,8 +19,7 @@ namespace Dungeon_of_hell.SinglePlayer
 		DispatcherTimer timer1;
 		TimeSpan time;
 		Boolean StopTimer;
-		Game game;
-		SPMain spMain;
+		SPMain game;
 		private Canvas canvas;
 		public Canvas Canvas { get { return canvas; } set { SetProperty(ref canvas, value); } }
 		public SinglePlayerViewModel()
@@ -33,6 +32,7 @@ namespace Dungeon_of_hell.SinglePlayer
 		}
 		public override void KeyDown(object sender, KeyEventArgs e)
 		{
+			if(e.Key == Key.E) { game.LoadNextMap(); }
 			game.Player.Move(e.Key, game.map, game.mapX, game.mapY);
 		}
 		private void StartGame()
@@ -56,8 +56,7 @@ namespace Dungeon_of_hell.SinglePlayer
 		private void SetDafaults()
 		{
 			canvas = new Canvas();
-			spMain = new SPMain(new Game(Canvas));
-			game = spMain.game;
+			game = new SPMain(canvas);
 
 			Canvas.Width = 722;
 			Canvas.Height = 500;

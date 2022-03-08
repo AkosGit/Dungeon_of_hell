@@ -9,7 +9,6 @@ namespace Raycasting_Engine
 {
 	public class EntityObject : GameObject
 	{
-		protected Canvas canvas;
 		int gridX;
 		int gridY;
 		double x;
@@ -20,7 +19,7 @@ namespace Raycasting_Engine
 		public double X { get => x; set => x = value; }
 		public double Y { get => y; set => y = value; }
 
-		public EntityObject(int gridX, int gridY, Canvas canvas, int mapS, bool isSolid = false)
+		public EntityObject(int gridX, int gridY, int mapS, bool isSolid = false)
 			: base(isSolid)
 		{
 			this.gridX = gridX;

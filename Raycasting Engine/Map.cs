@@ -10,25 +10,37 @@ namespace Raycasting_Engine
 {
 	public class Map
 	{
-		Canvas canvas;
+		int maxL;
 
-		public int MaxL;
+		int mapX;
+		int mapY;
+		int mapS;
 
-		public int mapX;
-		public int mapY;
-		public int mapS;
+		GameObject[] lmap;
 
-		public GameObject[] map;
+		Player player;
 
-		public Map(int maxL, int mapX, int mapY, int mapS, GameObject[] map)
+		public int MaxL { get => maxL; set => maxL = value; }
+		public int MapX { get => mapX; set => mapX = value; }
+		public int MapY { get => mapY; set => mapY = value; }
+		public int MapS { get => mapS; set => mapS = value; }
+		public GameObject[] map { get => lmap; set => lmap = value; }
+		public Player Player { get => player; set => player = value; }
+
+		public Map(int maxL, int mapX, int mapY, int mapS, GameObject[] map, Player player)
 		{
 			MaxL = maxL;
 			this.mapX = mapX;
 			this.mapY = mapY;
 			this.mapS = mapS;
-			this.map = map;
+			this.lmap = map;
+
+			this.player = player;
 		}
 
+		/// <summary>
+		/// Default map betöltése
+		/// </summary>
 		public Map()
 		{
 			GameObject Wall;
@@ -62,7 +74,9 @@ namespace Raycasting_Engine
 			mapY = 16;
 			mapS = 64;
 
-			MaxL = 16;
+			maxL = 16;
+
+			player = new Player(5, 5, mapS);
 		}
 	}
 }
