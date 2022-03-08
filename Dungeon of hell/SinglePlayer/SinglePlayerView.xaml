@@ -9,6 +9,8 @@
              Name="Content"
              >
     <Grid>
-		<ContentPresenter Content="{Binding Canvas}"/>
-	</Grid>
+        <Viewbox>
+            <ContentPresenter Content="{Binding Canvas}"/>
+        </Viewbox>
+    </Grid>
 </UserControl>
