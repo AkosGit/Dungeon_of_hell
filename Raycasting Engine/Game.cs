@@ -119,7 +119,7 @@ namespace Raycasting_Engine
 			if (ra > 2 * PI) { ra -= 2 * PI; }
 			for (r = 0; r < 80; r++)
 			{
-				//---Check Horizontal Lines---
+				//Check Horizontals
 				dof = 0;
 				double disH = 1000000000;
 				double hx = player.X;
@@ -139,9 +139,9 @@ namespace Raycasting_Engine
 					}
 					else { rx += xo; ry += yo; dof += 1; }
 				}
-				//DrawLineFromPlayer(rx, ry, Colors.Green, 6);
+				//DrawLineFromPlayer(rx, ry, Colors.Green, 6); //on 2D map
 
-				//---Check Vertical Lines---
+				//Check Verticals
 				dof = 0;
 				double disV = 1000000000;
 				double vx = player.X;
@@ -162,7 +162,7 @@ namespace Raycasting_Engine
 				Brush addedShadow = Brushes.Transparent;
 				if (disV < disH) { rx = vx; ry = vy; disT = disV; color = Colors.Blue; brush = (map[mpV] as SolidObject).TextureA; addedShadow = new SolidColorBrush(shadow); }
 				if (disV > disH) { rx = hx; ry = hy; disT = disH; color = Colors.CornflowerBlue; brush = (map[mpH] as SolidObject).TextureA; }
-				//DrawLineFromPlayer(rx, ry, color, 2);
+				//DrawLineFromPlayer(rx, ry, color, 2); //on 2D map
 				ra += DR; if (ra < 0) { ra += 2 * PI; }
 				if (ra > 2 * PI) { ra -= 2 * PI; }
 
