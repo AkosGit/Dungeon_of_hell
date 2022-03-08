@@ -28,10 +28,9 @@ namespace Raycasting_Engine
 
 		public Game(Canvas canvas, Map mainmap = null)
 		{
-			DefaultMap Defmap = new DefaultMap();
 			shadow = Color.FromArgb(50, 0, 0, 0);
 			this.canvas = canvas;
-			if (mainmap == null) mainmap = Defmap.map;
+			if (mainmap == null) mainmap = new Map();
 
 			MapGameMaptogame(mainmap);
 			SetDefaultThing();
