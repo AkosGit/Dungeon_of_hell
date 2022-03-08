@@ -3,24 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 namespace Dungeon_of_hell
 {
-    public static class Audio_player
+    public class Audio_player
     {
-        static MediaPlayer mediaplayer;
-        static Audio_player()
+        MediaPlayer mediaplayer;
+        //The max distance will determine how loud the sound is going to be, 0 will be the loudest
+        const float MAXDISTANCE=10f;
+        public Audio_player(string path, int distance = 0)
         {
             mediaplayer = new MediaPlayer();
-        }
-        public static void PlaySound(string path)
-        {
             mediaplayer.Open(new Uri(path));
-            mediaplayer.Volume = GlobalSettings.Settings.Volume / 100.0f;
             mediaplayer.Play();
+            mediaplayer.Volume = CalculateVolume(distance);
         }
-        public static void StopPlayback()
+        float CalculateVolume(float distance)
+        {
+            if(distance > MAXDISTANCE)
+            {
+                throw new InvalidOperationException("Distance is bigger than the maximum!");
+            }
+            float percent = 1 - distance / MAXDISTANCE;
+            if (percent == 0) { percent = 0.05f; }
+            return GlobalSettings.Settings.Volume / 100.0f * percent;
+        }
+        public void UpdateDistance(float distance)
+        {
+            mediaplayer.Volume = CalculateVolume(distance);
+        }
+        public void StopPlayback()
         {
             mediaplayer.Stop();
         }

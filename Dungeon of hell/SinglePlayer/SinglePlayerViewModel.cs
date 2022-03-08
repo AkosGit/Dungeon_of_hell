@@ -39,7 +39,7 @@ namespace Dungeon_of_hell.SinglePlayer
 		{
 			StopTimer = false;
 			InGame = true;
-
+			//Audio_player audio = new Audio_player(GlobalSettings.Settings.AssetsPath + "sound\\test.mp3", 10);
 			time = TimeSpan.FromDays(0);
 			timer1 = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 15), DispatcherPriority.Normal, delegate
 			{

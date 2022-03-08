@@ -20,6 +20,7 @@ namespace Dungeon_of_hell
 {
     public class Window_manager : ObservableObject, IWindowManager
     {
+        const bool ENABLE_SAVING = false;
         public void KeyDown(object sender, KeyEventArgs e)
         {
             if (SecondaryViewModel == null)
@@ -35,11 +36,13 @@ namespace Dungeon_of_hell
         {
             viewModels = new List<IViewModel>();
             GlobalSettings.Settings = new globalSettings();
-            //Location: %APPDATA%\DungeonOfHell
-            FILEPATH = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\DungeonOfHell";
-            Directory.CreateDirectory(FILEPATH);
-            LoadStates();
-            
+            if (ENABLE_SAVING)
+            {
+                //Location: %APPDATA%\DungeonOfHell
+                FILEPATH = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\DungeonOfHell";
+                Directory.CreateDirectory(FILEPATH);
+                LoadStates();
+            }       
         }
         private IViewModel primaryviewmodel;
         public IViewModel PrimaryViewModel { get { return primaryviewmodel; } set { SetProperty(ref primaryviewmodel, value); } }
@@ -123,12 +126,6 @@ namespace Dungeon_of_hell
             propertyInfo.SetValue(viewModels[index], Convert.ChangeType(value, propertyInfo.PropertyType), null);
         }
         void Write<T>(string path, T contents) {
-            /*FileStream file =File.Open(path, FileMode.Create);
-            byte[] content = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(contents));
-            file.Write(content,0,content.Length);
-            file.Flush();
-            file.Close();*/
-            //File.Delete(path);
             File.WriteAllText(path, JsonSerializer.Serialize(contents));
         }
         public void SaveStates()
@@ -164,7 +161,10 @@ namespace Dungeon_of_hell
         }
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            SaveStates();
+            if (ENABLE_SAVING)
+            {
+                SaveStates();
+            }
         }
     }  
 }
