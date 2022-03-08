@@ -56,8 +56,8 @@ namespace Raycasting_Engine
 			switch (k)
 			{
 				case Key.W:
-					if (map[ipy * mapY + ipx_P_xo].IsSolid) X += dx;
-					if (map[ipy_P_yo * mapY + ipx].IsSolid) Y += dy;
+					if (!map[ipy * mapY + ipx_P_xo].IsSolid) X += dx;
+					if (!map[ipy_P_yo * mapY + ipx].IsSolid) Y += dy;
 					return;
 				case Key.A:
 					a -= 0.1; if (a < 0) a += 2 * PI;
@@ -65,8 +65,8 @@ namespace Raycasting_Engine
 					dy = Math.Sin(a) * 5;
 					return;
 				case Key.S:
-					if (map[ipy * mapY + ipx_M_xo].IsSolid) X -= dx;
-					if (map[ipy_M_yo * mapY + ipx].IsSolid) Y -= dy;
+					if (!map[ipy * mapY + ipx_M_xo].IsSolid) X -= dx;
+					if (!map[ipy_M_yo * mapY + ipx].IsSolid) Y -= dy;
 					return;
 				case Key.D:
 					a += 0.1; if (a > 2 * PI) a -= 2 * PI;
@@ -81,7 +81,7 @@ namespace Raycasting_Engine
 
 		public void DrawRectangle(int height, int width, double x, double y, Brush brush, double a = 0, double rX = 0, double rY = 0)
 		{
-			System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle
+			Rectangle rect = new Rectangle
 			{
 				Stroke = brush,
 				StrokeThickness = 2,
