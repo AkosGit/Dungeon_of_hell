@@ -105,7 +105,7 @@ namespace Raycasting_Engine
 			bool typeH, typeV;
 			yo = 0;
 			xo = 0;
-			rx = Player.X;
+			rx = player.X;
 			ry = player.Y;
 			mp = 0;
 			mpH = 0;
@@ -128,7 +128,7 @@ namespace Raycasting_Engine
 				double aTan = -1 / Math.Tan(ra);
 				if (ra > PI) { ry = (((int)player.Y >> 6) << 6) - 0.0001; rx = (player.Y - ry) * aTan + player.X; yo = -64; xo = -yo * aTan; } //looking up
 				if (ra < PI) { ry = (((int)player.Y >> 6) << 6) + 64; rx = (player.Y - ry) * aTan + player.X; yo = 64; xo = -yo * aTan; } //looking down
-				if (ra == 0 || ra == PI) { rx = Player.X; ry = player.Y; dof = MaxL; }
+				if (ra == 0 || ra == PI) { rx = player.X; ry = player.Y; dof = MaxL; }
 				while (dof < MaxL)
 				{
 					mx = (int)(rx) >> 6; my = (int)(ry) >> 6; mp = my * mapX + mx;
@@ -150,7 +150,7 @@ namespace Raycasting_Engine
 				double nTan = -Math.Tan(ra);
 				if (ra > P2 && ra < P3) { rx = (((int)player.X >> 6) << 6) - 0.0001; ry = (player.X - rx) * nTan + player.Y; xo = -64; yo = -xo * nTan; } //looking left
 				if (ra < P2 || ra > P3) { rx = (((int)player.X >> 6) << 6) + 64; ry = (player.X - rx) * nTan + player.Y; xo = 64; yo = -xo * nTan; } //looking right
-				if (ra == 0 || ra == PI) { rx = Player.X; ry = player.Y; dof = MaxL; }
+				if (ra == 0 || ra == PI) { rx = player.X; ry = player.Y; dof = MaxL; }
 				while (dof < MaxL)
 				{
 					mx = (int)(rx) >> 6; my = (int)(ry) >> 6; mp = my * mapX + mx;
