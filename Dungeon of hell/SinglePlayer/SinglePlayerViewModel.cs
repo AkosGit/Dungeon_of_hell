@@ -32,7 +32,8 @@ namespace Dungeon_of_hell.SinglePlayer
 		}
 		public override void KeyDown(object sender, KeyEventArgs e)
 		{
-			if(e.Key == Key.E) { game.LoadNextMap(); }
+			if (e.Key == Key.Escape){ChangeSecondaryView("InGameMenu");}
+			if (e.Key == Key.E) { game.LoadNextMap(); }
 			game.Player.Move(e.Key, game.map, game.mapX, game.mapY);
 		}
 		private void StartGame()

@@ -50,16 +50,23 @@ namespace Dungeon_of_hell
         public IViewModel SecondaryViewModel { get { return secondaryviewmodel; } set { SetProperty(ref secondaryviewmodel, value); } }
         public List<IViewModel> viewModels { get; set; }
         public string FILEPATH { get; set; }
-
+        public void RemoveView(string viewname)
+        {
+            IViewModel view = viewModels[GetindexByName(viewname)];
+            Application.Current.Resources.Remove(view.ViewId);
+            viewModels.Remove(view);
+        }
         public void AddView(IViewModel view ,Type viewType)
         {
             Type viewModelType = view.GetType();
+            view.addview += (IViewModel model, Type typeofview) => { AddView(model, typeofview); };
+            view.removeview += (string viewname) => { RemoveView(viewname); };
+            view.viewexists += (string viewname) => { return ViewExists(viewname); };
             view.clearsecondviewEvent += () => { ClearSecondaryView(); };
             view.changeprimaryviewEvent += (string name) => { ChangePrimaryView(name); };
             view.changesecondaryviewEvent += (string name) => { ChangeSecondaryView(name); };
             view.getviewpropertyEvent += (string viewname, string propertyname) => { return GetViewProperty<object>(viewname, propertyname); };
             view.updateviewpropertyEvent += (string viewname, string propertyname, object value) => { UpdateViewProperty(viewname, propertyname, value); };
-            viewModels.Add(view);
             //add data template dynamically, required to access view
             const string xamlTemplate = "<DataTemplate DataType=\"{{x:Type vm:{0}}}\"><v:{1} /></DataTemplate>";
             var xaml = String.Format(xamlTemplate, viewModelType.Name, viewType.Name, viewModelType.Namespace, viewType.Namespace);
@@ -77,6 +84,8 @@ namespace Dungeon_of_hell
             var template = (DataTemplate)XamlReader.Parse(xaml, context);
             var key = template.DataTemplateKey;
             Application.Current.Resources.Add(key, template);
+            view.ViewId = key;
+            viewModels.Add(view);
         }
         int GetindexByName(string name)
         {
@@ -165,6 +174,11 @@ namespace Dungeon_of_hell
             {
                 SaveStates();
             }
+        }
+
+        public bool ViewExists(string name)
+        {
+            return viewModels.Any(m => m.Name == name);
         }
     }  
 }

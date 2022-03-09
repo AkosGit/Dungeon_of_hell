@@ -10,6 +10,10 @@ namespace Dungeon_of_hell
     public interface IViewModel
     {
         public string Name { get; set; }
+        public object ViewId { get; set; }
+        public event Action<IViewModel,Type> addview;
+        public event Action<string> removeview;
+        public event Func<string, bool> viewexists;
         public event Action<string> changeprimaryviewEvent;
         public event Action<string> changesecondaryviewEvent;
         public event Action clearsecondviewEvent;
@@ -20,6 +24,9 @@ namespace Dungeon_of_hell
         /// Call event.
         /// </summary>
         /// <param name="viewname">View model's name.</param>
+        public void AddView(IViewModel model, Type typeofview);
+        public void RemoveView(string viewname);
+        public bool ViewExists(string viewname);
         public void ChangePrimaryView(string viewname);
         /// <summary>
         /// Call event.
