@@ -51,7 +51,10 @@ namespace Raycasting_Engine
 		{
 			canvas.Children.Clear();
 			//drawMap2D();
-			//player.DrawPayer
+			//DrawPayer();
+			//Canvas.Width = 722;
+			//Canvas.Height = 500;
+			DrawRectangle(0, 250, 722, 250, 722, 500, 0, 500, Brushes.Aqua, Brushes.Transparent);
 			drawRays3D();
 		}
 
