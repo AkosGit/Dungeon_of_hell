@@ -1,6 +1,8 @@
 using Raycasting_Engine;
 using System;
+using System.Collections.Generic;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace SinglePlayer
@@ -9,8 +11,8 @@ namespace SinglePlayer
 	{
 		string[] maps;
 
-		public SPMain(Canvas canvas, Map map = null)
-			:base(canvas, map)
+		public SPMain(Canvas canvas,Map map = null)
+			:base(canvas,map)
 		{
 		}
 

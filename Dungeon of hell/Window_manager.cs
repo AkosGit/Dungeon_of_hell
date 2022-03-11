@@ -39,7 +39,7 @@ namespace Dungeon_of_hell
             {
                 GlobalSettings.Settings = (globalSettings)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json", typeof(globalSettings));
             }
-            
+
         }
         private IViewModel primaryviewmodel;
         public IViewModel PrimaryViewModel { get { return primaryviewmodel; } set { SetProperty(ref primaryviewmodel, value); } }
@@ -55,6 +55,10 @@ namespace Dungeon_of_hell
         public void AddView(IViewModel view, Type viewType)
         {
             Type viewModelType = view.GetType();
+            if (File.Exists(GlobalSettings.Settings.AssetsPath + "save\\Settings.json") && view is ISettings)
+            {
+                view = (IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Settings.json", typeof(SettingsViewModel));
+            }
             view.getview += (string viewname) => { return GetView(viewname); };
             view.addview += (IViewModel model, Type typeofview) => { AddView(model, typeofview); };
             view.removeview += (string viewname) => { RemoveView(viewname); };
@@ -141,6 +145,7 @@ namespace Dungeon_of_hell
                 ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json", (ISingleplayer)viewModels[GetindexByName("Singleplayer")]);
             }
             ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json", GlobalSettings.Settings);
+            ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\Settings.json", (ISettings)GetView("Settings"));
         }
 
         public bool ViewExists(string name)

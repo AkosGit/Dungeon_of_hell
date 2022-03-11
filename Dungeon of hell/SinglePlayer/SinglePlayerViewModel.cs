@@ -34,7 +34,11 @@ namespace Dungeon_of_hell.SinglePlayer
 		{
 			if (e.Key == Key.Escape){ChangeSecondaryView("SingleplayerInGameMenu");}
 			if (e.Key == Key.E) { game.LoadNextMap(); }
-			game.Player.Move(e.Key, game.map, game.mapX, game.mapY);
+            else
+            {
+				game.Player.Move(e.Key, game.map, game.mapX, game.mapY, GetViewProperty<Dictionary<string, Key>>("Settings", "SingleplayerBindings").FirstOrDefault(x => x.Value == e.Key).Key);
+			}
+			
 		}
 		private void StartGame()
 		{
@@ -58,7 +62,6 @@ namespace Dungeon_of_hell.SinglePlayer
 		{
 			canvas = new Canvas();
 			game = new SPMain(canvas);
-
 			Canvas.Width = 722;
 			Canvas.Height = 500;
 			Canvas.Background = Brushes.Gray;

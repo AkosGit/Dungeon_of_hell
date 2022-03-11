@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -15,7 +17,6 @@ namespace Raycasting_Engine
 
 		const int MoveRight = 5;
 		protected Canvas canvas;
-
 		protected Player player;
 		public MapObject[] map;
 		public int mapX;

@@ -36,7 +36,7 @@ namespace Raycasting_Engine
 			dy = Math.Sin((PI / 180) * this.a);
 		}
 
-		public void Move(Key k, MapObject[] map, int mapX, int mapY)
+		public void Move(Key k, MapObject[] map, int mapX, int mapY,string direction)
 		{
 			int xo = 0; if (dx < 0) { xo = -20; } else xo = 20;
 			int yo = 0; if (dy < 0) { yo = -20; } else yo = 20;
@@ -44,29 +44,29 @@ namespace Raycasting_Engine
 			int ipy = (int)Y / 64; int ipy_P_yo = (int)(Y + yo) / 64; int ipy_M_yo = (int)(Y - yo) / 64;
 			GridX = (int)X / 64; 
 			GridY = (int)Y / 64;
-			switch (k)
+			switch (direction)
 			{
-				case Key.W:
+				case "Forward":
 					if (!map[ipy * mapY + ipx_P_xo].IsSolid) X += dx;
 					if (!map[ipy_P_yo * mapY + ipx].IsSolid) Y += dy;
 					if (map[ipy * mapY + ipx_M_xo].IsSolid&& map[ipy * mapY + ipx_M_xo].CanOpen && GridX != ipx_M_xo) map[ipy * mapY + ipx_M_xo].Close();
 					if (map[ipy_M_yo * mapY + ipx].IsSolid&& map[ipy_M_yo * mapY + ipx].CanOpen && GridY != ipy_M_yo) map[ipy_M_yo * mapY + ipx].Close();
 					return;
-				case Key.A:
+				case "Left":
 					a -= 0.1; if (a < 0) a += 2 * PI;
 					dx = Math.Cos(a) * 5;
 					dy = Math.Sin(a) * 5;
 					return;
-				case Key.S:
+				case "Backwards":
 					if (!map[ipy * mapY + ipx_M_xo].IsSolid) X -= dx;
 					if (!map[ipy_M_yo * mapY + ipx].IsSolid) Y -= dy;
 					return;
-				case Key.D:
+				case "Right":
 					a += 0.1; if (a > 2 * PI) a -= 2 * PI;
 					dx = Math.Cos(a) * 5;
 					dy = Math.Sin(a) * 5;
 					return;
-				case Key.Space:
+				case "Use":
 					if (map[ipy * mapY + ipx_P_xo].IsSolid && map[ipy * mapY + ipx_P_xo].CanOpen) map[ipy * mapY + ipx_P_xo].Open();
 					if (map[ipy_P_yo * mapY + ipx].IsSolid && map[ipy_P_yo * mapY + ipx].CanOpen) map[ipy_P_yo * mapY + ipx].Open();
 					return;

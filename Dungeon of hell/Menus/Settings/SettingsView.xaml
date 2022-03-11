@@ -24,6 +24,21 @@
         </Button>
         <TextBlock Text="Volume:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">
         </TextBlock>
-        <Slider Maximum="100" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"/>
+        <Slider Maximum="100" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Value="{Binding volume}"/>
+        <ItemsControl ItemsSource="{Binding SingleplayerBindings, UpdateSourceTrigger=PropertyChanged}"  Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Name="bindings">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Key}"></TextBlock>
+                        </StackPanel>
+                        <StackPanel>
+                            <Button Content="{Binding Value}" Command="{Binding Path=DataContext.ChangeBind,  ElementName=bindings}" CommandParameter="{Binding Key}"></Button>
+
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>        
+        </ItemsControl>
     </Grid>
 </UserControl>

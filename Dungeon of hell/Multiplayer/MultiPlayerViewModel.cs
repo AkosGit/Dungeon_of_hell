@@ -34,7 +34,7 @@ namespace Dungeon_of_hell.MultiPlayer
 		{
 			if (e.Key == Key.Escape){ChangeSecondaryView("MultiplayerInGameMenu");}
 			if (e.Key == Key.E) { game.LoadNextMap(); }
-			game.Player.Move(e.Key, game.map, game.mapX, game.mapY);
+			//game.Player.Move(e.Key, game.map, game.mapX, game.mapY);
 		}
 		private void StartGame()
 		{

@@ -32,7 +32,7 @@ namespace Dungeon_of_hell.Engine
 		}
 		public override void KeyDown(object sender,KeyEventArgs e)
         {
-			game.Player.Move(e.Key, game.map, game.mapX, game.mapY);
+			//game.Player.Move(e.Key, game.map, game.mapX, game.mapY);
 		}
 		private void StartGame()
 		{
