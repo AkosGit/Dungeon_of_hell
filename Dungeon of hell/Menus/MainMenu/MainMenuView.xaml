@@ -11,7 +11,7 @@
                    />
         <Button Width="100" Height="20" Content="SinglePlayer" Command="{Binding Path=SinglePlayerView}">
         </Button>
-        <Button Width="100" Height="20" Content="Multiplayer" Command="{Binding Path=MultiplayerView}" IsEnabled="False">
+        <Button Width="100" Height="20" Content="Multiplayer" Command="{Binding Path=MultiplayerView}" IsEnabled="True">
         </Button>
         <Button Width="100" Height="20" Content="Settings" Command="{Binding Path=SettingsView}">
         </Button>

@@ -11,9 +11,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 
-namespace Dungeon_of_hell.SinglePlayer
+namespace Dungeon_of_hell.MultiPlayer
 {
-	public class SinglePlayerViewModel : ViewModel, ISingleplayer
+	public class MultiPlayerViewModel : ViewModel, IMultiplayer
 	{
 		public bool InGame { get; set; }
 		DispatcherTimer timer1;
@@ -22,9 +22,9 @@ namespace Dungeon_of_hell.SinglePlayer
 		SPMain game;
 		private Canvas canvas;
 		public Canvas Canvas { get { return canvas; } set { SetProperty(ref canvas, value); } }
-		public SinglePlayerViewModel()
+		public MultiPlayerViewModel()
 		{
-			Name = "Singleplayer";
+			Name = "Multiplayer";
 			SetDafaults();
 			StartGame();
 			//TODO SA: Párhuzamositani a bemeneteket
@@ -32,7 +32,7 @@ namespace Dungeon_of_hell.SinglePlayer
 		}
 		public override void KeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.Key == Key.Escape){ChangeSecondaryView("SingleplayerInGameMenu");}
+			if (e.Key == Key.Escape){ChangeSecondaryView("MultiplayerInGameMenu");}
 			if (e.Key == Key.E) { game.LoadNextMap(); }
 			game.Player.Move(e.Key, game.map, game.mapX, game.mapY);
 		}

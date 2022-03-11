@@ -40,8 +40,8 @@ namespace Raycasting_Engine
 			int yo = 0; if (dy < 0) { yo = -20; } else yo = 20;
 			int ipx = (int)X / 64; int ipx_P_xo = (int)(X + xo) / 64; int ipx_M_xo = (int)(X - xo) / 64;
 			int ipy = (int)Y / 64; int ipy_P_yo = (int)(Y + yo) / 64; int ipy_M_yo = (int)(Y - yo) / 64;
-			gridX = (int)X / 64; 
-			gridY = (int)Y / 64;
+			GridX = (int)X / 64; 
+			GridY = (int)Y / 64;
 			switch (k)
 			{
 				case Key.W:

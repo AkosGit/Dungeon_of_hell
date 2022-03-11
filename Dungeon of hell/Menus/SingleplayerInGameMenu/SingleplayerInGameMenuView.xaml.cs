@@ -17,9 +17,9 @@ namespace Dungeon_of_hell
     /// <summary>
     /// Interaction logic for HomeView.xaml
     /// </summary>
-    public partial class InGameMenuView : UserControl
+    public partial class SingleplayerInGameMenuView : UserControl
     {
-        public InGameMenuView()
+        public SingleplayerInGameMenuView()
         {
             InitializeComponent();
         }

@@ -3,9 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using Dungeon_of_hell.SinglePlayer;
+using Dungeon_of_hell.MultiPlayer;
+
 namespace Dungeon_of_hell
 {
     public class MainMenuViewModel : ViewModel
@@ -16,22 +19,29 @@ namespace Dungeon_of_hell
             Name = "MainMenu";
             SinglePlayerView = new RelayCommand(() =>
             {
-                if (!ViewExists("Singleplayer"))
+                if (File.Exists(ObjectManager.FILEPATH + "Singleplayer.json"))
+                {
+                    AddView((IViewModel)ObjectManager.Read(ObjectManager.FILEPATH + "Singleplayer.json", typeof(SinglePlayerViewModel)), typeof(SinglePlayerView));
+                }
+                else
                 {
                     AddView(new SinglePlayerViewModel(), typeof(SinglePlayerView));
-                    AddView(new InGameMenuViewModel(), typeof(InGameMenuView));
                 }
+                AddView(new SingleplayerInGameMenuViewModel(), typeof(SingleplayerInGameMenuView));
                 ChangePrimaryView("Singleplayer");
             });
             MultiplayerView = new RelayCommand(() =>
             {
-                //TODO
-                if (!ViewExists("Multiplayer"))
+                if (File.Exists(ObjectManager.FILEPATH + "Multiplayer.json"))
                 {
-                    //AddView(new MultiplayerViewModel(), typeof(MultiplayerView));
-                    //AddView(new InGameMenuViewModel(), typeof(InGameMenuView));
+                        AddView((IViewModel)ObjectManager.Read(ObjectManager.FILEPATH+"Multiplayer.json",typeof(MultiPlayerViewModel)), typeof(MultiPlayerView));
                 }
-                ChangePrimaryView("MultiPlayer");
+                else
+                {
+                        AddView(new MultiPlayerViewModel(), typeof(MultiPlayerView));
+                }                
+                AddView(new MultiplayerInGameMenuViewModel(), typeof(MultiplayerInGameMenuView));
+                ChangePrimaryView("Multiplayer");
 
             });
             SettingsView = new RelayCommand(() =>

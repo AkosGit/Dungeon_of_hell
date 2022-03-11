@@ -23,12 +23,12 @@ namespace Dungeon_of_hell
             if (ViewExists("Singleplayer"))
             {
                 ChangePrimaryView("Singleplayer");
-                ChangeSecondaryView("InGameMenu");
+                ChangeSecondaryView("SingleplayerInGameMenu");
             }
             else if (ViewExists("Multiplayer"))
             {
                 ChangePrimaryView("Multiplayer");
-                ChangeSecondaryView("InGameMenu");
+                ChangeSecondaryView("MultiplayerInGameMenu");
             }
             else
             {

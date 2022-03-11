@@ -8,12 +8,12 @@ using System.Windows.Input;
 
 namespace Dungeon_of_hell
 {
-    public class InGameMenuViewModel : ViewModel
+    public class MultiplayerInGameMenuViewModel : ViewModel
     {
     
-        public InGameMenuViewModel()
+        public MultiplayerInGameMenuViewModel()
         {
-            Name = "InGameMenu";
+            Name = "MultiplayerInGameMenu";
             Resume = new RelayCommand(() => {
                 ClearSecondView();
             });
@@ -24,17 +24,11 @@ namespace Dungeon_of_hell
             });
             MainMenuView = new RelayCommand(() =>
             {
-                if (ViewExists("Singleplayer"))
-                {
-                    RemoveView("Singleplayer");
-                }
-                if (ViewExists("Multiplayer"))
-                {
-                    RemoveView("Multiplayer");
-                }
+                ObjectManager.Write(ObjectManager.FILEPATH + "Multiplayer.json", (IMultiplayer)GetView("Multiplayer"));
+                RemoveView("Multiplayer");                
                 ChangePrimaryView("MainMenu");
                 ClearSecondView();
-                RemoveView("InGameMenu");
+                RemoveView("MultiplayerInGameMenu");
             });
         }
         public ICommand Resume { get; set; }
