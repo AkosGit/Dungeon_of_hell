@@ -13,5 +13,9 @@ namespace Raycasting_Engine
 		{
 			this.isSolid = isSolid;
 		}
+		public GameObject()
+        {
+
+        }
 	}
 }

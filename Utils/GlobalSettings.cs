@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 
 
-namespace Dungeon_of_hell
+namespace Utils
 {
     public static class GlobalSettings
     {
@@ -22,7 +22,7 @@ namespace Dungeon_of_hell
         {
             //global sound
             Volume = 40;
-            AssetsPath = $"{Directory.GetCurrentDirectory()}\\Assets\\";
+            AssetsPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\DungeonOfHell\\Assets\\";
         }
     }
 }

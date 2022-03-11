@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace Dungeon_of_hell
+namespace Utils
 {
     public class Audio_player
     {

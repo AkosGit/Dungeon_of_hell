@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
-
+using Utils;
 namespace Dungeon_of_hell
 {
     public class SettingsViewModel : ViewModel

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -20,6 +21,7 @@ namespace Raycasting_Engine
 		double a;
 
 		public double A { get => a; set => a = value; }
+		[JsonIgnore]
 		public Point Pxy { get => new Point(X, Y); }
 		public double Dx { get => dx; set => dx = value; }
 		public double Dy { get => dy; set => dy = value; }
@@ -34,7 +36,7 @@ namespace Raycasting_Engine
 			dy = Math.Sin((PI / 180) * this.a);
 		}
 
-		public void Move(Key k, GameObject[] map, int mapX, int mapY)
+		public void Move(Key k, MapObject[] map, int mapX, int mapY)
 		{
 			int xo = 0; if (dx < 0) { xo = -20; } else xo = 20;
 			int yo = 0; if (dy < 0) { yo = -20; } else yo = 20;
@@ -47,8 +49,8 @@ namespace Raycasting_Engine
 				case Key.W:
 					if (!map[ipy * mapY + ipx_P_xo].IsSolid) X += dx;
 					if (!map[ipy_P_yo * mapY + ipx].IsSolid) Y += dy;
-					if ((map[ipy * mapY + ipx_M_xo] is SolidObject) && (map[ipy * mapY + ipx_M_xo] as SolidObject).CanOpen && GridX != ipx_M_xo) (map[ipy * mapY + ipx_M_xo] as SolidObject).Close();
-					if ((map[ipy_M_yo * mapY + ipx] is SolidObject) && (map[ipy_M_yo * mapY + ipx] as SolidObject).CanOpen && GridY != ipy_M_yo) (map[ipy_M_yo * mapY + ipx] as SolidObject).Close();
+					if (map[ipy * mapY + ipx_M_xo].IsSolid&& map[ipy * mapY + ipx_M_xo].CanOpen && GridX != ipx_M_xo) map[ipy * mapY + ipx_M_xo].Close();
+					if (map[ipy_M_yo * mapY + ipx].IsSolid&& map[ipy_M_yo * mapY + ipx].CanOpen && GridY != ipy_M_yo) map[ipy_M_yo * mapY + ipx].Close();
 					return;
 				case Key.A:
 					a -= 0.1; if (a < 0) a += 2 * PI;
@@ -65,8 +67,8 @@ namespace Raycasting_Engine
 					dy = Math.Sin(a) * 5;
 					return;
 				case Key.Space:
-					if ((map[ipy * mapY + ipx_P_xo] is SolidObject) && (map[ipy * mapY + ipx_P_xo] as SolidObject).CanOpen) (map[ipy * mapY + ipx_P_xo] as SolidObject).Open();
-					if ((map[ipy_P_yo * mapY + ipx] is SolidObject) && (map[ipy_P_yo * mapY + ipx] as SolidObject).CanOpen) (map[ipy_P_yo * mapY + ipx] as SolidObject).Open();
+					if (map[ipy * mapY + ipx_P_xo].IsSolid && map[ipy * mapY + ipx_P_xo].CanOpen) map[ipy * mapY + ipx_P_xo].Open();
+					if (map[ipy_P_yo * mapY + ipx].IsSolid && map[ipy_P_yo * mapY + ipx].CanOpen) map[ipy_P_yo * mapY + ipx].Open();
 					return;
 				default:
 					return;

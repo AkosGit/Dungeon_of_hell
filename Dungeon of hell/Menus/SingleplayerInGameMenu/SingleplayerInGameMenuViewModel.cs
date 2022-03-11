@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
-
+using Utils;
 namespace Dungeon_of_hell
 {
     public class SingleplayerInGameMenuViewModel : ViewModel
@@ -24,7 +24,7 @@ namespace Dungeon_of_hell
             });
             MainMenuView = new RelayCommand(() =>
             {
-                ObjectManager.Write(ObjectManager.FILEPATH + "Singleplayer.json", (ISingleplayer)GetView("Singleplayer"));
+                ObjectManager.Write<ISingleplayer>(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json", (ISingleplayer)GetView("Singleplayer"));
                 RemoveView("Singleplayer");
                 ChangePrimaryView("MainMenu");
                 ClearSecondView();

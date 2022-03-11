@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-
+using Utils;
 namespace Dungeon_of_hell
 {
     public abstract class ViewModel : ObservableObject,IViewModel

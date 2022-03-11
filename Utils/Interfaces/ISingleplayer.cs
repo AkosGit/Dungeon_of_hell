@@ -1,4 +1,4 @@
-﻿namespace Dungeon_of_hell
+﻿namespace Utils
 {
 	public interface ISingleplayer
 	{

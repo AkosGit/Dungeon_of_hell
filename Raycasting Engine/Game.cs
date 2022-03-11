@@ -9,7 +9,7 @@ namespace Raycasting_Engine
 	public class Game
 	{
 		const double PI = 3.1415926535;
-		const double P2 = PI / 2;
+        const double P2 = PI / 2;
 		const double P3 = 3 * PI / 2;
 		const double DR = 0.0174533;
 
@@ -17,20 +17,22 @@ namespace Raycasting_Engine
 		protected Canvas canvas;
 
 		protected Player player;
-		public GameObject[] map;
+		public MapObject[] map;
 		public int mapX;
 		public int mapY;
 		public int mapS;
 		protected int MaxL;
 		Color shadow;
-
+		public MapManager MapManager;
 		public Player Player { get => player; set => player = value; }
 
 		public Game(Canvas canvas, Map mainmap = null)
 		{
+
+			MapManager = new MapManager();
 			shadow = Color.FromArgb(50, 0, 0, 0);
 			this.canvas = canvas;
-			if (mainmap == null) mainmap = new Map();
+			if (mainmap == null) mainmap = MapManager.GetMap("Main");
 
 			LoadMapToInGameMap(mainmap);
 			
@@ -163,8 +165,8 @@ namespace Raycasting_Engine
 				Color color = Colors.Transparent;
 				Brush brush = Brushes.Transparent;
 				Brush addedShadow = Brushes.Transparent;
-				if (disV < disH) { rx = vx; ry = vy; disT = disV; color = Colors.Blue; brush = (map[mpV] as SolidObject).TextureA; addedShadow = new SolidColorBrush(shadow); }
-				if (disV > disH) { rx = hx; ry = hy; disT = disH; color = Colors.CornflowerBlue; brush = (map[mpH] as SolidObject).TextureA; }
+				if (disV < disH) { rx = vx; ry = vy; disT = disV; color = Colors.Blue; brush = map[mpV].TextureA; addedShadow = new SolidColorBrush(shadow); }
+				if (disV > disH) { rx = hx; ry = hy; disT = disH; color = Colors.CornflowerBlue; brush = map[mpH].TextureA; }
 				//DrawLineFromPlayer(rx, ry, color, 2); //on 2D map
 				ra += DR; if (ra < 0) { ra += 2 * PI; }
 				if (ra > 2 * PI) { ra -= 2 * PI; }

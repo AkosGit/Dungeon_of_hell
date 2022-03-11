@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Dungeon_of_hell
+namespace Utils
 {
     public interface IWindowManager
     {

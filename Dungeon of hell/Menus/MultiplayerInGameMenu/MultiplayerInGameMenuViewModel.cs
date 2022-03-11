@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
-
+using Utils;
 namespace Dungeon_of_hell
 {
     public class MultiplayerInGameMenuViewModel : ViewModel
@@ -24,7 +24,7 @@ namespace Dungeon_of_hell
             });
             MainMenuView = new RelayCommand(() =>
             {
-                ObjectManager.Write(ObjectManager.FILEPATH + "Multiplayer.json", (IMultiplayer)GetView("Multiplayer"));
+                ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "Save\\Multiplayer.json", (IMultiplayer)GetView("Multiplayer"));
                 RemoveView("Multiplayer");                
                 ChangePrimaryView("MainMenu");
                 ClearSecondView();

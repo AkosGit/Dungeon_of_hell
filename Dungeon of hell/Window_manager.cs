@@ -15,7 +15,7 @@ using System.Windows.Markup;
 using System.Media;
 using System.Windows.Media;
 using System.Windows.Input;
-
+using Utils;
 namespace Dungeon_of_hell
 {
     public class Window_manager : ObservableObject, IWindowManager
@@ -33,14 +33,11 @@ namespace Dungeon_of_hell
         }
         public Window_manager()
         {
+            GlobalSettings.Settings = new globalSettings();
             viewModels = new List<IViewModel>();
-            if(File.Exists(ObjectManager.FILEPATH + "GlobalSettings.json"))
+            if(File.Exists(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json"))
             {
-                GlobalSettings.Settings = (globalSettings)ObjectManager.Read(ObjectManager.FILEPATH + "\\GlobalSettings.json", typeof(globalSettings));
-            }
-            else
-            {
-                GlobalSettings.Settings = new globalSettings();
+                GlobalSettings.Settings = (globalSettings)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json", typeof(globalSettings));
             }
             
         }
@@ -141,9 +138,9 @@ namespace Dungeon_of_hell
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
             if (ViewExists("Singleplayer")){
-                ObjectManager.Write(ObjectManager.FILEPATH + "Singleplayer.json",(ISingleplayer)viewModels[GetindexByName("Singleplayer")]);
+                ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json", (ISingleplayer)viewModels[GetindexByName("Singleplayer")]);
             }
-            ObjectManager.Write(ObjectManager.FILEPATH + "GlobalSettings.json", GlobalSettings.Settings);
+            ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json", GlobalSettings.Settings);
         }
 
         public bool ViewExists(string name)

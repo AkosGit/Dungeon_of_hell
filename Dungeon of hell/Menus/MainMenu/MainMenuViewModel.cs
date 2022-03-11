@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 using Dungeon_of_hell.SinglePlayer;
 using Dungeon_of_hell.MultiPlayer;
-
+using Utils;
 namespace Dungeon_of_hell
 {
     public class MainMenuViewModel : ViewModel
@@ -19,9 +19,9 @@ namespace Dungeon_of_hell
             Name = "MainMenu";
             SinglePlayerView = new RelayCommand(() =>
             {
-                if (File.Exists(ObjectManager.FILEPATH + "Singleplayer.json"))
+                if (File.Exists(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json"))
                 {
-                    AddView((IViewModel)ObjectManager.Read(ObjectManager.FILEPATH + "Singleplayer.json", typeof(SinglePlayerViewModel)), typeof(SinglePlayerView));
+                    AddView((IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json", typeof(SinglePlayerViewModel)), typeof(SinglePlayerView));
                 }
                 else
                 {
@@ -32,9 +32,9 @@ namespace Dungeon_of_hell
             });
             MultiplayerView = new RelayCommand(() =>
             {
-                if (File.Exists(ObjectManager.FILEPATH + "Multiplayer.json"))
+                if (File.Exists(GlobalSettings.Settings.AssetsPath + "Save\\Multiplayer.json"))
                 {
-                        AddView((IViewModel)ObjectManager.Read(ObjectManager.FILEPATH+"Multiplayer.json",typeof(MultiPlayerViewModel)), typeof(MultiPlayerView));
+                        AddView((IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Multiplayer.json", typeof(MultiPlayerViewModel)), typeof(MultiPlayerView));
                 }
                 else
                 {
