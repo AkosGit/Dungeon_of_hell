@@ -31,6 +31,7 @@ namespace Dungeon_of_hell
                 RemoveView("SingleplayerInGameMenu");
             });
         }
+        public string Background { get { return GlobalSettings.Settings.AssetsPath + "img\\MenuBackground.png"; } }
         public ICommand Resume { get; set; }
         public ICommand SettingsView { get; set; }
         public ICommand MainMenuView { get; set; }

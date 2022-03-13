@@ -4,6 +4,17 @@
              xmlns:local="clr-namespace:Dungeon_of_hell"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <Style TargetType="Button" x:Key="MenuButton">
+                <Setter Property="Background" Value="White"></Setter>
+                <Style.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="BorderBrush" Value="Red"></Setter>
+                        <Setter Property="BorderThickness" Value="50"></Setter>
+                        <Setter Property="CornerRadius" Value="5" />
+                    </Style>
+                </Style.Resources>
+            </Style>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

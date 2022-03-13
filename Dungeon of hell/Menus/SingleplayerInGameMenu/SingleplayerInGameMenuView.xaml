@@ -7,17 +7,27 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.Background>
-            <SolidColorBrush Color="OrangeRed" Opacity="0.8" />
+            <VisualBrush>
+                <VisualBrush.Visual>
+                    <Image Source="{Binding Background}" Opacity="0.7">
+                        <Image.BitmapEffect>
+                            <BlurBitmapEffect KernelType="Gaussian" Radius="20" />
+                        </Image.BitmapEffect>
+                    </Image>
+                </VisualBrush.Visual>
+            </VisualBrush>
         </Grid.Background>
-        <StackPanel VerticalAlignment="Center">
-            <Button Width="100" Height="20" Content="Resume" Command="{Binding Path=Resume}">
-            </Button>
-            <Button Width="100" Height="20" Content="Settings" Command="{Binding Path=SettingsView}">
-            </Button>
-            <Button Width="100" Height="20" Content="Exit to main menu" Command="{Binding Path=MainMenuView}">
-            </Button>
-
-        </StackPanel>
+        <Viewbox>
+            <Grid MinHeight="350">
+                <StackPanel VerticalAlignment="Center">
+                    <Button Style="{DynamicResource MenuButton}" Width="100" Height="20" Content="Resume" Command="{Binding Path=Resume}">
+                </Button>
+                    <Button Style="{DynamicResource MenuButton}" Width="100" Height="20" Content="Settings" Command="{Binding Path=SettingsView}">
+                </Button>
+                    <Button Style="{DynamicResource MenuButton}" Width="100" Height="20" Content="Exit to main menu" Command="{Binding Path=MainMenuView}">
+                    </Button>
+                </StackPanel>
     </Grid>
-  
+    </Viewbox>
+    </Grid>
 </UserControl>

@@ -4,11 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <Grid.Background>
-            <SolidColorBrush Color="OrangeRed" Opacity="0.8" />
-        </Grid.Background>
+             d:DesignHeight="300" d:DesignWidth="300" Background="Red">
+    <Viewbox>
+       
+    <Grid MinHeight="350" MinWidth="400">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*">
             </ColumnDefinition>
@@ -20,20 +19,20 @@
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <Button Width="100" Height="20" Content="Go back" Command="{Binding Path=InGameMenuView}" Grid.Column="0"  Grid.Row="0" VerticalAlignment="Center">
+        <Button VerticalAlignment="Top" HorizontalAlignment="Center" Style="{DynamicResource MenuButton}" Width="100" Height="20" Content="Go back" Command="{Binding Path=InGameMenuView}" Grid.Column="0"  Grid.Row="0">
         </Button>
-        <TextBlock Text="Volume:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">
+        <TextBlock Text="Volume:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
         </TextBlock>
-        <Slider Maximum="100" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Value="{Binding volume}"/>
-        <ItemsControl ItemsSource="{Binding SingleplayerBindings, UpdateSourceTrigger=PropertyChanged}"  Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Name="bindings">
+            <Slider Maximum="100" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Value="{Binding volume}"></Slider>
+            <ItemsControl ItemsSource="{Binding SingleplayerBindings, UpdateSourceTrigger=PropertyChanged}"  Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Name="bindings" VerticalAlignment="Center" HorizontalAlignment="Center">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <StackPanel>
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                             <TextBlock Text="{Binding Key}"></TextBlock>
                         </StackPanel>
-                        <StackPanel>
-                            <Button Content="{Binding Value}" Command="{Binding Path=DataContext.ChangeBind,  ElementName=bindings}" CommandParameter="{Binding Key}"></Button>
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Button Content="{Binding Value, UpdateSourceTrigger=LostFocus}" Command="{Binding Path=DataContext.ChangeBind,  ElementName=bindings}" CommandParameter="{Binding Key}"></Button>
 
                         </StackPanel>
                     </StackPanel>
@@ -41,4 +40,5 @@
             </ItemsControl.ItemTemplate>        
         </ItemsControl>
     </Grid>
+    </Viewbox>
 </UserControl>
