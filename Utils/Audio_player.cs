@@ -18,9 +18,12 @@ namespace Utils
         {
 
             mediaplayer = new MediaPlayer();
-            mediaplayer.Open(new Uri(path));
-            mediaplayer.Play();
+            mediaplayer.Open(new Uri(GlobalSettings.Settings.AssetsPath+path));
             mediaplayer.Volume = CalculateVolume(distance);
+        }
+        public void Play()
+        {
+            mediaplayer.Play();
         }
         float CalculateVolume(float distance)
         {
