@@ -15,15 +15,18 @@ namespace Dungeon_of_hell
         {
             Name = "SingleplayerInGameMenu";
             Resume = new RelayCommand(() => {
+                Audio_player.Play("menuSelect");
                 ClearSecondView();
             });
             SettingsView = new RelayCommand(() =>
             {
+                Audio_player.Play("menuSelect");
                 ClearSecondView();
                 ChangePrimaryView("Settings");
             });
             MainMenuView = new RelayCommand(() =>
             {
+                Audio_player.Play("menuSelect");
                 ObjectManager.Write<ISingleplayer>(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json", (ISingleplayer)GetView("Singleplayer"));
                 RemoveView("Singleplayer");
                 ChangePrimaryView("MainMenu");

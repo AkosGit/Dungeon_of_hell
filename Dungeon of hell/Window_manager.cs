@@ -31,8 +31,13 @@ namespace Dungeon_of_hell
                 viewModels[GetindexByName(SecondaryViewModel.Name)].KeyDown(sender, e);
             }
         }
+        void AddTracks()
+        {
+            Audio_player.AddTrack("menuSelect", "sound\\menu_select_1.mp3");
+        }
         public Window_manager()
         {
+            AddTracks();
             GlobalSettings.Settings = new globalSettings();
             viewModels = new List<IViewModel>();
             if(File.Exists(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json"))
@@ -141,6 +146,7 @@ namespace Dungeon_of_hell
         }
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
+            Audio_player.RemoveAll();
             if (ViewExists("Singleplayer")){
                 ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json", (ISingleplayer)viewModels[GetindexByName("Singleplayer")]);
             }

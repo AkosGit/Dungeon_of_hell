@@ -15,15 +15,18 @@ namespace Dungeon_of_hell
         {
             Name = "MultiplayerInGameMenu";
             Resume = new RelayCommand(() => {
+                Audio_player.Play("menuSelect");
                 ClearSecondView();
             });
             SettingsView = new RelayCommand(() =>
             {
+                Audio_player.Play("menuSelect");
                 ClearSecondView();
                 ChangePrimaryView("Settings");
             });
             MainMenuView = new RelayCommand(() =>
             {
+                Audio_player.Play("menuSelect");
                 ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "Save\\Multiplayer.json", (IMultiplayer)GetView("Multiplayer"));
                 RemoveView("Multiplayer");                
                 ChangePrimaryView("MainMenu");

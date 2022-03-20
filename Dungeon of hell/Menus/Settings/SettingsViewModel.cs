@@ -20,6 +20,7 @@ namespace Dungeon_of_hell
             Name = "Settings";
             ChangeBind = new RelayCommand<object>(Change);
             InGameMenuView = new RelayCommand(() => {
+                Audio_player.Play("menuSelect");
                 Switch();
             });
             currentBind = "nothing";

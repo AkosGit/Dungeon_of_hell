@@ -15,14 +15,12 @@ namespace Dungeon_of_hell
 {
     public class MainMenuViewModel : ViewModel
     {
-        public Audio_player audio;
         public MainMenuViewModel()
         {
             Name = "MainMenu";
-            Audio_player audio = new Audio_player("sound\\menu_select_1.mp3");
             SinglePlayerView = new RelayCommand(() =>
             {
-                audio.Play();
+                Audio_player.Play("menuSelect");
                 if (File.Exists(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json"))
                 {
                     AddView((IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json", typeof(SinglePlayerViewModel)), typeof(SinglePlayerView));
@@ -36,7 +34,7 @@ namespace Dungeon_of_hell
             });
             MultiplayerView = new RelayCommand(() =>
             {
-                audio.Play();
+                Audio_player.Play("menuSelect");
                 if (File.Exists(GlobalSettings.Settings.AssetsPath + "Save\\Multiplayer.json"))
                 {
                         AddView((IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Multiplayer.json", typeof(MultiPlayerViewModel)), typeof(MultiPlayerView));
@@ -50,7 +48,7 @@ namespace Dungeon_of_hell
             });
             SettingsView = new RelayCommand(() =>
             {
-                audio.Play();
+                Audio_player.Play("menuSelect");
                 ChangePrimaryView("Settings");
 
             });
