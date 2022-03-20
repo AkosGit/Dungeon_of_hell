@@ -13,7 +13,7 @@ namespace Dungeon_of_hell
     
         public int volume { get { return GlobalSettings.Settings.Volume; } set { GlobalSettings.Settings.Volume = value; } }
         Dictionary<string, Key> singleplayerBindings;
-        public Dictionary<string, Key> SingleplayerBindings {get { return singleplayerBindings; } set { SetProperty(ref singleplayerBindings, value); } }
+        public Dictionary<string, Key> SingleplayerBindings { get { return singleplayerBindings; } set { SetProperty(ref singleplayerBindings, value); } }
         string currentBind;
         public SettingsViewModel()
         {
@@ -24,12 +24,12 @@ namespace Dungeon_of_hell
                 Switch();
             });
             currentBind = "nothing";
-            singleplayerBindings = new Dictionary<string, Key>();
-            singleplayerBindings.Add("Forward", Key.W);
-            singleplayerBindings.Add("Backwards", Key.S);
-            singleplayerBindings.Add("Left", Key.A);
-            singleplayerBindings.Add("Right", Key.D);
-            singleplayerBindings.Add("Use", Key.Space);
+            SingleplayerBindings = new Dictionary<string, Key>();
+            SingleplayerBindings.Add("Forward", Key.W);
+            SingleplayerBindings.Add("Backwards", Key.S);
+            SingleplayerBindings.Add("Left", Key.A);
+            SingleplayerBindings.Add("Right", Key.D);
+            SingleplayerBindings.Add("Use", Key.Space);
         }
         void Change(object key)
         {
@@ -66,9 +66,11 @@ namespace Dungeon_of_hell
             {
                 if(currentBind!= "nothing")
                 {
-                    Dictionary<string, Key> b;
-                    singleplayerBindings[currentBind] = e.Key;
+                    Dictionary<string, Key> Bindings=singleplayerBindings;
+                    Bindings[currentBind] = e.Key;
                     currentBind = "nothing";
+                    SingleplayerBindings = null;
+                    SingleplayerBindings = Bindings;
                 }
                 
             }

@@ -6,15 +6,15 @@
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="722" Background="OrangeRed">
     <Viewbox>
-        <StackPanel MinHeight="350">
+        <StackPanel MinHeight="350" Style="{StaticResource Stack}">
             <TextBlock Text="Dungeon of Hell" VerticalAlignment="Center" HorizontalAlignment="Center" 
-                   FontWeight="Bold" FontSize="18"
+                   FontWeight="Bold" FontSize="18" Style="{StaticResource Text}"
                    />
         <Button Width="100" Height="20" Content="SinglePlayer" Style="{StaticResource MenuButton}" Command="{Binding Path=SinglePlayerView}">
         </Button>
-        <Button Width="100" Height="20" Content="Multiplayer" Style="{DynamicResource MenuButton}" Command="{Binding Path=MultiplayerView}" IsEnabled="True">
+            <Button Width="100" Height="20" Content="Multiplayer" Style="{StaticResource MenuButton}" Command="{Binding Path=MultiplayerView}" IsEnabled="True">
         </Button>
-        <Button Width="100" Height="20" Content="Settings" Style="{DynamicResource MenuButton}" Command="{Binding Path=SettingsView}">
+            <Button Width="100" Height="20" Content="Settings" Style="{StaticResource MenuButton}" Command="{Binding Path=SettingsView}">
         </Button>
     </StackPanel>
         </Viewbox>
