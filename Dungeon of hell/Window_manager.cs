@@ -64,6 +64,15 @@ namespace Dungeon_of_hell
             {
                 view = (IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Settings.json", typeof(SettingsViewModel));
             }
+            else if(view.Name=="Settings")
+            {
+                //defaults
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = "Forward", key = Key.W, Message = "w" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = "Backwards", key = Key.S, Message = "s" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = "Left", key = Key.A, Message = "a" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = "Right", key = Key.D, Message = "d" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = "Use", key = Key.Space, Message = "space" });
+            }
             view.getview += (string viewname) => { return GetView(viewname); };
             view.addview += (IViewModel model, Type typeofview) => { AddView(model, typeofview); };
             view.removeview += (string viewname) => { RemoveView(viewname); };

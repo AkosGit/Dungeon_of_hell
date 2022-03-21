@@ -24,7 +24,7 @@
             <TextBlock Text="Volume:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold">
             </TextBlock>
             <Slider Maximum="100" Grid.Column="1" Grid.Row="1" Width="100" VerticalAlignment="Center" HorizontalAlignment="Center" Value="{Binding volume}"></Slider>
-            <ItemsControl ItemsSource="{Binding SingleplayerBindings}" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Name="bindings">
+            <ItemsControl ItemsSource="{Binding SingleplayerBindings,UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Name="bindings">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="0,10,0,0">
@@ -35,8 +35,8 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition></RowDefinition>
                             </Grid.RowDefinitions>
-                            <TextBlock FontWeight="Bold" Text="{Binding Key}" Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Left"></TextBlock>
-                            <Button  Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Width="100" Content="{Binding Value}" Command="{Binding Path=DataContext.ChangeBind,  ElementName=bindings}" CommandParameter="{Binding Key}"></Button>
+                            <TextBlock FontWeight="Bold" Text="{Binding Usecase}" Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Left"></TextBlock>
+                            <Button  Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Width="100" Content="{Binding Message}" Command="{Binding Path=DataContext.ChangeBind,  ElementName=bindings}" CommandParameter="{Binding Message}"></Button>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

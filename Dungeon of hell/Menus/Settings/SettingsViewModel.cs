@@ -1,6 +1,7 @@
 ﻿using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -12,9 +13,8 @@ namespace Dungeon_of_hell
     {
     
         public int volume { get { return GlobalSettings.Settings.Volume; } set { GlobalSettings.Settings.Volume = value; } }
-        Dictionary<string, Key> singleplayerBindings;
-        public Dictionary<string, Key> SingleplayerBindings { get { return singleplayerBindings; } set { SetProperty(ref singleplayerBindings, value); } }
-        string currentBind;
+        public ObservableCollection<Binding> SingleplayerBindings { get; set; }
+        int currentBind;
         public SettingsViewModel()
         {
             Name = "Settings";
@@ -23,17 +23,18 @@ namespace Dungeon_of_hell
                 Audio_player.Play("menuSelect");
                 Switch();
             });
-            currentBind = "nothing";
-            SingleplayerBindings = new Dictionary<string, Key>();
-            SingleplayerBindings.Add("Forward", Key.W);
-            SingleplayerBindings.Add("Backwards", Key.S);
-            SingleplayerBindings.Add("Left", Key.A);
-            SingleplayerBindings.Add("Right", Key.D);
-            SingleplayerBindings.Add("Use", Key.Space);
+            currentBind = -1;
+            SingleplayerBindings = new ObservableCollection<Binding>();
         }
         void Change(object key)
         {
-            currentBind = (string)key;
+            Binding index = SingleplayerBindings.Where(i => i.Message == (string)key).First();
+            currentBind = SingleplayerBindings.IndexOf(index);
+            index.Message = "Press a key..";
+            //force ui to update
+            SingleplayerBindings[currentBind] = null;
+            SingleplayerBindings[currentBind] = index;
+            
         }
         void Switch()
         {
@@ -64,16 +65,18 @@ namespace Dungeon_of_hell
             }
             else
             {
-                if(currentBind!= "nothing")
+                if(currentBind!= -1)
                 {
-                    Dictionary<string, Key> Bindings=singleplayerBindings;
-                    Bindings[currentBind] = e.Key;
-                    currentBind = "nothing";
-                    SingleplayerBindings = null;
-                    SingleplayerBindings = Bindings;
+                    Binding b = SingleplayerBindings[currentBind];
+                    b.key = e.Key;
+                    b.Message = e.Key.ToString();
+                    SingleplayerBindings[currentBind] = null;
+                    SingleplayerBindings[currentBind] = b;
+                    currentBind = -1;
                 }
                 
             }
         }
     }
+
 }

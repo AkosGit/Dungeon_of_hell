@@ -24,7 +24,6 @@ namespace Utils
         public void RemoveView(string viewname);
         public T GetViewProperty<T>(string viewname, string propertyname);
         public void UpdateViewProperty<T>(string viewname, string propertyname, T value);
-
         //save states to filesystem: settings, player positions etc
         public void OnWindowClosing(object sender, CancelEventArgs e);
     }

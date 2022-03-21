@@ -2,6 +2,7 @@
 using SinglePlayer;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,10 +34,10 @@ namespace Dungeon_of_hell.SinglePlayer
 		public override void KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.Key == Key.Escape){ChangeSecondaryView("SingleplayerInGameMenu");}
-			if (e.Key == Key.E) { game.LoadNextMap(); }
+			else if (e.Key == Key.E) { game.LoadNextMap(); }
             else
             {
-				game.Player.Move(e.Key, game.map, game.mapX, game.mapY, GetViewProperty<Dictionary<string, Key>>("Settings", "SingleplayerBindings").FirstOrDefault(x => x.Value == e.Key).Key);
+				game.Player.Move(e.Key, game.map, game.mapX, game.mapY, GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings").FirstOrDefault(x => x.key == e.Key).Usecase);
 			}
 			
 		}
