@@ -16,7 +16,7 @@ namespace Raycasting_Engine
 		int mapS;
 		string mapname;
 		MapObject[] lmap;
-
+		EntityObject[] lEntityMap;
 		Player player;
 		public string MapName { get => mapname; set => mapname = value; }
 		public int MaxL { get => maxL; set => maxL = value; }
@@ -24,9 +24,10 @@ namespace Raycasting_Engine
 		public int MapY { get => mapY; set => mapY = value; }
 		public int MapS { get => mapS; set => mapS = value; }
 		public MapObject[] map { get => lmap; set => lmap = value; }
+		public EntityObject[] EntityMap { get => lEntityMap; set => lEntityMap = value; }
 		public Player Player { get => player; set => player = value; }
 
-		public Map(int maxL, int mapX, int mapY, int mapS, MapObject[] map, Player player,string mapname)
+		public Map(int maxL, int mapX, int mapY, int mapS, MapObject[] map,EntityObject[] entitymap, Player player,string mapname)
 		{
 			this.mapname = MapName;
 			MaxL = maxL;
@@ -35,6 +36,7 @@ namespace Raycasting_Engine
 			this.mapS = mapS;
 			this.lmap = map;
 			this.player = player;
+			this.lEntityMap = entitymap;
 		}
 		public Map()
         {

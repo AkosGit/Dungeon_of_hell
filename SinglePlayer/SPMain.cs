@@ -14,6 +14,7 @@ namespace SinglePlayer
 		public SPMain(Canvas canvas,Map map = null)
 			:base(canvas,map)
 		{
+
 		}
 
 		public void ChangeMap(Map map)

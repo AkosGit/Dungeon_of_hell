@@ -17,7 +17,7 @@ namespace Utils
         public static void Write<T>(string path, T contents)
         {
             //default json writer can't write maps because of cycles but newsoft can't write interfaces
-            if(typeof(ISingleplayer).IsAssignableFrom(typeof(T))|| typeof(ISettings).IsAssignableFrom(typeof(T)) || typeof(IMultiplayer).IsAssignableFrom(typeof(T)) || typeof(IMultiplayer).IsAssignableFrom(typeof(T)))
+            if(typeof(ISingleplayer).IsAssignableFrom(typeof(T))|| typeof(IGlobalSettings).IsAssignableFrom(typeof(T)) || typeof(ISettings).IsAssignableFrom(typeof(T)) || typeof(IMultiplayer).IsAssignableFrom(typeof(T)) || typeof(IMultiplayer).IsAssignableFrom(typeof(T)))
             {
                 
                 File.WriteAllText(path, System.Text.Json.JsonSerializer.Serialize(contents));

@@ -67,11 +67,11 @@ namespace Dungeon_of_hell
             else if(view.Name=="Settings")
             {
                 //defaults
-                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = "Forward", key = Key.W, Message = "w" });
-                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = "Backwards", key = Key.S, Message = "s" });
-                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = "Left", key = Key.A, Message = "a" });
-                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = "Right", key = Key.D, Message = "d" });
-                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = "Use", key = Key.Space, Message = "space" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Forward, key = Key.W, Message = "W" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Backwards, key = Key.S, Message = "S" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Left, key = Key.A, Message = "A" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Right, key = Key.D, Message = "D" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Use, key = Key.Space, Message = "SPACE" });
             }
             view.getview += (string viewname) => { return GetView(viewname); };
             view.addview += (IViewModel model, Type typeofview) => { AddView(model, typeofview); };
@@ -159,7 +159,7 @@ namespace Dungeon_of_hell
             if (ViewExists("Singleplayer")){
                 ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json", (ISingleplayer)viewModels[GetindexByName("Singleplayer")]);
             }
-            ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json", GlobalSettings.Settings);
+            ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json", (IGlobalSettings)GlobalSettings.Settings);
             ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\Settings.json", (ISettings)GetView("Settings"));
         }
 

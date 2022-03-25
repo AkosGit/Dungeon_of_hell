@@ -8,6 +8,10 @@ using System.Windows.Input;
 
 namespace Utils
 {
+    public enum EntityActions
+    {
+        Forward, Backwards, Left, Right, Use
+    }
     public interface ISettings
     {
         public ObservableCollection<Binding> SingleplayerBindings { get; set; }
@@ -16,6 +20,6 @@ namespace Utils
     {
         public Key key { get; set; }
         public string Message { get; set; }
-        public string Usecase { get; set; }
+        public EntityActions Usecase { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace Utils
     {
         public static globalSettings Settings { get; set; }
     }
-    public class globalSettings
+    public class globalSettings: IGlobalSettings
     {
         public int Volume { get; set; }
         public string AssetsPath { get; set; }

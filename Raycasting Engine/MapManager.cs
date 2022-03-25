@@ -14,64 +14,65 @@ namespace Raycasting_Engine
         public MapManager()
         {
             LoadMaps();
-            //Map main = new Map()
-            //{
-            //    map = new MapObject[]
-            //    {
-            //    new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Air(), new Air(), new Wall2(), new Air(), new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Wall2(), new Air(), new Wall(),
-            //    new Wall(), new Air(), new Wall(), new Wall(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Wall(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Wall(), new Air(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Air(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
-            //    new Wall(), new Air(), new Air(), new Wall(), new Air(), new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Wall(), new Air(), new Wall2(),
-            //    new Wall(), new Air(), new Wall(), new Wall(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Wall(), new Air(), new Air(), new Air(), new Wall2(),
-            //    new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
-            //    new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(),
-            //    },
-            //    MapName = "Main",
-            //    MapX = 16,
-            //    MapY = 16,
-            //    MapS = 64,
-            //    MaxL = 16,
-            //    Player = new Player(5, 5, 64)
-            //};
-            //AddMap(main);
-            //Map test = new Map()
-            //{
-            //    map = new MapObject[]
-            //{
-            //    new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Door(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-            //    new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(),
-            //},
-            //    MapName = "Test",
-            //    MapX = 16,
-            //    MapY = 16,
-            //    MapS = 64,
-            //    MaxL = 16,
-            //    Player = new Player(2, 2, 64)
-            //};
-            //AddMap(test);
+            Map main = new Map()
+            {
+                map = new MapObject[]
+                {
+                    new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(),
+                    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
+                    new Wall(), new Air(), new Air(), new Wall2(), new Air(), new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Wall2(), new Air(), new Wall(),
+                    new Wall(), new Air(), new Wall(), new Wall(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Wall(), new Air(), new Air(), new Air(), new Wall(),
+                    new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(),
+                    new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(),
+                    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
+                    new Wall(), new Wall(), new Air(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Air(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(),
+                    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
+                    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
+                    new Wall(), new Air(), new Air(), new Wall(), new Air(), new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Wall(), new Air(), new Wall2(),
+                    new Wall(), new Air(), new Wall(), new Wall(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Wall(), new Air(), new Air(), new Air(), new Wall2(),
+                    new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
+                    new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(),
+                    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
+                    new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(),
+                },
+                EntityMap = new EntityObject[16],
+                MapName = "Main",
+                MapX = 16,
+                MapY = 16,
+                MapS = 64,
+                MaxL = 16,
+                Player = new Player(5, 5, 64)
+            };
+            AddMap(main);
+            Map test = new Map()
+            {
+                map = new MapObject[]
+            {
+                new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(),
+                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
+                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
+                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
+                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
+                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
+                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
+                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Door(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
+                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
+                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
+                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
+                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
+                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
+                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
+                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
+                new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(),
+            },
+                MapName = "Test",
+                MapX = 16,
+                MapY = 16,
+                MapS = 64,
+                MaxL = 16,
+                Player = new Player(2, 2, 64)
+            };
+            AddMap(test);
         }
         void LoadMaps()
         {
