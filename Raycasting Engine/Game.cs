@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HUD;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,12 +26,14 @@ namespace Raycasting_Engine
 		protected int MaxL;
 		Color shadow;
 		public MapManager MapManager;
+		public UI HUD;
 		public Player Player { get => player; set => player = value; }
 
-		public Game(Canvas canvas, Map mainmap = null)
+		public Game(Canvas canvas, Canvas hud,int Inventoryslots,Item defitem,Map mainmap = null)
 		{
 
 			MapManager = new MapManager();
+			HUD = new UI(hud,Inventoryslots,defitem);
 			shadow = Color.FromArgb(50, 0, 0, 0);
 			this.canvas = canvas;
 			if (mainmap == null) mainmap = MapManager.GetMap("Main");
@@ -38,7 +41,15 @@ namespace Raycasting_Engine
 			LoadMapToInGameMap(mainmap);
 			
 		}
-
+		//render Item in hand
+		public void RenderItem()
+        {
+			Brush Selected = HUD.Inventory.SelectedItem.Texture;
+			double pos = canvas.Width / 7 * 6;
+			double itemh = 30;
+			double itemw = 50;
+			DrawRectangle(pos, 0, pos + itemw, 0, pos, itemh, pos + itemw, itemh,Selected,Brushes.Transparent);
+        }
 		protected void LoadMapToInGameMap(Map map)
 		{
 			this.map = map.map;
@@ -53,6 +64,7 @@ namespace Raycasting_Engine
 		public void DrawTurn()
 		{
 			canvas.Children.Clear();
+			RenderItem();
 			//drawMap2D();
 			//DrawPayer();
 			//Canvas.Width = 722;

@@ -13,7 +13,8 @@ namespace Raycasting_Engine
 		int gridY;
 		double x;
 		double y;
-
+		int health;
+		public int Health { get => health; set => health = value; }
 		public int GridX { get => gridX; set => gridX = value; }
 		public int GridY { get => gridY; set => gridY = value; }
 		public double X { get => x; set => x = value; }
@@ -24,6 +25,7 @@ namespace Raycasting_Engine
 		{
 			this.gridX = gridX;
 			this.gridY = gridY;
+			health = 100;
 		}
 	}
 }

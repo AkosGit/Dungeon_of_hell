@@ -1,3 +1,4 @@
+using HUD;
 using Raycasting_Engine;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,9 @@ namespace SinglePlayer
 	{
 		string[] maps;
 
-		public SPMain(Canvas canvas,Map map = null)
-			:base(canvas,map)
+		public SPMain(Canvas canvas,Canvas hud,int Inventoryslots, Item defitem, Map map = null)
+			:base(canvas,hud, Inventoryslots,defitem,map)
 		{
-
 		}
 
 		public void ChangeMap(Map map)

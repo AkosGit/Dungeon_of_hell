@@ -54,7 +54,7 @@ namespace Dungeon_of_hell.Engine
 		private void SetDafaults()
 		{
 			canvas = new Canvas();
-			game = new Game(Canvas);
+			//game = new Game(Canvas,hud);
 
 			Canvas.Width = 722;
 			Canvas.Height = 500;

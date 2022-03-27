@@ -57,7 +57,7 @@ namespace Dungeon_of_hell.MultiPlayer
 		private void SetDafaults()
 		{
 			canvas = new Canvas();
-			game = new SPMain(canvas);
+			//game = new SPMain(canvas,hud);
 
 			Canvas.Width = 722;
 			Canvas.Height = 500;

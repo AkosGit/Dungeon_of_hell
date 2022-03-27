@@ -10,7 +10,11 @@
              >
     <Grid>
         <Viewbox>
-            <ContentPresenter Content="{Binding Canvas}"/>
+            <StackPanel Orientation="Horizontal">
+                <ContentPresenter Content="{Binding Canvas}"/>
+                <ContentPresenter Content="{Binding HUD}"/>
+            </StackPanel>
+            
         </Viewbox>
     </Grid>
 </UserControl>
