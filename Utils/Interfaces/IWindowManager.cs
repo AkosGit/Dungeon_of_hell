@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Dungeon_of_hell
+namespace Utils
 {
     public interface IWindowManager
     {
@@ -24,11 +24,7 @@ namespace Dungeon_of_hell
         public void RemoveView(string viewname);
         public T GetViewProperty<T>(string viewname, string propertyname);
         public void UpdateViewProperty<T>(string viewname, string propertyname, T value);
-
         //save states to filesystem: settings, player positions etc
-        public string FILEPATH { get; set; }
-        public void LoadStates();
-        public void SaveStates();
         public void OnWindowClosing(object sender, CancelEventArgs e);
     }
 }

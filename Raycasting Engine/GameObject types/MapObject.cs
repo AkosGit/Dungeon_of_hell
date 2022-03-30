@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace Raycasting_Engine
 {
-	public class SolidObject : GameObject
+	public class MapObject : GameObject
 	{
 		string name;
 		public string Name { get => name; set => name = value; }
@@ -19,12 +19,20 @@ namespace Raycasting_Engine
 		Brush textureA;
 		public Brush TextureA { get => textureA; set => textureA = value; }
 
-		public SolidObject(int gridX, int gridY, Color A, bool isSolid = false, bool canOpen = false)
+		public MapObject(int gridX, int gridY, Color A, bool isSolid = false, bool canOpen = false)
 			: base(isSolid)
 		{
 			textureA = new SolidColorBrush(A);
 			this.canOpen = canOpen;
 		}
+		public MapObject(bool isSolid):base(isSolid)
+        {
+
+        }
+		public MapObject()
+        {
+
+        }
 
 		public void Open()
 		{

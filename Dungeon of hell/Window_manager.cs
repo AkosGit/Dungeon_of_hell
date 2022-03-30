@@ -15,12 +15,11 @@ using System.Windows.Markup;
 using System.Media;
 using System.Windows.Media;
 using System.Windows.Input;
-
+using Utils;
 namespace Dungeon_of_hell
 {
     public class Window_manager : ObservableObject, IWindowManager
     {
-        const bool ENABLE_SAVING = false;
         public void KeyDown(object sender, KeyEventArgs e)
         {
             if (SecondaryViewModel == null)
@@ -32,33 +31,49 @@ namespace Dungeon_of_hell
                 viewModels[GetindexByName(SecondaryViewModel.Name)].KeyDown(sender, e);
             }
         }
+        void AddTracks()
+        {
+            Audio_player.AddTrack("menuSelect", "sound\\menu_select_1.mp3");
+        }
         public Window_manager()
         {
-            viewModels = new List<IViewModel>();
+            AddTracks();
             GlobalSettings.Settings = new globalSettings();
-            if (ENABLE_SAVING)
+            viewModels = new List<IViewModel>();
+            if(File.Exists(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json"))
             {
-                //Location: %APPDATA%\DungeonOfHell
-                FILEPATH = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\DungeonOfHell";
-                Directory.CreateDirectory(FILEPATH);
-                LoadStates();
-            }       
+                GlobalSettings.Settings = (globalSettings)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json", typeof(globalSettings));
+            }
+
         }
         private IViewModel primaryviewmodel;
         public IViewModel PrimaryViewModel { get { return primaryviewmodel; } set { SetProperty(ref primaryviewmodel, value); } }
         private IViewModel secondaryviewmodel;
         public IViewModel SecondaryViewModel { get { return secondaryviewmodel; } set { SetProperty(ref secondaryviewmodel, value); } }
         public List<IViewModel> viewModels { get; set; }
-        public string FILEPATH { get; set; }
         public void RemoveView(string viewname)
         {
             IViewModel view = viewModels[GetindexByName(viewname)];
             Application.Current.Resources.Remove(view.ViewId);
             viewModels.Remove(view);
         }
-        public void AddView(IViewModel view ,Type viewType)
+        public void AddView(IViewModel view, Type viewType)
         {
             Type viewModelType = view.GetType();
+            if (File.Exists(GlobalSettings.Settings.AssetsPath + "save\\Settings.json") && view is ISettings)
+            {
+                view = (IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Settings.json", typeof(SettingsViewModel));
+            }
+            else if(view.Name=="Settings")
+            {
+                //defaults
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Forward, key = Key.W, Message = "W" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Backwards, key = Key.S, Message = "S" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Left, key = Key.A, Message = "A" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Right, key = Key.D, Message = "D" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Use, key = Key.Space, Message = "SPACE" });
+            }
+            view.getview += (string viewname) => { return GetView(viewname); };
             view.addview += (IViewModel model, Type typeofview) => { AddView(model, typeofview); };
             view.removeview += (string viewname) => { RemoveView(viewname); };
             view.viewexists += (string viewname) => { return ViewExists(viewname); };
@@ -87,10 +102,14 @@ namespace Dungeon_of_hell
             view.ViewId = key;
             viewModels.Add(view);
         }
+        public IViewModel GetView(string viewname)
+        {
+            return viewModels[GetindexByName(viewname)];
+        }
         int GetindexByName(string name)
         {
 
-            if(viewModels.Any(n => n.Name == name))
+            if (viewModels.Any(n => n.Name == name))
             {
                 return viewModels.FindIndex(n => n.Name == name);
             }
@@ -100,7 +119,7 @@ namespace Dungeon_of_hell
         public void ChangePrimaryView(string name)
         {
 
-            PrimaryViewModel = viewModels[GetindexByName(name)]; 
+            PrimaryViewModel = viewModels[GetindexByName(name)];
         }
         public void ChangePrimaryView(int index)
         {
@@ -118,7 +137,7 @@ namespace Dungeon_of_hell
         public void ClearSecondaryView()
         {
             SecondaryViewModel = null;
-            
+
         }
         public T GetViewProperty<T>(string viewname, string propertyname)
         {
@@ -127,58 +146,26 @@ namespace Dungeon_of_hell
             if (propertyInfo == null) { throw new ArgumentNullException("The property doesn't exists!"); }
             return (T)propertyInfo.GetValue(viewModels[index], null);
         }
-        public void UpdateViewProperty<T>(string viewname, string propertyname,T value)
+        public void UpdateViewProperty<T>(string viewname, string propertyname, T value)
         {
             int index = GetindexByName(viewname);
             PropertyInfo propertyInfo = viewModels[index].GetType().GetProperty(propertyname);
             if (propertyInfo == null) { throw new ArgumentNullException("The property doesn't exists!"); }
             propertyInfo.SetValue(viewModels[index], Convert.ChangeType(value, propertyInfo.PropertyType), null);
         }
-        void Write<T>(string path, T contents) {
-            File.WriteAllText(path, JsonSerializer.Serialize(contents));
-        }
-        public void SaveStates()
-        {
-            string path = $"{FILEPATH}\\GlobalSettings.json";
-            Write(path, GlobalSettings.Settings);
-            foreach (IViewModel model  in viewModels)
-            {
-                path = $"{FILEPATH}\\{model.Name}.json";
-                if(model is ISingleplayer) { Write(path, (ISingleplayer)model); }
-                if (model is IMinigame) { Write(path, (IMinigame)model); }
-            }
-        }
-        object Read(string path, Type type) { return JsonSerializer.Deserialize(File.ReadAllText(path),type); }
-        public void LoadStates()
-        {
-            string path = $"{FILEPATH}\\GlobalSettings.json";
-            if (File.Exists(path))
-            {
-                GlobalSettings.Settings = (globalSettings)Read(path,typeof(globalSettings));
-            }
-            for (int i = 0; i < viewModels.Count; i++)
-            {
-                path = $"{FILEPATH}\\{viewModels[i].Name}.json";
-                if (File.Exists(path))
-                {
-                    if (viewModels[i] is ISingleplayer || viewModels[i] is IMinigame) 
-                    { 
-                        viewModels[i]=(IViewModel) Read(path, viewModels[i].GetType()); 
-                    }
-                }
-            }
-        }
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            if (ENABLE_SAVING)
-            {
-                SaveStates();
+            Audio_player.RemoveAll();
+            if (ViewExists("Singleplayer")){
+                ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json", (ISingleplayer)viewModels[GetindexByName("Singleplayer")]);
             }
+            ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json", (IGlobalSettings)GlobalSettings.Settings);
+            ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\Settings.json", (ISettings)GetView("Settings"));
         }
 
         public bool ViewExists(string name)
         {
             return viewModels.Any(m => m.Name == name);
         }
-    }  
+    }
 }

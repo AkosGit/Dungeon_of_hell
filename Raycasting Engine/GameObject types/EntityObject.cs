@@ -33,6 +33,7 @@ namespace Raycasting_Engine
 		{
 			this.gridX = gridX;
 			this.gridY = gridY;
+			health = 100;
 		}
 	}
 }

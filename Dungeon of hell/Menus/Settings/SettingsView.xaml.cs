@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Dungeon_of_hell
 {
@@ -22,6 +23,8 @@ namespace Dungeon_of_hell
         public SettingsView()
         {
             InitializeComponent();
+
         }
+
     }
 }

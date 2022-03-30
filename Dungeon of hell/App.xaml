@@ -4,6 +4,24 @@
              xmlns:local="clr-namespace:Dungeon_of_hell"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <Style TargetType="Button" x:Key="MenuButton">
+                <Setter Property="Background" Value="White"></Setter>
+                <Setter Property="Margin" Value="0,5,0,0"></Setter>
+                <Style.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="BorderBrush" Value="Red"></Setter>
+                        <Setter Property="BorderThickness" Value="50"></Setter>
+                        <Setter Property="CornerRadius" Value="5" />
+                    </Style>
+                </Style.Resources>
+            </Style>
+            <Style TargetType="TextBlock" x:Key="Text">
+                <Setter Property="Margin" Value="0,7,0,5"></Setter>
+            </Style>
+            <Style TargetType="StackPanel" x:Key="Stack">
+                <Setter Property="Margin" Value="0,5,0,5"></Setter>
+            </Style>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

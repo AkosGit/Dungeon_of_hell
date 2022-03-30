@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-
+using Utils;
 namespace Dungeon_of_hell
 {
     public abstract class ViewModel : ObservableObject,IViewModel
@@ -21,7 +21,11 @@ namespace Dungeon_of_hell
         public event Action<IViewModel, Type> addview;
         public event Action<string> removeview;
         public event Func<string,bool> viewexists;
-
+        public event Func<string, IViewModel> getview;
+        public IViewModel GetView(string viewname)
+        {
+            return getview?.Invoke(viewname);
+        }
         public void AddView(IViewModel model, Type typeofview)
         {
             addview?.Invoke(model, typeofview);

@@ -5,38 +5,36 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
-
+using Utils;
 namespace Dungeon_of_hell
 {
-    public class InGameMenuViewModel : ViewModel
+    public class SingleplayerInGameMenuViewModel : ViewModel
     {
     
-        public InGameMenuViewModel()
+        public SingleplayerInGameMenuViewModel()
         {
-            Name = "InGameMenu";
+            Name = "SingleplayerInGameMenu";
             Resume = new RelayCommand(() => {
+                Audio_player.Play("menuSelect");
                 ClearSecondView();
             });
             SettingsView = new RelayCommand(() =>
             {
+                Audio_player.Play("menuSelect");
                 ClearSecondView();
                 ChangePrimaryView("Settings");
             });
             MainMenuView = new RelayCommand(() =>
             {
-                if (ViewExists("Singleplayer"))
-                {
-                    RemoveView("Singleplayer");
-                }
-                if (ViewExists("Multiplayer"))
-                {
-                    RemoveView("Multiplayer");
-                }
+                Audio_player.Play("menuSelect");
+                ObjectManager.Write<ISingleplayer>(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json", (ISingleplayer)GetView("Singleplayer"));
+                RemoveView("Singleplayer");
                 ChangePrimaryView("MainMenu");
                 ClearSecondView();
-                RemoveView("InGameMenu");
+                RemoveView("SingleplayerInGameMenu");
             });
         }
+        public string Background { get { return GlobalSettings.Settings.AssetsPath + "img\\MenuBackground.png"; } }
         public ICommand Resume { get; set; }
         public ICommand SettingsView { get; set; }
         public ICommand MainMenuView { get; set; }

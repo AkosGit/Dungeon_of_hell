@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Dungeon_of_hell
+namespace Utils
 {
     public interface IViewModel
     {
         public string Name { get; set; }
         public object ViewId { get; set; }
+        public event Func<string, IViewModel> getview;
         public event Action<IViewModel,Type> addview;
         public event Action<string> removeview;
         public event Func<string, bool> viewexists;
@@ -24,6 +25,7 @@ namespace Dungeon_of_hell
         /// Call event.
         /// </summary>
         /// <param name="viewname">View model's name.</param>
+        public IViewModel GetView(string viewname);
         public void AddView(IViewModel model, Type typeofview);
         public void RemoveView(string viewname);
         public bool ViewExists(string viewname);
