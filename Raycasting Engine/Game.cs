@@ -132,6 +132,7 @@ namespace Raycasting_Engine
 			typeH = false;
 			typeV = false;
 			int me;
+			List<RenderObject> renderingList = new List<RenderObject>();
 
 			ra = player.A - DR * 40; if (ra < 0) { ra += 2 * PI; }
 			if (ra > 2 * PI) { ra -= 2 * PI; }
@@ -192,7 +193,11 @@ namespace Raycasting_Engine
 				double lineO = 250 - lineH / 2;
 				//DrawLine(r * 8 + MoveRight, lineO, r * 8 + MoveRight, lineH + lineO, color, 8);
 				DrawRectangle(r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
-
+				
+				Side side;
+				if (addedShadow != Brushes.Transparent) side = Side.vertical;
+				else side = Side.horizontal;
+				renderingList.Add(new RenderObject(1, 1, side, new Point(r * 9 + MoveRight - 5, lineO), new Point(r * 9 + MoveRight + 5, lineO), new Point(r * 9 + MoveRight + 5, lineH + lineO), new Point(r * 9 + MoveRight - 5, lineH + lineO)));
 
 			}
 		}
