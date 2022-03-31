@@ -7,12 +7,12 @@ using Utils;
 
 namespace Raycasting_Engine
 {
-    public class Player : MovableEntityObject,IPlayer
+    public class Player : MovableEntityObject, IPlayer
     {
         public Player(int gridX, int gridY, int mapS, bool isSolid = false, int a = 0) :base(gridX, gridY, mapS, isSolid,a)
         {
 
         }
 
-    }
+	}
 }

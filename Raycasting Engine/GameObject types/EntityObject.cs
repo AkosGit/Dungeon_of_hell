@@ -26,7 +26,7 @@ namespace Raycasting_Engine
 		public double Z { get => z; set => z = value; }
 
 		protected bool Visible { get => visible; set => visible = value; }
-		protected int Health { get => health; }
+		public int Health { get => health; set => health = value; }
 
 		public EntityObject(int gridX, int gridY, int mapS, bool isSolid = false)
 			: base(isSolid)
