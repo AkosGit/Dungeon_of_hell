@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +33,12 @@ namespace Dungeon_of_hell
 			manager.AddView(new MainMenuViewModel(), typeof(MainMenuView));
             manager.AddView(new SettingsViewModel(), typeof(SettingsView));
             manager.ChangePrimaryView("MainMenu");
+            
+            if (bool.Parse(ConfigurationManager.AppSettings.Get("IsTest")) == true)
+			{
+                manager.AddView(new SinglePlayerViewModel(), typeof(SinglePlayerView));
+                manager.ChangePrimaryView("Singleplayer");
+            }
         }
     }
 }
