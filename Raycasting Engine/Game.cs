@@ -154,7 +154,7 @@ namespace Raycasting_Engine
 					if (mp > 0 && mp < mapX * mapY && map[mp].IsSolid)
 					{
 						if (map[mp].IsSolid) { hx = rx; hy = ry; disH = Distance(player.X, player.Y, hx, hy, ra); typeH = map[mp].IsSolid; mpH = mp; dof = MaxL; }
-						else {me = mp; }
+						else { me = mp; }
 					}
 					else { rx += xo; ry += yo; dof += 1; }
 				}
@@ -192,14 +192,26 @@ namespace Raycasting_Engine
 				double lineH = mapS * 450 / disT; if (lineH > 450) { lineH = 450; }
 				double lineO = 250 - lineH / 2;
 				//DrawLine(r * 8 + MoveRight, lineO, r * 8 + MoveRight, lineH + lineO, color, 8);
-				DrawRectangle(r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
-				
+				//DrawRectangle(r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
+
 				Side side;
 				if (addedShadow != Brushes.Transparent) side = Side.vertical;
 				else side = Side.horizontal;
-				renderingList.Add(new RenderObject(1, 1, side, new Point(r * 9 + MoveRight - 5, lineO), new Point(r * 9 + MoveRight + 5, lineO), new Point(r * 9 + MoveRight + 5, lineH + lineO), new Point(r * 9 + MoveRight - 5, lineH + lineO)));
+				renderingList.Add(new RenderObject(rx, ry, side, new Point(r * 9 + MoveRight - 5, lineO), new Point(r * 9 + MoveRight + 5, lineO), new Point(r * 9 + MoveRight + 5, lineH + lineO), new Point(r * 9 + MoveRight - 5, lineH + lineO), brush));
 
 			}
+
+			RenderObject[] render = renderingList.ToArray();
+			Array.Sort(render);
+
+
+			foreach (var item in render)
+			{
+				Brush sideShadow = Brushes.Transparent;
+				if (item.Side == Side.vertical) sideShadow = new SolidColorBrush(shadow);
+				DrawRectangle(item.ScreenP1.X, item.ScreenP1.Y, item.ScreenP2.X, item.ScreenP2.Y, item.ScreenP3.X, item.ScreenP3.Y, item.ScreenP4.X, item.ScreenP4.Y, item.Brush, sideShadow);
+			}
+			
 		}
 
 		private double Distance(double ax, double ay, double bx, double by, double ang)

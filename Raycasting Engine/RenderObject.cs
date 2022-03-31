@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Raycasting_Engine
 {
@@ -11,7 +12,7 @@ namespace Raycasting_Engine
 	{
 		vertical, horizontal
 	}
-	public class RenderObject
+	public class RenderObject : IComparable
 	{
 		double flatX;
 		double flatY;
@@ -23,6 +24,7 @@ namespace Raycasting_Engine
 		Point screenP3;
 		Point screenP4;
 
+		Brush brush;
 
 		public double FlatX { get => flatX; set => flatX = value; }
 		public double FlatY { get => flatY; set => flatY = value; }
@@ -34,7 +36,9 @@ namespace Raycasting_Engine
 
 		public double Height { get { return screenP2.Y - screenP3.Y; } }
 
-		public RenderObject(double flatX, double flatY, Side side, Point p1, Point p2, Point p3, Point p4)
+		public Brush Brush { get => brush; set => brush = value; }
+
+		public RenderObject(double flatX, double flatY, Side side, Point p1, Point p2, Point p3, Point p4, Brush brush)
 		{
 			this.FlatX = flatX;
 			this.FlatY = flatY;
@@ -43,7 +47,12 @@ namespace Raycasting_Engine
 			this.ScreenP2 = p2;
 			this.ScreenP3 = p3;
 			this.ScreenP4 = p4;
+			this.brush = brush;
 		}
 
+		public int CompareTo(object obj)
+		{
+			return (obj as RenderObject).Height.CompareTo(this.Height);
+		}
 	}
 }
