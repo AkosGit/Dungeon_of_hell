@@ -13,7 +13,7 @@ namespace HUD
 {
     public static class Render
     {
-
+		//koordináták sorrendje: bal lent,bal fent,jobb fent,jobb lent
 		public static  void DrawRectangle(Canvas c,double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, Brush contents, Brush outline, double thickness = 0)
 		{
 			Polygon myPolygon = new Polygon();
@@ -33,6 +33,8 @@ namespace HUD
 			myPointCollection.Add(Point2);
 			myPointCollection.Add(Point3);
 			myPointCollection.Add(Point4);
+
+
 
 			myPolygon.Points = myPointCollection;
 
@@ -59,7 +61,7 @@ namespace HUD
 					);
 
 				// Build the geometry object that represents the text.
-				Geometry textGeometry = formattedText.BuildGeometry(new System.Windows.Point(20, 0));
+				Geometry textGeometry = formattedText.BuildGeometry(new System.Windows.Point(15, 0));
 
 				// Draw a rounded rectangle under the text that is slightly larger than the text.
 				drawingContext.DrawRoundedRectangle(System.Windows.Media.Brushes.Transparent, null, new Rect(new System.Windows.Size(formattedText.Width + 50, formattedText.Height + 5)), 5.0, 5.0);

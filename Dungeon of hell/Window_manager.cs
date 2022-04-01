@@ -40,7 +40,7 @@ namespace Dungeon_of_hell
             AddTracks();
             GlobalSettings.Settings = new globalSettings();
             viewModels = new List<IViewModel>();
-            if(File.Exists(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json"))
+            if(File.Exists(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json") && !GlobalSettings.Settings.DisableSaving)
             {
                 GlobalSettings.Settings = (globalSettings)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json", typeof(globalSettings));
             }
@@ -60,7 +60,7 @@ namespace Dungeon_of_hell
         public void AddView(IViewModel view, Type viewType)
         {
             Type viewModelType = view.GetType();
-            if (File.Exists(GlobalSettings.Settings.AssetsPath + "save\\Settings.json") && view is ISettings)
+            if (File.Exists(GlobalSettings.Settings.AssetsPath + "save\\Settings.json") && view is ISettings && !GlobalSettings.Settings.DisableSaving)
             {
                 view = (IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Settings.json", typeof(SettingsViewModel));
             }

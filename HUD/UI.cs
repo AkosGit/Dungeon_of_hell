@@ -18,7 +18,7 @@ namespace HUD
         {
             this.SLOTS = slots;
             this.hud = hud;
-			Health = 100;
+            ChangeHealth(100);
             Inventory = new Inventory(hud,SLOTS,defitem);
         }
         public void Input(Key key)
@@ -38,7 +38,7 @@ namespace HUD
         {
 			Health = h;
 			DrawingBrush healthBrush = new DrawingBrush(Render.DrawMyText(Health.ToString()));
-			Render.DrawRectangle(hud,0, 0, hud.Width, 0, 0, hud.Height / SLOTS * 2, hud.Width, hud.Height / SLOTS * 2, healthBrush, Brushes.Black, 2);			
+			Render.DrawRectangle(hud,0, hud.Height, 0, (hud.Height / SLOTS) * 5, hud.Width, (hud.Height / SLOTS) * 5, hud.Width,hud.Height, healthBrush, Brushes.Black, 2);			
         }
 
 

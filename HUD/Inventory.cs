@@ -13,6 +13,7 @@ namespace HUD
     
     public class Inventory
     {
+        const int HEALTHBARSLOTS = 2;
         List<Item> Items { get; set; }
         public int Slots { get; set; }
         Canvas hud;
@@ -70,7 +71,7 @@ namespace HUD
         void render()
         {
             //rerender inventory slots
-            double slotHeight = hud.Height / Slots + 2;
+            double slotHeight = hud.Height / (Slots + HEALTHBARSLOTS);
             //MessageBox.Show(slotHeight.ToString());
             double height = slotHeight * Slots;
             Brush outline;
@@ -79,7 +80,7 @@ namespace HUD
             {
                 if (IsitemInInventory(i) && Items[i] == SelectedItem)
                 {
-                    outline = Brushes.Gold;
+                    outline = Brushes.Black;
                 }
                 else
                 {
@@ -90,7 +91,7 @@ namespace HUD
                     Texture = Items[i].Texture;
                 }
                 else { Texture = Brushes.Transparent; }
-                Render.DrawRectangle(hud, 0, height - slotHeight, hud.Width, height - slotHeight, 0, height, hud.Width, height, Texture, outline, 4);
+                Render.DrawRectangle(hud,0, height - slotHeight, 0,height, hud.Width, height, hud.Width, height-slotHeight, Texture, outline, 4);
                 height = height - slotHeight;
             }
         }

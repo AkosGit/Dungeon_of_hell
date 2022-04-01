@@ -4,7 +4,7 @@ using System.Windows.Media;
 
 namespace Raycasting_Engine
 {
-	public class GameObject
+	public class GameObject : IComparable
 	{
 		bool isSolid;
 		public bool IsSolid { get => isSolid; set => isSolid = value; }
@@ -17,5 +17,10 @@ namespace Raycasting_Engine
         {
 
         }
-	}
+
+        public int CompareTo(object obj)
+        {
+			return this.GetHashCode().CompareTo(obj.GetHashCode());
+        }
+    }
 }
