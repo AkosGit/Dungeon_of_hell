@@ -16,8 +16,11 @@ namespace Raycasting_Engine
         List<Map> Maps;
         public MapManager()
         {
-
-            LoadMaps();
+            if (!GlobalSettings.Settings.DisableSaving)
+            {
+                LoadMaps();
+            }
+            Maps = new List<Map>();
             Map main = new Map()
             {
                 map = new MapObject[]
@@ -80,11 +83,10 @@ namespace Raycasting_Engine
         }
         void LoadMaps()
         {
-            Maps = new List<Map>();
-            foreach (string file in Directory.GetFiles(GlobalSettings.Settings.AssetsPath + "map"))
-            {
-                Maps.Add((Map)ObjectManager.Read(file, typeof(Map)));
-            }
+                foreach (string file in Directory.GetFiles(GlobalSettings.Settings.AssetsPath + "map"))
+                {
+                    Maps.Add((Map)ObjectManager.Read(file, typeof(Map)));
+                }
         }
         public Map GetMap(string mapname)
         {
