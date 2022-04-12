@@ -123,6 +123,9 @@ namespace Raycasting_Engine
     }
     public class Door : MapObject
     {
-        public Door() : base(0, 0, Color.FromArgb(255, 123, 70, 23), true, true) { }
+        public Door() : base(0, 0, Color.FromArgb(255, 123, 70, 23), true, true) {
+            this.image = new Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\test.jpg");
+        }
+
     }
 }
