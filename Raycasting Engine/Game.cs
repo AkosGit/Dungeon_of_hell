@@ -38,6 +38,7 @@ namespace Raycasting_Engine
 		public MapManager MapManager;
 		public UI HUD;
 		public Player Player { get => player; set => player = value; }
+		public List<EntityObject> entities;
 
 		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, Map mainmap = null)
 		{
@@ -145,11 +146,14 @@ namespace Raycasting_Engine
 			typeV = false;
 			int me;
 			Dictionary<GameObject, List<RenderObject>> renderingList = new Dictionary<GameObject, List<RenderObject>>();
+			List<EntityObject> visibleEntities = new List<EntityObject>();
 
 			ra = player.A - DR * 40; if (ra < 0) { ra += 2 * PI; }
 			if (ra > 2 * PI) { ra -= 2 * PI; }
 			for (r = 0; r < 80; r++)
 			{
+				List<EntityObject> tmpEntities = new List<EntityObject>(); //Used for tempolary saving in ray enemies.
+				List<double> tmpEnitiesDistances = new List<double>();
 				GameObject toBeRendered = null;
 				//Check Horizontals
 				dof = 0;
@@ -164,6 +168,7 @@ namespace Raycasting_Engine
 				while (dof < MaxL)
 				{
 					mx = (int)(rx) >> 6; my = (int)(ry) >> 6; mp = my * mapX + mx;
+					if (mp > 0 && mp < mapX * mapY && entities.Where(x => x.IsHere(mx, my)).Count() > 0) foreach (EntityObject entity in entities.Where(x => x.IsHere(mx, my))) { tmpEntities.Add(entity); tmpEnitiesDistances.Add(Distance(player.X, player.Y, entity.X, entity.Y, ra))}
 					if (mp > 0 && mp < mapX * mapY && map[mp].IsSolid)
 					{
 						if (map[mp].IsSolid) { hx = rx; hy = ry; disH = Distance(player.X, player.Y, hx, hy, ra); typeH = map[mp].IsSolid; mpH = mp; dof = MaxL; }
@@ -206,6 +211,12 @@ namespace Raycasting_Engine
 				double lineO = 250 - lineH / 2;
 				//DrawLine(r * 8 + MoveRight, lineO, r * 8 + MoveRight, lineH + lineO, color, 8);
 				//DrawRectangle(r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
+				foreach (EntityObject entity in tmpEntities)
+				{
+					visibleEntities.Add(entity);
+					renderingList.Add(entity, new List<RenderObject>());
+					renderingList[entity].Add(new RenderObject(entity.)
+				}
 
 				Side side;
 				if (addedShadow != Brushes.Transparent) side = Side.vertical;

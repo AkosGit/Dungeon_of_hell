@@ -15,6 +15,9 @@ namespace Raycasting_Engine
 		protected double y;
 		protected double z;
 
+		private double height;
+		private double width;
+
 		protected bool visible;
 		protected int health;
 
@@ -25,8 +28,13 @@ namespace Raycasting_Engine
 		public double Y { get => y; set => y = value; }
 		public double Z { get => z; set => z = value; }
 
+
+
 		protected bool Visible { get => visible; set => visible = value; }
 		public int Health { get => health; set => health = value; }
+
+		protected double Height { get => height; set => height = value; }
+		protected double Width { get => width; set => width = value; }
 
 		public EntityObject(int gridX, int gridY, int mapS, bool isSolid = false)
 			: base(isSolid)
@@ -34,6 +42,11 @@ namespace Raycasting_Engine
 			this.gridX = gridX;
 			this.gridY = gridY;
 			health = 100;
+		}
+		public bool IsHere(int mapX, int mapY)
+		{
+			if (mapX == gridX && mapY == gridY) return true;
+			return false;
 		}
 	}
 }
