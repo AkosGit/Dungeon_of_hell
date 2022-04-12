@@ -18,6 +18,7 @@ namespace HUD
         {
             this.SLOTS = slots;
             this.hud = hud;
+            hud.Height = 500;
             ChangeHealth(100);
             Inventory = new Inventory(hud,SLOTS,defitem);
         }

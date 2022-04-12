@@ -202,7 +202,7 @@ namespace Raycasting_Engine
 				double ca = player.A - ra; if (ca < 0) { ca += 2 * PI; }
 				if (ca > 2 * PI) { ca -= 2 * PI; }
 				disT = disT * Math.Cos(ca);
-				double lineH = mapS * 450 / disT; if (lineH > 450) { lineH = 450; }
+				double lineH = mapS * 500 / disT; if (lineH > 500) { lineH = 500; }
 				double lineO = 250 - lineH / 2;
 				//DrawLine(r * 8 + MoveRight, lineO, r * 8 + MoveRight, lineH + lineO, color, 8);
 				//DrawRectangle(r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
