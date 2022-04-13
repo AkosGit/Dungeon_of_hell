@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-
+using Rendering;
 namespace HUD
 {
     public class UI
@@ -38,8 +38,8 @@ namespace HUD
 		public void ChangeHealth(int h)
         {
 			Health = h;
-			DrawingBrush healthBrush = new DrawingBrush(Render.DrawMyText(Health.ToString()));
-			Render.DrawRectangle(hud,0, hud.Height, 0, (hud.Height / SLOTS) * 5, hud.Width, (hud.Height / SLOTS) * 5, hud.Width,hud.Height, healthBrush, Brushes.Black, 2);			
+			DrawingBrush healthBrush = new DrawingBrush(RUtils.DrawMyText(Health.ToString()));
+            RGeometry.DrawRectangle(hud,0, hud.Height, 0, (hud.Height / SLOTS) * 5, hud.Width, (hud.Height / SLOTS) * 5, hud.Width,hud.Height, healthBrush, Brushes.Black, 2);			
         }
 
 
