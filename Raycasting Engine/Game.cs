@@ -16,6 +16,8 @@ using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
+using System.Drawing.Drawing2D;
+using System.Runtime.InteropServices;
 
 namespace Raycasting_Engine
 {
@@ -202,7 +204,8 @@ namespace Raycasting_Engine
 				double ca = player.A - ra; if (ca < 0) { ca += 2 * PI; }
 				if (ca > 2 * PI) { ca -= 2 * PI; }
 				disT = disT * Math.Cos(ca);
-				double lineH = mapS * 500 / disT; if (lineH > 500) { lineH = 500; }
+				//double lineH = mapS * 500 / disT; if (lineH > 500) { lineH = 500; }
+				double lineH = mapS * 500 / disT;
 				double lineO = 250 - lineH / 2;
 				//DrawLine(r * 8 + MoveRight, lineO, r * 8 + MoveRight, lineH + lineO, color, 8);
 				//DrawRectangle(r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
@@ -229,10 +232,10 @@ namespace Raycasting_Engine
 				if (SideA.Count != 0)
 				{
 					if (item.Key is MapObject)
-                    {
+					{
 						RenderSide(SideA, Side.horizontal, ((MapObject)item.Key).image);
 					}
-					
+
 				}
 				if (SideB.Count != 0)
 				{
@@ -248,35 +251,97 @@ namespace Raycasting_Engine
 			const bool ENABLE_TEXTURES = false;
 			double percentVisible;
 			Brush sideShadow = Brushes.Transparent;
-			if (side == Side.vertical)
-			{
-				percentVisible = (Math.Abs((render.Last().FlatY) - (render.First().FlatY))) / 64;
-				sideShadow = new SolidColorBrush(shadow);
-			}
-			else { percentVisible = (Math.Abs((render.Last().FlatX) - (render.First().FlatX))) / 64; }
-            if (percentVisible != 0)
+            if (render.Count == 1) { percentVisible = 1; }
+            else
             {
-				System.Drawing.Rectangle cropRect = new System.Drawing.Rectangle();
-				cropRect.Width = (int)(s.Width * percentVisible);
-				cropRect.Height = s.Height;
-				Bitmap bit = s.Clone(cropRect, s.PixelFormat);
+				if (side == Side.vertical)
+				{
+					percentVisible = (Math.Abs((render.Last().FlatY) - (render.First().FlatY))) / 62;
+					sideShadow = new SolidColorBrush(shadow);
+				}
+				else { percentVisible = (Math.Abs((render.Last().FlatX) - (render.First().FlatX))) / 62; }
+			}
+
+				Point Point1 = new Point(render.First().ScreenP1.X, render.First().ScreenP1.Y);
+				Point Point2 = new Point(render.Last().ScreenP2.X, render.Last().ScreenP2.Y);
+				Point Point3 = new Point(render.Last().ScreenP3.X, render.Last().ScreenP3.Y);
+				Point Point4 = new Point(render.First().ScreenP4.X, render.First().ScreenP4.Y);
+
+				PointCollection myPointCollection = new PointCollection();
+				myPointCollection.Add(Point1);
+				myPointCollection.Add(Point2);
+				myPointCollection.Add(Point3);
+				myPointCollection.Add(Point4);
+
 				Brush imgbrush = Brushes.AliceBlue;
 				if (ENABLE_TEXTURES)
 				{
-					ImageSource source = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-						bit.GetHbitmap(),
-						IntPtr.Zero,
-						System.Windows.Int32Rect.Empty,
-						BitmapSizeOptions.FromWidthAndHeight((int)(s.Width * percentVisible), s.Height));
-					imgbrush = new ImageBrush(source);
+					//crop to image percent visible
+					int with = (int)(s.Width * percentVisible);
+					System.Drawing.Rectangle cropRect = new System.Drawing.Rectangle();
+					cropRect.Width = with;
+					cropRect.Height = s.Height;
+					Bitmap bit = new Bitmap(with, s.Height);
+					using (Graphics gdi = Graphics.FromImage(bit))
+					{
+						//cropping
+						gdi.DrawImage(s, -cropRect.X,-cropRect.Y);
+						//Rotate the image
+						gdi.RotateTransform(360);
+					}
+					imgbrush = new ImageBrush();
+					((ImageBrush)imgbrush).Stretch = Stretch.None;
+					FreeTransform transform = new FreeTransform();
+					transform.Bitmap = bit;
+					transform.FourCorners = PointsToPointF(myPointCollection);
+					((ImageBrush)imgbrush).ImageSource = ImageSourceFromBitmap(transform.Bitmap);
 				}
+				Polygon myPolygon = new Polygon();
+				myPolygon.Stroke = imgbrush;
+				myPolygon.Fill = imgbrush;
+				myPolygon.StrokeThickness = 0;
+				myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
+				myPolygon.VerticalAlignment = VerticalAlignment.Center;
+
+				Polygon myPolygon2 = new Polygon();
+				myPolygon2.Stroke = sideShadow;
+				myPolygon2.Fill = sideShadow;
+				myPolygon2.StrokeThickness = 0;
+				myPolygon2.HorizontalAlignment = HorizontalAlignment.Left;
+				myPolygon2.VerticalAlignment = VerticalAlignment.Center;
+				myPolygon.Points = myPointCollection;
+				myPolygon2.Points = myPointCollection;
+
+				canvas.Children.Add(myPolygon);
+				canvas.Children.Add(myPolygon2);
+
 				//TODO: find visible side(left or right)
-				DrawRectangle(render.First().ScreenP1.X, render.First().ScreenP1.Y, render.Last().ScreenP2.X, render.Last().ScreenP2.Y, render.Last().ScreenP3.X, render.Last().ScreenP3.Y, render.First().ScreenP4.X, render.First().ScreenP4.Y, imgbrush, sideShadow);
+				//DrawRectangle(render.First().ScreenP1.X, render.First().ScreenP1.Y, render.Last().ScreenP2.X, render.Last().ScreenP2.Y, render.Last().ScreenP3.X, render.Last().ScreenP3.Y, render.First().ScreenP4.X, render.First().ScreenP4.Y, imgbrush, sideShadow);
 				//bit.Dispose();
 				//source = null;
-			}
 		}
+		[DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		public static extern bool DeleteObject([In] IntPtr hObject);
 
+		public ImageSource ImageSourceFromBitmap(Bitmap bmp)
+		{
+			var handle = bmp.GetHbitmap();
+			try
+			{
+				return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+			}
+			finally { DeleteObject(handle); }
+		}
+		PointF[] PointsToPointF(PointCollection pc)
+        {
+			PointF[] points = new PointF[pc.Count];
+            for (int i = 0; i < pc.Count; i++)
+            {
+				points[i] = new PointF((float)pc[i].X, (float)pc[i].Y);    
+            }
+			return points;
+        }
 		private double Distance(double ax, double ay, double bx, double by, double ang)
 		{
 			return Math.Sqrt(Math.Pow(bx - ax, 2) + Math.Pow(by - ay, 2));
@@ -333,7 +398,6 @@ namespace Raycasting_Engine
 			myPolygon2.Points = myPointCollection;
 
 			canvas.Children.Add(myPolygon);
-			canvas.Children.Add(myPolygon2);
 		}
 		public void DrawLineFromPlayer(double x, double y, Color color, double thickness)
 		{
