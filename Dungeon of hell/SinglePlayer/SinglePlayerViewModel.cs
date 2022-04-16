@@ -17,7 +17,8 @@ namespace Dungeon_of_hell.SinglePlayer
 {
 	public class SinglePlayerViewModel : ViewModel, ISingleplayer
 	{
-		const int InventorySLOST= 7;
+		const int InventorySLOST = 7;
+		
 		public bool InGame { get; set; }
 		DispatcherTimer timer1;
 		TimeSpan time;
@@ -40,15 +41,8 @@ namespace Dungeon_of_hell.SinglePlayer
 			ObservableCollection<Binding> sb = GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings");
 			if (e.Key == Key.Escape){ChangeSecondaryView("SingleplayerInGameMenu");}
 			else if (e.Key == Key.E) { game.LoadNextMap(); }
-            else if (((int)e.Key) <= InventorySLOST) { game.HUD.Input(e.Key); }
-			else
-            {
-				if(sb.Any(x => x.key == e.Key))
-                {
-					game.Player.Move(e.Key, game.map, game.mapX, game.mapY, sb.FirstOrDefault(x => x.key == e.Key).Usecase);
-				}
-			}
-			
+            else if (game.HUD.Inventory.InvKeys.Contains(e.Key)) { 
+				game.HUD.Input(e.Key); }	
 		}
 		private void StartGame()
 		{
@@ -62,6 +56,15 @@ namespace Dungeon_of_hell.SinglePlayer
 					//MessageBox.Show("Vége");
 				}
 				time = time.Add(TimeSpan.FromMilliseconds(1));
+				//handle multiple keydowns
+				var binds = GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings");
+				foreach (Binding k in binds)
+				{
+					if (Keyboard.IsKeyDown(k.key))
+					{
+						game.Player.Move(k.key, game.map, game.mapX, game.mapY, binds.FirstOrDefault(x => x.key == k.key).Usecase);
+					}
+				}
 				game.DrawTurn();
 			}, Application.Current.Dispatcher);
 
@@ -75,6 +78,7 @@ namespace Dungeon_of_hell.SinglePlayer
 			hud.Height = 722;
 			hud.Background = Brushes.DarkRed;
 			game = new SPMain(canvas,hud,InventorySLOST,new Item("Józsi", Brushes.Yellow));
+			game.HUD.Inventory.AddItem(new Item("Laci", Brushes.Red));
 			Canvas.Width = 722;
 			Canvas.Height = 500;
 			Canvas.Background = Brushes.Gray;

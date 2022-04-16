@@ -299,6 +299,8 @@ namespace Raycasting_Engine
 				}
 				else { percentVisible = (Math.Abs((render.Last().FlatX) - (render.First().FlatX))) / 62; }
 			}
+			//avoid visible percentages rounded to 0;
+            if (percentVisible < 0.1) { percentVisible = 0.1; }
 
 			Point Point1 = new Point(render.First().ScreenP1.X, render.First().ScreenP1.Y);
 			Point Point2 = new Point(render.Last().ScreenP2.X, render.Last().ScreenP2.Y);
@@ -322,7 +324,7 @@ namespace Raycasting_Engine
 				using (Graphics gdi = Graphics.FromImage(bit))
 				{
 					//if left side is not visible so texturing dosent start from the left side
-					if (render.First().ScreenP1.X < 5 && percentVisible < 0.8)
+					if (render.First().ScreenP1.X < 1 && percentVisible < 0.8)
 					{
 						//rotate from center to cut from right end
 						float centerX = s.Width / 2F;
@@ -340,9 +342,9 @@ namespace Raycasting_Engine
 				}
 				//a new bitmap is required to flip the image back
 				Bitmap bit2 = new Bitmap(bit.Width, bit.Height);
-				if (render.First().ScreenP1.X < 5 && percentVisible < 0.8)
+				using (Graphics gdi = Graphics.FromImage(bit2))
 				{
-					using (Graphics gdi = Graphics.FromImage(bit2))
+					if (render.First().ScreenP1.X < 1 && percentVisible < 0.8)
 					{
 						float centerX = bit.Width / 2F;
 						float centerY = bit.Height / 2F;
@@ -351,15 +353,19 @@ namespace Raycasting_Engine
 						gdi.TranslateTransform(-centerX, -centerY);
 						gdi.DrawImage(bit, 0, 0);
 					}
+					else 
+					{
+						gdi.DrawImage(bit, 0, 0);
+					}
+
 				}
-                else { bit2 = bit; }
 				//Transform by 4 corners
 				Rendering.FreeTransform transform = new Rendering.FreeTransform();
 				transform.Bitmap = bit2;
 				transform.FourCorners = RUtils.PointsToPointF(myPointCollection);
 				//apply image to brush
 				imgbrush = new ImageBrush();
-				((ImageBrush)imgbrush).Stretch = Stretch.Uniform;
+				((ImageBrush)imgbrush).Stretch = Stretch.UniformToFill;
 				((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(transform.Bitmap);
 				//((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(bit);
 				bit.Dispose();

@@ -25,10 +25,29 @@ namespace HUD
         public void Input(Key key)
         {
             //items can be selected by pushing the corresponding number 1-5
-            int index = (int)key;
+            int index = 0;
+            switch (key)
+            {
+                case Key.D1:
+                    index = 1;
+                    break;
+                case Key.D2:
+                    index = 2;
+                    break;
+                case Key.D3:
+                    index = 3;
+                    break;
+                case Key.D4:
+                    index = 4;
+                    break;
+                case Key.D5:
+                    index = 5;
+                    break;
+            }
+
             if (index <= SLOTS)
             {
-                if (Inventory.IsitemInInventory(index-1))
+                if (Inventory.IsitemInInventory(index))
                 {
                     Item item = Inventory.GetItemByIndex(index-1);
                     Inventory.SelectItem(item);

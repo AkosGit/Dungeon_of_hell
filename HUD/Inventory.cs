@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Rendering;
@@ -14,6 +15,7 @@ namespace HUD
     public class Inventory
     {
         const int HEALTHBARSLOTS = 2;
+        public Key[] InvKeys = { Key.D1, Key.D2, Key.D3, Key.D4, Key.D5 };
         List<Item> Items { get; set; }
         public int Slots { get; set; }
         Canvas hud;
@@ -45,7 +47,7 @@ namespace HUD
         }
         public bool IsitemInInventory(int i)
         {
-            if (Items.ElementAtOrDefault(i) != null)
+            if (Items.Count>= i)
             {
                 return true;
             }
@@ -78,7 +80,7 @@ namespace HUD
             Brush Texture;
             for (int i = 0; i < Slots; i++)
             {
-                if (IsitemInInventory(i) && Items[i] == SelectedItem)
+                if (IsitemInInventory(i+1) && Items[i] == SelectedItem)
                 {
                     outline = Brushes.Black;
                 }
@@ -86,7 +88,7 @@ namespace HUD
                 {
                     outline = Brushes.Gray;
                 }
-                if (IsitemInInventory(i))
+                if (IsitemInInventory(i+1))
                 {
                     Texture = Items[i].Texture;
                 }
