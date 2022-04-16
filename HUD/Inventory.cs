@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-
+using Rendering;
 namespace HUD
 {
     
@@ -91,7 +91,7 @@ namespace HUD
                     Texture = Items[i].Texture;
                 }
                 else { Texture = Brushes.Transparent; }
-                Render.DrawRectangle(hud,0, height - slotHeight, 0,height, hud.Width, height, hud.Width, height-slotHeight, Texture, outline, 4);
+                RGeometry.DrawRectangleNoShadow(hud,0, height - slotHeight, 0,height, hud.Width, height, hud.Width, height-slotHeight, Texture, outline, 4);
                 height = height - slotHeight;
             }
         }

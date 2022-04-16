@@ -16,7 +16,9 @@ using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
-
+using System.Drawing.Drawing2D;
+using System.Runtime.InteropServices;
+using Rendering;
 namespace Raycasting_Engine
 {
 	public class Game
@@ -59,7 +61,7 @@ namespace Raycasting_Engine
 			double pos = canvas.Width / 7 * 6;
 			double itemh = 30;
 			double itemw = 50;
-			DrawRectangle(pos, canvas.ActualHeight, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height, Selected, Brushes.Transparent);
+			RGeometry.DrawRectangle(canvas,pos, canvas.ActualHeight, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height, Selected, Brushes.Transparent);
 
 		}
 		protected void LoadMapToInGameMap(Map map)
@@ -83,7 +85,7 @@ namespace Raycasting_Engine
 			//DrawPayer();
 			//Canvas.Width = 722;
 			//Canvas.Height = 500;
-			DrawRectangle(0, 250, 722, 250, 722, 500, 0, 500, Brushes.Aqua, Brushes.Transparent);
+			RGeometry.DrawRectangle(canvas,0, 250, 722, 250, 722, 500, 0, 500, Brushes.Aqua, Brushes.Transparent);
 			drawRays3D();
 			RenderItem();
 
@@ -100,7 +102,7 @@ namespace Raycasting_Engine
 					Brush color;
 					if (map[y * mapY + x].IsSolid) color = Brushes.White; else color = Brushes.Black;
 					xo = x * mapS; yo = y * mapS;
-					DrawRectangle(xo + 1, yo + 1, xo + 1, yo + mapS - 1, xo + mapS - 1, yo + mapS - 1, xo + mapS - 1, yo + 1, color, new SolidColorBrush(Colors.Transparent), 0);
+					RGeometry.DrawRectangle(canvas,xo + 1, yo + 1, xo + 1, yo + mapS - 1, xo + mapS - 1, yo + mapS - 1, xo + mapS - 1, yo + 1, color, new SolidColorBrush(Colors.Transparent), 0);
 				}
 			}
 		}
@@ -216,7 +218,7 @@ namespace Raycasting_Engine
 				double ca = player.A - ra; if (ca < 0) { ca += 2 * PI; }
 				if (ca > 2 * PI) { ca -= 2 * PI; }
 				disT = disT * Math.Cos(ca);
-				double lineH = mapS * 500 / disT; if (lineH > 500) { lineH = 500; }
+				double lineH = mapS * 500 / disT;
 				double lineO = 250 - lineH / 2;
 				//DrawLine(r * 8 + MoveRight, lineO, r * 8 + MoveRight, lineH + lineO, color, 8);
 				//DrawRectangle(r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
@@ -230,7 +232,8 @@ namespace Raycasting_Engine
 					renderingList.Add(entity, new List<RenderObject>());
 					renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(r * 9 + MoveRight - (entity.Width/2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO), new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO), brush, entityH));
 				}
-
+				//RGeometry.DrawRectangle(canvas,r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
+				
 				Side side;
 				if (addedShadow != Brushes.Transparent) side = Side.vertical;
 				else side = Side.horizontal;
@@ -241,22 +244,21 @@ namespace Raycasting_Engine
 				renderingList[toBeRendered].Add(new RenderObject(rx, ry, side, new Point(r * 9 + MoveRight - 5, lineO), new Point(r * 9 + MoveRight + 5, lineO), new Point(r * 9 + MoveRight + 5, lineH + lineO), new Point(r * 9 + MoveRight - 5, lineH + lineO), brush));
 
 			}
-
-			//RenderObject[] render = renderingList.ToArray();
-			//Array.Sort(render);
+			//sorting items in order of height: back to fron rendering of objects
 			renderingList = renderingList.OrderByDescending(x => x.Value.Min(z => z.Height)).ToDictionary(z => z.Key, y => y.Value);
 			foreach (var item in renderingList)
 			{
+				//Seperate each visible side of obj
 				List<RenderObject> SideA = item.Value.Where(y => y.Side == Side.horizontal).ToList();
 				List<RenderObject> SideB = item.Value.Where(y => y.Side == Side.vertical).ToList();
 
 				if (SideA.Count != 0)
 				{
 					if (item.Key is MapObject)
-                    {
+					{
 						RenderSide(SideA, Side.horizontal, ((MapObject)item.Key).image);
 					}
-					
+
 				}
 				if (SideB.Count != 0)
 				{
@@ -272,80 +274,23 @@ namespace Raycasting_Engine
 			const bool ENABLE_TEXTURES = false;
 			double percentVisible;
 			Brush sideShadow = Brushes.Transparent;
-			if (side == Side.vertical)
-			{
-				percentVisible = (Math.Abs((render.Last().FlatY) - (render.First().FlatY))) / 64;
-				sideShadow = new SolidColorBrush(shadow);
-			}
-			else { percentVisible = (Math.Abs((render.Last().FlatX) - (render.First().FlatX))) / 64; }
-            if (percentVisible != 0)
+			Brush imgbrush = Brushes.AliceBlue;
+			//find visible portion
+			if (render.Count == 1) { percentVisible = 0.1; }
+            else
             {
-				System.Drawing.Rectangle cropRect = new System.Drawing.Rectangle();
-				cropRect.Width = (int)(s.Width * percentVisible);
-				cropRect.Height = s.Height;
-				Bitmap bit = s.Clone(cropRect, s.PixelFormat);
-				Brush imgbrush = Brushes.AliceBlue;
-				if (ENABLE_TEXTURES)
+				if (side == Side.vertical)
 				{
-					ImageSource source = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-						bit.GetHbitmap(),
-						IntPtr.Zero,
-						System.Windows.Int32Rect.Empty,
-						BitmapSizeOptions.FromWidthAndHeight((int)(s.Width * percentVisible), s.Height));
-					imgbrush = new ImageBrush(source);
+					percentVisible = (Math.Abs((render.Last().FlatY) - (render.First().FlatY))) / 62;
+					sideShadow = new SolidColorBrush(shadow);
 				}
-				//TODO: find visible side(left or right)
-				DrawRectangle(render.First().ScreenP1.X, render.First().ScreenP1.Y, render.Last().ScreenP2.X, render.Last().ScreenP2.Y, render.Last().ScreenP3.X, render.Last().ScreenP3.Y, render.First().ScreenP4.X, render.First().ScreenP4.Y, imgbrush, sideShadow);
-				//bit.Dispose();
-				//source = null;
+				else { percentVisible = (Math.Abs((render.Last().FlatX) - (render.First().FlatX))) / 62; }
 			}
-		}
 
-		private double Distance(double ax, double ay, double bx, double by, double ang)
-		{
-			return Math.Sqrt(Math.Pow(bx - ax, 2) + Math.Pow(by - ay, 2));
-		}
-		#endregion
-
-		#region Default shapes drawing
-		// ToDO SA: Kitenni a rajzolást külön osztályba
-		public void DrawRectangle(int height, int width, int x, int y, System.Windows.Media.Brush brush)
-		{
-
-			Rectangle rect = new Rectangle
-			{
-				Stroke = brush,
-				StrokeThickness = 2,
-				Fill = brush,
-				Height = height,
-				Width = width
-			};
-			Canvas.SetLeft(rect, x);
-			Canvas.SetTop(rect, y);
-			canvas.Children.Add(rect);
-
-		}
-		//koordináták sorrendje: bal lent,bal fent,jobb fent,jobb lent
-		public void DrawRectangle(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, Brush color, Brush shadow, double thickness = 0)
-		{
-			Polygon myPolygon = new Polygon();
-			myPolygon.Stroke = color;
-			myPolygon.Fill = color;
-			myPolygon.StrokeThickness = thickness;
-			myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
-			myPolygon.VerticalAlignment = VerticalAlignment.Center;
-
-			Polygon myPolygon2 = new Polygon();
-			myPolygon2.Stroke = shadow;
-			myPolygon2.Fill = shadow;
-			myPolygon2.StrokeThickness = thickness;
-			myPolygon2.HorizontalAlignment = HorizontalAlignment.Left;
-			myPolygon2.VerticalAlignment = VerticalAlignment.Center;
-
-			Point Point1 = new Point(x1, y1);
-			Point Point2 = new Point(x2, y2);
-			Point Point3 = new Point(x3, y3);
-			Point Point4 = new Point(x4, y4);
+			Point Point1 = new Point(render.First().ScreenP1.X, render.First().ScreenP1.Y);
+			Point Point2 = new Point(render.Last().ScreenP2.X, render.Last().ScreenP2.Y);
+			Point Point3 = new Point(render.Last().ScreenP3.X, render.Last().ScreenP3.Y);
+			Point Point4 = new Point(render.First().ScreenP4.X, render.First().ScreenP4.Y);
 
 			PointCollection myPointCollection = new PointCollection();
 			myPointCollection.Add(Point1);
@@ -353,39 +298,78 @@ namespace Raycasting_Engine
 			myPointCollection.Add(Point3);
 			myPointCollection.Add(Point4);
 
+			if (ENABLE_TEXTURES)
+			{
+				//crop to image percent visible
+				int with = (int)(s.Width * percentVisible);
+				System.Drawing.Rectangle cropRect = new System.Drawing.Rectangle();
+				cropRect.Width = with;
+				cropRect.Height = s.Height;
+				Bitmap bit = new Bitmap(with, s.Height);
+				using (Graphics gdi = Graphics.FromImage(bit))
+				{
+					//if left side is not visible so texturing dosent start from the left side
+					if (render.First().ScreenP1.X < 20 && percentVisible < 0.8)
+					{
+						//MessageBox.Show($" {percentVisible} {render.Last().ScreenP1.X} Player: {player.X}");
+						//rotate from center to cut from right end
+						float centerX = bit.Width / 2F;
+						float centerY = bit.Height / 2F;
+						gdi.TranslateTransform(centerX, centerY);
+						gdi.RotateTransform(180.0F);
+						//cropping to rect
+						gdi.DrawImage(s, -cropRect.X, -cropRect.Y);
+						gdi.RotateTransform(180.0F);
+						gdi.TranslateTransform(-centerX, -centerY);
+						gdi.ResetTransform();
+					}
+                    else
+                    {
+						gdi.DrawImage(s, -cropRect.X, -cropRect.Y);
+					}
+				}
+				//Transform by 4 corners
+				Rendering.FreeTransform transform = new Rendering.FreeTransform();
+				transform.Bitmap = bit;
+				bit.Dispose();
+				transform.FourCorners = RUtils.PointsToPointF(myPointCollection);
+				//apply image to brush
+				imgbrush = new ImageBrush();
+				((ImageBrush)imgbrush).Stretch = Stretch.None;
+				//((ImageBrush)imgbrush).ImageSource = ImageSourceFromBitmap(transform.Bitmap);
+				((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(bit);
+
+			}
+			//draw polygon
+			Polygon myPolygon = new Polygon();
+			myPolygon.Stroke = imgbrush;
+			myPolygon.Fill = imgbrush;
+			myPolygon.StrokeThickness = 0;
+			myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
+			myPolygon.VerticalAlignment = VerticalAlignment.Center;
+
+			Polygon myPolygon2 = new Polygon();
+			myPolygon2.Stroke = sideShadow;
+			myPolygon2.Fill = sideShadow;
+			myPolygon2.StrokeThickness = 0;
+			myPolygon2.HorizontalAlignment = HorizontalAlignment.Left;
+			myPolygon2.VerticalAlignment = VerticalAlignment.Center;
 			myPolygon.Points = myPointCollection;
 			myPolygon2.Points = myPointCollection;
 
 			canvas.Children.Add(myPolygon);
 			canvas.Children.Add(myPolygon2);
+			//RGeometry.DrawRectangle(canvas,render.First().ScreenP1.X, render.First().ScreenP1.Y, render.Last().ScreenP2.X, render.Last().ScreenP2.Y, render.Last().ScreenP3.X, render.Last().ScreenP3.Y, render.First().ScreenP4.X, render.First().ScreenP4.Y, imgbrush, sideShadow);
 		}
-		public void DrawLineFromPlayer(double x, double y, Color color, double thickness)
+		private double Distance(double ax, double ay, double bx, double by, double ang)
 		{
-			Point p1 = new Point(player.X, player.Y);
-			Point p2 = new Point(x, y);
-			Line l = new Line();
-			l.Stroke = new SolidColorBrush(color);
-			l.StrokeThickness = thickness;
-			l.X1 = p1.X;
-			l.X2 = p2.X;
-			l.Y1 = p1.Y;
-			l.Y2 = p2.Y;
-			canvas.Children.Add(l);
+			return Math.Sqrt(Math.Pow(bx - ax, 2) + Math.Pow(by - ay, 2));
 		}
-		public void DrawLine(double x1, double y1, double x2, double y2, Color color, double thickness)
-		{
-			Point p1 = new Point(x1, y1);
-			Point p2 = new Point(x2, y2);
-			Line l = new Line();
-			l.Stroke = new SolidColorBrush(color);
-			l.StrokeThickness = thickness;
-			l.Fill = Brushes.Red;
-			l.X1 = p1.X;
-			l.X2 = p2.X;
-			l.Y1 = p1.Y;
-			l.Y2 = p2.Y;
-			canvas.Children.Add(l);
-		}
+		#endregion
+
+		#region Default shapes drawing
+		
+
 
 		#endregion
 	}

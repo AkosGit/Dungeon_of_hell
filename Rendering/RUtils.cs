@@ -8,41 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Globalization;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
+using System.Drawing;
+using System.Windows.Media.Imaging;
 
-namespace HUD
+namespace Rendering
 {
-    public static class Render
-    {
-		//koordináták sorrendje: bal lent,bal fent,jobb fent,jobb lent
-		public static  void DrawRectangle(Canvas c,double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, Brush contents, Brush outline, double thickness = 0)
-		{
-			Polygon myPolygon = new Polygon();
-			myPolygon.Stroke = outline;
-			myPolygon.Fill = contents;
-			myPolygon.StrokeThickness = thickness;
-			myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
-			myPolygon.VerticalAlignment = VerticalAlignment.Center;
-
-            Point Point1 = new Point(x1, y1);
-			Point Point2 = new Point(x2, y2);
-			Point Point3 = new Point(x3, y3);
-			Point Point4 = new Point(x4, y4);
-
-			PointCollection myPointCollection = new PointCollection();
-			myPointCollection.Add(Point1);
-			myPointCollection.Add(Point2);
-			myPointCollection.Add(Point3);
-			myPointCollection.Add(Point4);
-
-
-
-			myPolygon.Points = myPointCollection;
-
-			c.Children.Add(myPolygon);
-		}
-
+	public class RUtils
+	{
 		[Obsolete]
-		public  static Drawing DrawMyText(string textString)
+		public static Drawing DrawMyText(string textString)
 		{
 			// Create a new DrawingGroup of the control.
 			DrawingGroup drawingGroup = new DrawingGroup();
@@ -72,6 +48,28 @@ namespace HUD
 				// Return the updated DrawingGroup content to be used by the control.
 				return drawingGroup;
 			}
+		}
+		[DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		public static extern bool DeleteObject([In] IntPtr hObject);
+
+		public static ImageSource ImageSourceFromBitmap(Bitmap bmp)
+		{
+			var handle = bmp.GetHbitmap();
+			try
+			{
+				return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+			}
+			finally { DeleteObject(handle); }
+		}
+		public static PointF[] PointsToPointF(PointCollection pc)
+		{
+			PointF[] points = new PointF[pc.Count];
+			for (int i = 0; i < pc.Count; i++)
+			{
+				points[i] = new PointF((float)pc[i].X, (float)pc[i].Y);
+			}
+			return points;
 		}
 	}
 }
