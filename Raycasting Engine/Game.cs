@@ -76,7 +76,7 @@ namespace Raycasting_Engine
 
 			entities = new List<EntityObject>();
 			EntityObject test = new EntityObject(2, 2, 100, 40, mapS);
-			test.image = new Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+			test.image = new Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\test.jpg");
 			entities.Add(new EntityObject(2, 2, 400, 50, mapS));
 			
 		}
@@ -234,6 +234,7 @@ namespace Raycasting_Engine
 					double entityO = 250 - entityH / 2;
 					renderingList.Add(entity, new List<RenderObject>());
 					renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(r * 9 + MoveRight - (entity.Width/2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO), new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO), Brushes.Green, entityH));
+					
 				}
 				//RGeometry.DrawRectangle(canvas,r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
 				
@@ -263,7 +264,10 @@ namespace Raycasting_Engine
 					}
 					else if(item.Key is EntityObject)
 					{
-						RenderSide(SideA, Side.horizontal, ((EntityObject)item.Key).image);
+						//((EntityObject)item.Key).image: results in null :(
+						//RenderSide(SideA, Side.horizontal, ((EntityObject)item.Key).image);
+						RenderSide(SideA, Side.horizontal, new Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\entity.png"));
+
 					}
 				}
 				if (SideB.Count != 0)
@@ -277,12 +281,15 @@ namespace Raycasting_Engine
 		}
 		void RenderSide(List<RenderObject> render, Side side, Bitmap s)
 		{
-			const bool ENABLE_TEXTURES = false;
+			const bool ENABLE_TEXTURES = true;
 			double percentVisible;
 			Brush sideShadow = Brushes.Transparent;
 			Brush imgbrush = Brushes.AliceBlue;
 			//find visible portion
-			if (render.Count == 1) { percentVisible = 0.1; }
+			if (render.Count == 1) { 
+				if(render[0] is RenderEntity) { percentVisible = 1; }
+                else { percentVisible = 0.1; }
+			}
             else
             {
 				if (side == Side.vertical)
@@ -314,36 +321,37 @@ namespace Raycasting_Engine
 				Bitmap bit = new Bitmap(with, s.Height);
 				using (Graphics gdi = Graphics.FromImage(bit))
 				{
+					gdi.DrawImage(s, -cropRect.X, -cropRect.Y);
 					//if left side is not visible so texturing dosent start from the left side
-					if (render.First().ScreenP1.X < 20 && percentVisible < 0.8)
-					{
-						//MessageBox.Show($" {percentVisible} {render.Last().ScreenP1.X} Player: {player.X}");
-						//rotate from center to cut from right end
-						float centerX = bit.Width / 2F;
-						float centerY = bit.Height / 2F;
-						gdi.TranslateTransform(centerX, centerY);
-						gdi.RotateTransform(180.0F);
-						//cropping to rect
-						gdi.DrawImage(s, -cropRect.X, -cropRect.Y);
-						gdi.RotateTransform(180.0F);
-						gdi.TranslateTransform(-centerX, -centerY);
-						gdi.ResetTransform();
-					}
-                    else
-                    {
-						gdi.DrawImage(s, -cropRect.X, -cropRect.Y);
-					}
+					//if (render.First().ScreenP1.X < 20 && percentVisible < 0.8)
+					//{
+					//	//MessageBox.Show($" {percentVisible} {render.Last().ScreenP1.X} Player: {player.X}");
+					//	//rotate from center to cut from right end
+					//	float centerX = bit.Width / 2F;
+					//	float centerY = bit.Height / 2F;
+					//	gdi.TranslateTransform(centerX, centerY);
+					//	gdi.RotateTransform(180.0F);
+					//	//cropping to rect
+					//	gdi.DrawImage(s, -cropRect.X, -cropRect.Y);
+					//	gdi.RotateTransform(180.0F);
+					//	gdi.TranslateTransform(-centerX, -centerY);
+					//	gdi.ResetTransform();
+					//}
+					//               else
+					//               {
+					//	gdi.DrawImage(s, -cropRect.X, -cropRect.Y);
+					//}
 				}
 				//Transform by 4 corners
 				Rendering.FreeTransform transform = new Rendering.FreeTransform();
 				transform.Bitmap = bit;
-				bit.Dispose();
 				transform.FourCorners = RUtils.PointsToPointF(myPointCollection);
 				//apply image to brush
 				imgbrush = new ImageBrush();
-				((ImageBrush)imgbrush).Stretch = Stretch.None;
-				//((ImageBrush)imgbrush).ImageSource = ImageSourceFromBitmap(transform.Bitmap);
-				((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(bit);
+				((ImageBrush)imgbrush).Stretch = Stretch.Fill;
+				((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(transform.Bitmap);
+				//((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(bit);
+				bit.Dispose();
 
 			}
 			//draw polygon
