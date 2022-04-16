@@ -15,7 +15,7 @@ namespace Raycasting_Engine
 		public RenderEntity(double flatX, double flatY, Side side, Point p1, Point p2, Point p3, Point p4, Brush brush, double wallHeight) 
 			:base(flatX, flatY, side, p1, p2, p3, p4, brush)
 		{
-			originalWallHeight = wallHeight;
+			height = wallHeight;
 		}
 
 		public override int CompareTo(object obj)

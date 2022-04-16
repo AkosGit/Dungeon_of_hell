@@ -26,6 +26,8 @@ namespace Raycasting_Engine
 
 		Brush brush;
 
+		protected double height;
+
 		public double FlatX { get => flatX; set => flatX = value; }
 		public double FlatY { get => flatY; set => flatY = value; }
 		public Side Side { get => side; set => side = value; }
@@ -34,7 +36,7 @@ namespace Raycasting_Engine
 		public Point ScreenP3 { get => screenP3; set => screenP3 = value; }
 		public Point ScreenP4 { get => screenP4; set => screenP4 = value; }
 
-		public double Height { get { return screenP2.Y - screenP3.Y; } }
+		public double Height { get => height; }
 
 		public Brush Brush { get => brush; set => brush = value; }
 
@@ -48,12 +50,13 @@ namespace Raycasting_Engine
 			this.ScreenP3 = p3;
 			this.ScreenP4 = p4;
 			this.brush = brush;
+
+			height = screenP3.Y - screenP2.Y;
 		}
 
 		public virtual int CompareTo(object obj)
 		{
 			return (obj as RenderObject).Height.CompareTo(this.Height);
 		}
-
 	}
 }

@@ -75,7 +75,10 @@ namespace Raycasting_Engine
 			this.player = map.Player;
 
 			entities = new List<EntityObject>();
-			entities.Add(new EntityObject(2, 2, mapS));
+			EntityObject test = new EntityObject(2, 2, 100, 40, mapS);
+			test.image = new Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+			entities.Add(new EntityObject(2, 2, 400, 50, mapS));
+			
 		}
 
 		public void DrawTurn()
@@ -230,7 +233,7 @@ namespace Raycasting_Engine
 					double entityH = mapS * 500 / disE; if (entityH > 500) { entityH = 500; }
 					double entityO = 250 - entityH / 2;
 					renderingList.Add(entity, new List<RenderObject>());
-					renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(r * 9 + MoveRight - (entity.Width/2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO), new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO), brush, entityH));
+					renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(r * 9 + MoveRight - (entity.Width/2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO), new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO), Brushes.Green, entityH));
 				}
 				//RGeometry.DrawRectangle(canvas,r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
 				
@@ -258,7 +261,10 @@ namespace Raycasting_Engine
 					{
 						RenderSide(SideA, Side.horizontal, ((MapObject)item.Key).image);
 					}
-
+					else if(item.Key is EntityObject)
+					{
+						RenderSide(SideA, Side.horizontal, ((EntityObject)item.Key).image);
+					}
 				}
 				if (SideB.Count != 0)
 				{

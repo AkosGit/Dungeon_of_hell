@@ -28,7 +28,7 @@ namespace Raycasting_Engine
 		public double Y { get => y; set => y = value; }
 		public double Z { get => z; set => z = value; }
 
-
+		public System.Drawing.Bitmap image { get; set; }
 
 		protected bool Visible { get => visible; set => visible = value; }
 		public int Health { get => health; set => health = value; }
@@ -36,12 +36,15 @@ namespace Raycasting_Engine
 		public double Height { get => height; set => height = value; }
 		public double Width { get => width; set => width = value; }
 
-		public EntityObject(int gridX, int gridY, int mapS, bool isSolid = false)
+		public EntityObject(int gridX, int gridY, int mapS, double he = 0, double wi = 0, bool isSolid = false)
 			: base(isSolid)
 		{
 			this.gridX = gridX;
 			this.gridY = gridY;
 			health = 100;
+
+			height = he;
+			width = wi;
 		}
 		public bool IsHere(int mapX, int mapY)
 		{
