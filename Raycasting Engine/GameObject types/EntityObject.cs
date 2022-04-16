@@ -33,8 +33,8 @@ namespace Raycasting_Engine
 		protected bool Visible { get => visible; set => visible = value; }
 		public int Health { get => health; set => health = value; }
 
-		protected double Height { get => height; set => height = value; }
-		protected double Width { get => width; set => width = value; }
+		public double Height { get => height; set => height = value; }
+		public double Width { get => width; set => width = value; }
 
 		public EntityObject(int gridX, int gridY, int mapS, bool isSolid = false)
 			: base(isSolid)

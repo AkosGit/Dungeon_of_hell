@@ -50,9 +50,10 @@ namespace Raycasting_Engine
 			this.brush = brush;
 		}
 
-		public int CompareTo(object obj)
+		public virtual int CompareTo(object obj)
 		{
 			return (obj as RenderObject).Height.CompareTo(this.Height);
 		}
+
 	}
 }

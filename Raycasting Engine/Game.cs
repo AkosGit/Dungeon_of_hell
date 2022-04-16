@@ -71,6 +71,9 @@ namespace Raycasting_Engine
 			mapS = map.MapS;
 
 			this.player = map.Player;
+
+			entities = new List<EntityObject>();
+			entities.Add(new EntityObject(2, 2, mapS));
 		}
 
 		public void DrawTurn()
@@ -168,7 +171,13 @@ namespace Raycasting_Engine
 				while (dof < MaxL)
 				{
 					mx = (int)(rx) >> 6; my = (int)(ry) >> 6; mp = my * mapX + mx;
-					if (mp > 0 && mp < mapX * mapY && entities.Where(x => x.IsHere(mx, my)).Count() > 0) foreach (EntityObject entity in entities.Where(x => x.IsHere(mx, my))) { tmpEntities.Add(entity); tmpEnitiesDistances.Add(Distance(player.X, player.Y, entity.X, entity.Y, ra))}
+					if (mp > 0 && mp < mapX * mapY && entities.Where(x => x.IsHere(mx, my)).Count() > 0)
+					{
+						foreach (EntityObject entity in entities.Where(x => x.IsHere(mx, my))) 
+						{
+							if(!visibleEntities.Contains(entity)) tmpEntities.Add(entity); tmpEnitiesDistances.Add(Distance(player.X, player.Y, entity.X, entity.Y, ra));
+						}
+					}
 					if (mp > 0 && mp < mapX * mapY && map[mp].IsSolid)
 					{
 						if (map[mp].IsSolid) { hx = rx; hy = ry; disH = Distance(player.X, player.Y, hx, hy, ra); typeH = map[mp].IsSolid; mpH = mp; dof = MaxL; }
@@ -214,8 +223,12 @@ namespace Raycasting_Engine
 				foreach (EntityObject entity in tmpEntities)
 				{
 					visibleEntities.Add(entity);
+					double disE = Distance(player.X, player.Y, entity.X, entity.Y, ca);
+					disE = disE * Math.Cos(ca);
+					double entityH = mapS * 500 / disE; if (entityH > 500) { entityH = 500; }
+					double entityO = 250 - entityH / 2;
 					renderingList.Add(entity, new List<RenderObject>());
-					renderingList[entity].Add(new RenderObject(entity.)
+					renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(r * 9 + MoveRight - (entity.Width/2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO), new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO), brush, entityH));
 				}
 
 				Side side;
