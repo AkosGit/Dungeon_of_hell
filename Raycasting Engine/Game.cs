@@ -76,7 +76,7 @@ namespace Raycasting_Engine
 
 			entities = new List<EntityObject>();
 			EntityObject test = new EntityObject(2, 2, 100, 40, mapS);
-			test.image = new Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\test.jpg");
+			test.image = new Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
 			entities.Add(new EntityObject(2, 2, 400, 50, mapS));
 			
 		}
@@ -321,34 +321,45 @@ namespace Raycasting_Engine
 				Bitmap bit = new Bitmap(with, s.Height);
 				using (Graphics gdi = Graphics.FromImage(bit))
 				{
-					gdi.DrawImage(s, -cropRect.X, -cropRect.Y);
 					//if left side is not visible so texturing dosent start from the left side
-					//if (render.First().ScreenP1.X < 20 && percentVisible < 0.8)
-					//{
-					//	//MessageBox.Show($" {percentVisible} {render.Last().ScreenP1.X} Player: {player.X}");
-					//	//rotate from center to cut from right end
-					//	float centerX = bit.Width / 2F;
-					//	float centerY = bit.Height / 2F;
-					//	gdi.TranslateTransform(centerX, centerY);
-					//	gdi.RotateTransform(180.0F);
-					//	//cropping to rect
-					//	gdi.DrawImage(s, -cropRect.X, -cropRect.Y);
-					//	gdi.RotateTransform(180.0F);
-					//	gdi.TranslateTransform(-centerX, -centerY);
-					//	gdi.ResetTransform();
-					//}
-					//               else
-					//               {
-					//	gdi.DrawImage(s, -cropRect.X, -cropRect.Y);
-					//}
+					if (render.First().ScreenP1.X < 5 && percentVisible < 0.8)
+					{
+						//rotate from center to cut from right end
+						float centerX = s.Width / 2F;
+						float centerY = s.Height / 2F;
+						gdi.TranslateTransform(centerX, centerY);
+						gdi.RotateTransform(180.0F);
+						gdi.TranslateTransform(-centerX, -centerY);
+						//cropping to rect
+						gdi.DrawImage(s, -cropRect.X, -cropRect.Y);
+					}
+					else
+					{
+						gdi.DrawImage(s, -cropRect.X, -cropRect.Y);
+					}
 				}
+				//a new bitmap is required to flip the image back
+				Bitmap bit2 = new Bitmap(bit.Width, bit.Height);
+				if (render.First().ScreenP1.X < 5 && percentVisible < 0.8)
+				{
+					using (Graphics gdi = Graphics.FromImage(bit2))
+					{
+						float centerX = bit.Width / 2F;
+						float centerY = bit.Height / 2F;
+						gdi.TranslateTransform(centerX, centerY);
+						gdi.RotateTransform(180.0F);
+						gdi.TranslateTransform(-centerX, -centerY);
+						gdi.DrawImage(bit, 0, 0);
+					}
+				}
+                else { bit2 = bit; }
 				//Transform by 4 corners
 				Rendering.FreeTransform transform = new Rendering.FreeTransform();
-				transform.Bitmap = bit;
+				transform.Bitmap = bit2;
 				transform.FourCorners = RUtils.PointsToPointF(myPointCollection);
 				//apply image to brush
 				imgbrush = new ImageBrush();
-				((ImageBrush)imgbrush).Stretch = Stretch.Fill;
+				((ImageBrush)imgbrush).Stretch = Stretch.Uniform;
 				((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(transform.Bitmap);
 				//((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(bit);
 				bit.Dispose();
