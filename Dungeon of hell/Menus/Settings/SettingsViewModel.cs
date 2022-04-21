@@ -11,7 +11,8 @@ namespace Dungeon_of_hell
 {
     public class SettingsViewModel : ViewModel,ISettings
     {
-    
+
+        List<Key> forbiddenKeys = new List<Key>() { Key.Space,Key.Enter };
         public int volume { get { return GlobalSettings.Settings.Volume; } set { GlobalSettings.Settings.Volume = value; } }
         public ObservableCollection<Binding> SingleplayerBindings { get; set; }
         int currentBind;
@@ -28,13 +29,16 @@ namespace Dungeon_of_hell
         }
         void Change(object key)
         {
-            Binding index = SingleplayerBindings.Where(i => i.Message == (string)key).First();
-            currentBind = SingleplayerBindings.IndexOf(index);
-            index.Message = "Press a key..";
-            //force ui to update
-            SingleplayerBindings[currentBind] = null;
-            SingleplayerBindings[currentBind] = index;
-            
+            if (currentBind == -1)
+            {
+                    string skey = (string)key;
+                    Binding index = SingleplayerBindings.Where(i => i.Message == skey).First();
+                    currentBind = SingleplayerBindings.IndexOf(index);
+                    index.Message = "Press a key..";
+                    //force ui to update
+                    SingleplayerBindings[currentBind] = null;
+                    SingleplayerBindings[currentBind] = index;
+            }
         }
         void Switch()
         {
@@ -65,7 +69,7 @@ namespace Dungeon_of_hell
             }
             else
             {
-                if(currentBind!= -1)
+                if(currentBind!= -1 && !forbiddenKeys.Contains(e.Key) && !SingleplayerBindings.Any(z => z.key==e.Key))
                 {
                     Binding b = SingleplayerBindings[currentBind];
                     b.key = e.Key;

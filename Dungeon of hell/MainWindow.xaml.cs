@@ -23,10 +23,11 @@ namespace Dungeon_of_hell
     /// </summary>
     public partial class MainWindow : Window
     {
+        Window_manager manager;
         public MainWindow()
         {
 
-            Window_manager manager = new Window_manager();
+            manager = new Window_manager();
             InitializeComponent();
             DataContext = manager;
             Closing += manager.OnWindowClosing;
@@ -39,6 +40,11 @@ namespace Dungeon_of_hell
                 manager.AddView(new SinglePlayerViewModel(), typeof(SinglePlayerView));
                 manager.ChangePrimaryView("Singleplayer");
             }
+        }
+
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            manager.KeyDown(sender, e);
         }
     }
 }
