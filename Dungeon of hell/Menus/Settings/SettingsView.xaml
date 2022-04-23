@@ -6,7 +6,7 @@
              mc:Ignorable="d" 
              xmlns:local="clr-namespace:Dungeon_of_hell"
              d:DesignHeight="300" d:DesignWidth="300" Background="Red">
-    <Viewbox>
+    <Viewbox Margin="10">
 
         <Grid MinHeight="350" MinWidth="400" Margin="0,10,0,10">
             <Grid.Resources>

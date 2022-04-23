@@ -12,7 +12,7 @@
                    />
         <Button Width="100" Height="20" Content="SinglePlayer" Style="{StaticResource MenuButton}" Command="{Binding Path=SinglePlayerView}">
         </Button>
-            <Button Width="100" Height="20" Content="Multiplayer" Style="{StaticResource MenuButton}" Command="{Binding Path=MultiplayerView}" IsEnabled="True">
+        <Button Width="100" Height="20" Content="Multiplayer" Style="{StaticResource MenuButton}" Command="{Binding Path=MultiplayerView}" IsEnabled="False">
         </Button>
             <Button Width="100" Height="20" Content="Settings" Style="{StaticResource MenuButton}" Command="{Binding Path=SettingsView}">
         </Button>
