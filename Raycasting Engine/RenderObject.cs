@@ -12,7 +12,7 @@ namespace Raycasting_Engine
 	{
 		vertical, horizontal
 	}
-	public class RenderObject : IComparable
+	public class RenderObject : IComparable, ICloneable
 	{
 		double flatX;
 		double flatY;
@@ -58,5 +58,11 @@ namespace Raycasting_Engine
 		{
 			return (obj as RenderObject).Height.CompareTo(this.Height);
 		}
-	}
+
+        public object Clone()
+        {
+			return new RenderObject(flatX, flatY, side, ScreenP1, ScreenP2, ScreenP3, ScreenP4, brush);
+
+		}
+    }
 }

@@ -19,6 +19,10 @@ using System.Windows.Media.Imaging;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 using Rendering;
+using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Raycasting_Engine
 {
 	public class Game
@@ -269,8 +273,6 @@ namespace Raycasting_Engine
 					}
 					else if(item.Key is EntityObject)
 					{
-						//((EntityObject)item.Key).image: results in null :(
-						//RenderSide(SideA, Side.horizontal, ((EntityObject)item.Key).image);
 						RenderSide(SideA, Side.horizontal, ((EntityObject)item.Key).image);
 
 					}
@@ -302,6 +304,121 @@ namespace Raycasting_Engine
 				Audio_player.UpdateDistance(name,(float)(10*(dist/MAXDISTFROMPLAYER)));
             }
         }
+		void RenderSideParalel(List<RenderObject> render, Side side, Bitmap s)
+		{
+			var uiContext = SynchronizationContext.Current;
+			Task.Run(() => { renderTask(render.ConvertAll(x => (RenderObject)x.Clone()), side,new Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\test.jpg"),uiContext); });
+
+			void renderTask(List<RenderObject> render, Side side,Bitmap original, SynchronizationContext uiContext)
+			{
+				const bool ENABLETEXURING = false;
+				Rendering.FreeTransform transform = new Rendering.FreeTransform();
+				double percentVisible;
+				Brush sideShadow = Brushes.Transparent;
+				Brush imgbrush = Brushes.AliceBlue;
+				Point Point1 = new Point(render.First().ScreenP1.X, render.First().ScreenP1.Y);
+				Point Point2 = new Point(render.Last().ScreenP2.X, render.Last().ScreenP2.Y);
+				Point Point3 = new Point(render.Last().ScreenP3.X, render.Last().ScreenP3.Y);
+				Point Point4 = new Point(render.First().ScreenP4.X, render.First().ScreenP4.Y);
+
+				PointCollection myPointCollection = new PointCollection();
+				myPointCollection.Add(Point1);
+				myPointCollection.Add(Point2);
+				myPointCollection.Add(Point3);
+				myPointCollection.Add(Point4);
+				if (ENABLETEXURING)
+                {
+					if (render.Count == 1)
+					{
+						if (render[0] is RenderEntity) { percentVisible = 1; }
+						else { percentVisible = 0.1; }
+					}
+					else
+					{
+						if (side == Side.vertical)
+						{
+							percentVisible = (Math.Abs((render.Last().FlatY) - (render.First().FlatY))) / 62;
+							sideShadow = new SolidColorBrush(shadow);
+						}
+						else { percentVisible = (Math.Abs((render.Last().FlatX) - (render.First().FlatX))) / 62; }
+					}
+					//avoid visible percentages rounded to 0;
+					if (percentVisible < 0.1) { percentVisible = 0.1; }
+					int with = (int)(original.Width * percentVisible);
+					System.Drawing.Rectangle cropRect = new System.Drawing.Rectangle();
+					cropRect.Width = with;
+					cropRect.Height = original.Height;
+					Bitmap bit = new Bitmap(with, original.Height);
+					using (Graphics gdi = Graphics.FromImage(bit))
+					{
+						//if left side is not visible so texturing dosent start from the left side
+						if (render.First().ScreenP1.X < 1 && percentVisible < 0.8)
+						{
+							//rotate from center to cut from right end
+							float centerX = original.Width / 2F;
+							float centerY = original.Height / 2F;
+							gdi.TranslateTransform(centerX, centerY);
+							gdi.RotateTransform(180.0F);
+							gdi.TranslateTransform(-centerX, -centerY);
+							//cropping to rect
+							gdi.DrawImage(original, -cropRect.X, -cropRect.Y);
+						}
+						else
+						{
+							gdi.DrawImage(original, -cropRect.X, -cropRect.Y);
+						}
+					}
+					//a new bitmap is required to flip the image back
+					Bitmap bit2 = new Bitmap(bit.Width, bit.Height);
+					using (Graphics gdi = Graphics.FromImage(bit2))
+					{
+						if (render.First().ScreenP1.X < 1 && percentVisible < 0.8)
+						{
+							float centerX = bit.Width / 2F;
+							float centerY = bit.Height / 2F;
+							gdi.TranslateTransform(centerX, centerY);
+							gdi.RotateTransform(180.0F);
+							gdi.TranslateTransform(-centerX, -centerY);
+							gdi.DrawImage(bit, 0, 0);
+						}
+						else
+						{
+							gdi.DrawImage(bit, 0, 0);
+						}
+
+					}
+					//Transform by 4 corners
+					imgbrush = new ImageBrush();
+					transform.Bitmap = bit2;
+					transform.FourCorners = RUtils.PointsToPointF(myPointCollection);
+					((ImageBrush)imgbrush).Stretch = Stretch.UniformToFill;
+					((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(transform.Bitmap);
+				}
+				uiContext.Post(new SendOrPostCallback((o) => {
+				
+					Polygon myPolygon = new Polygon();
+					myPolygon.Stroke = imgbrush;
+					myPolygon.Fill = imgbrush;
+					myPolygon.StrokeThickness = 0;
+					myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
+					myPolygon.VerticalAlignment = VerticalAlignment.Center;
+
+					Polygon myPolygon2 = new Polygon();
+					myPolygon2.Stroke = sideShadow;
+					myPolygon2.Fill = sideShadow;
+					myPolygon2.StrokeThickness = 0;
+					myPolygon2.HorizontalAlignment = HorizontalAlignment.Left;
+					myPolygon2.VerticalAlignment = VerticalAlignment.Center;
+					myPolygon.Points = myPointCollection;
+					myPolygon2.Points = myPointCollection;
+
+					canvas.Children.Add(myPolygon);
+					canvas.Children.Add(myPolygon2);
+				}), null);
+				
+			}
+			//RGeometry.DrawRectangle(canvas,render.First().ScreenP1.X, render.First().ScreenP1.Y, render.Last().ScreenP2.X, render.Last().ScreenP2.Y, render.Last().ScreenP3.X, render.Last().ScreenP3.Y, render.First().ScreenP4.X, render.First().ScreenP4.Y, imgbrush, sideShadow);
+		}
 		void RenderSide(List<RenderObject> render, Side side, Bitmap s)
 		{
 			const bool ENABLE_TEXTURES = true;
@@ -309,12 +426,13 @@ namespace Raycasting_Engine
 			Brush sideShadow = Brushes.Transparent;
 			Brush imgbrush = Brushes.AliceBlue;
 			//find visible portion
-			if (render.Count == 1) { 
-				if(render[0] is RenderEntity) { percentVisible = 1; }
-                else { percentVisible = 0.1; }
+			if (render.Count == 1)
+			{
+				if (render[0] is RenderEntity) { percentVisible = 1; }
+				else { percentVisible = 0.1; }
 			}
-            else
-            {
+			else
+			{
 				if (side == Side.vertical)
 				{
 					percentVisible = (Math.Abs((render.Last().FlatY) - (render.First().FlatY))) / 62;
@@ -323,7 +441,7 @@ namespace Raycasting_Engine
 				else { percentVisible = (Math.Abs((render.Last().FlatX) - (render.First().FlatX))) / 62; }
 			}
 			//avoid visible percentages rounded to 0;
-            if (percentVisible < 0.1) { percentVisible = 0.1; }
+			if (percentVisible < 0.1) { percentVisible = 0.1; }
 
 			Point Point1 = new Point(render.First().ScreenP1.X, render.First().ScreenP1.Y);
 			Point Point2 = new Point(render.Last().ScreenP2.X, render.Last().ScreenP2.Y);
@@ -376,7 +494,7 @@ namespace Raycasting_Engine
 						gdi.TranslateTransform(-centerX, -centerY);
 						gdi.DrawImage(bit, 0, 0);
 					}
-					else 
+					else
 					{
 						gdi.DrawImage(bit, 0, 0);
 					}
