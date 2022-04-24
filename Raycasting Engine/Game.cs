@@ -75,10 +75,13 @@ namespace Raycasting_Engine
 			this.player = map.Player;
 
 			entities = new List<EntityObject>();
-			EntityObject test = new EntityObject(2, 2, 100, 40, mapS);
+			EntityObject test = new EntityObject(2, 2, 100,"Józsi", 40, mapS);
 			test.image = new Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
-			entities.Add(new EntityObject(2, 2, 400, 50, mapS));
-			
+			test.Sound = "sound\\test.mp3";
+			EntityObject test2 = new EntityObject(2, 2, 400, "nem józsi", 50, mapS);
+			test2.image= new Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+			test2.Sound = "sound\\test.mp3";
+			entities.Add(test2);
 		}
 
 		public void DrawTurn()
@@ -91,7 +94,10 @@ namespace Raycasting_Engine
 			RGeometry.DrawRectangle(canvas,0, 250, 722, 250, 722, 500, 0, 500, Brushes.Aqua, Brushes.Transparent);
 			drawRays3D();
 			RenderItem();
-
+			foreach (EntityObject ent in entities)
+			{
+				PlaySounds(ent);
+			}
 		}
 
 		#region 2D
@@ -255,7 +261,6 @@ namespace Raycasting_Engine
 				//Seperate each visible side of obj
 				List<RenderObject> SideA = item.Value.Where(y => y.Side == Side.horizontal).ToList();
 				List<RenderObject> SideB = item.Value.Where(y => y.Side == Side.vertical).ToList();
-
 				if (SideA.Count != 0)
 				{
 					if (item.Key is MapObject)
@@ -266,7 +271,7 @@ namespace Raycasting_Engine
 					{
 						//((EntityObject)item.Key).image: results in null :(
 						//RenderSide(SideA, Side.horizontal, ((EntityObject)item.Key).image);
-						RenderSide(SideA, Side.horizontal, new Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\entity.png"));
+						RenderSide(SideA, Side.horizontal, ((EntityObject)item.Key).image);
 
 					}
 				}
@@ -279,6 +284,24 @@ namespace Raycasting_Engine
 				}
 			}
 		}
+		void PlaySounds(EntityObject obj)
+        {
+			//TODO: remove sound when enity is dead
+			const double MAXDISTFROMPLAYER = 600;
+			//MessageBox.Show(dist.ToString());
+			double dist = Distance(Player.X, Player.Y, obj.X, obj.Y, Player.A);
+			if (dist<=MAXDISTFROMPLAYER)
+            {
+				string name = (obj).Name;
+
+				if (!Audio_player.inPlayer(name))
+                {
+					Audio_player.AddTrack(name, (obj).Sound,-1,false,true);
+					Audio_player.Play(name);
+                }
+				Audio_player.UpdateDistance(name,(float)(10*(dist/MAXDISTFROMPLAYER)));
+            }
+        }
 		void RenderSide(List<RenderObject> render, Side side, Bitmap s)
 		{
 			const bool ENABLE_TEXTURES = true;

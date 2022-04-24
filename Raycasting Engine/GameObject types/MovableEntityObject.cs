@@ -27,8 +27,8 @@ namespace Raycasting_Engine
 		public double Dx { get => dx; set => dx = value; }
 		public double Dy { get => dy; set => dy = value; }
 
-		public MovableEntityObject(int gridX, int gridY,  int mapS, bool isSolid = false, int a = 0)
-			: base(gridX, gridY, mapS, 0, 0, isSolid)
+		public MovableEntityObject(int gridX, int gridY,  int mapS,string name, bool isSolid = false, int a = 0)
+			: base(gridX, gridY, mapS,name, 0, 0, isSolid)
 		{
 			X = gridX * mapS;
 			Y = gridY * mapS;

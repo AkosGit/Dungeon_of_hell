@@ -9,7 +9,7 @@ namespace Raycasting_Engine
 	class Props : EntityObject
 	{
 
-		public Props(int gridX, int gridY, int mapS, int z, bool visible, int x = 0, int y = 0, bool isSolid = false) : base(gridX, gridY, mapS, 0, 0, isSolid)
+		public Props(int gridX, int gridY, int mapS,string name, int z, bool visible, int x = 0, int y = 0, bool isSolid = false) : base(gridX, gridY, mapS,name, 0, 0, isSolid)
 		{
 			this.x = gridX * mapS + x;
 			this.y = gridY * mapS + y;

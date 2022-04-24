@@ -14,14 +14,19 @@ namespace Utils
         {
             tracks = new Dictionary<string, Audio>();
         }
-        public static void AddTrack(string name, string path, int distance = 0,bool removeWhenEnded=false)
+        public static void AddTrack(string name, string path, int distance = 0,bool removeWhenEnded=false, bool islooping=false)
         {
             //removeWhenEnded will remove the track from Dictionary when its finished playing
             //The max distance will determine how loud the sound is going to be, 0 will be the loudest
             //If distance is -1 volume will be mute 
             //max distance can specified below as a const
-            Audio audio = new Audio(name,path,removeWhenEnded,distance);
+            Audio audio = new Audio(name,path,removeWhenEnded,islooping,distance);
             tracks.Add(name, audio);
+        }
+        public static bool inPlayer(string name)
+        {
+
+            return tracks.Keys.Contains(name);
         }
         public static void RemoveTrack(string name)
         {
@@ -62,13 +67,15 @@ namespace Utils
         float distance;
         bool removeWhenEnded;
         string name;
+        bool isloping;
 
-        public Audio(string name,string path, bool removeWhenEnded, int distance)
+        public Audio(string name,string path, bool removeWhenEnded,bool islooping, int distance)
         {
             this.name = name;
             this.removeWhenEnded = removeWhenEnded;
             this.path = path;
             this.distance = distance;
+            this.isloping = isloping;
             mediaplayer = new MediaPlayer();
         }
         public void Play()
@@ -76,10 +83,19 @@ namespace Utils
             mediaplayer.Open(new Uri(GlobalSettings.Settings.AssetsPath + path));
             mediaplayer.Volume = CalculateVolume(distance);
             mediaplayer.Play();
+
             if (removeWhenEnded)
             {
                 mediaplayer.MediaEnded += Remove;
             }
+            if (isloping)
+            {
+                mediaplayer.MediaEnded += Doloop;
+            }
+        }
+        void Doloop(object sender, EventArgs e)
+        {
+            mediaplayer.Play();
         }
         private async void Remove(object sender, EventArgs e)
         {
