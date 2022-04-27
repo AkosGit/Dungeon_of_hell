@@ -22,6 +22,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rendering", "Rendering\Rend
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCPListener", "TCPListener\TCPListener.csproj", "{2B8B25CC-CCBD-47FC-9D85-F8A4F4F9F6E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCPClient", "TCPClient\TCPClient.csproj", "{FF44EFE1-F816-4C59-8D54-E9B140688F7A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{2B8B25CC-CCBD-47FC-9D85-F8A4F4F9F6E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B8B25CC-CCBD-47FC-9D85-F8A4F4F9F6E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B8B25CC-CCBD-47FC-9D85-F8A4F4F9F6E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF44EFE1-F816-4C59-8D54-E9B140688F7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF44EFE1-F816-4C59-8D54-E9B140688F7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF44EFE1-F816-4C59-8D54-E9B140688F7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF44EFE1-F816-4C59-8D54-E9B140688F7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
