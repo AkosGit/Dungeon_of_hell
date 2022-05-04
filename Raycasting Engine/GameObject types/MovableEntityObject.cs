@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -20,6 +21,10 @@ namespace Raycasting_Engine
 		double dx;
 		double dy;
 		double a;
+		//for playing walking sound
+		public bool IsMoving;
+		public bool IsHurting;
+		public bool IsSpeaking;
 
 		public double A { get => a; set => a = value; }
 		[JsonIgnore]
@@ -27,8 +32,8 @@ namespace Raycasting_Engine
 		public double Dx { get => dx; set => dx = value; }
 		public double Dy { get => dy; set => dy = value; }
 
-		public MovableEntityObject(int gridX, int gridY,  int mapS,string name, bool isSolid = false, int a = 0)
-			: base(gridX, gridY, mapS,name, 0, 0, isSolid)
+		public MovableEntityObject(int gridX, int gridY,  int mapS,string name, bool isSolid = false, int a = 0, Dictionary<Audio_player.EnitySound, List<string>> Sounds =null)
+			: base(gridX, gridY, mapS,name, 0, 0, isSolid,Sounds)
 		{
 			X = gridX * mapS;
 			Y = gridY * mapS;
@@ -73,7 +78,8 @@ namespace Raycasting_Engine
 			switch (action)
 			{
 				case EntityActions.Forward:
-					if (!map[ipy * mapY + ipx_P_xo].IsSolid) X += dx;
+
+					if (!map[ipy * mapY + ipx_P_xo].IsSolid) { X += dx;IsMoving = true; }
 					if (!map[ipy_P_yo * mapY + ipx].IsSolid) Y += dy;
 					if (map[ipy * mapY + ipx_M_xo].IsSolid&& map[ipy * mapY + ipx_M_xo].CanOpen && GridX != ipx_M_xo) map[ipy * mapY + ipx_M_xo].Close();
 					if (map[ipy_M_yo * mapY + ipx].IsSolid&& map[ipy_M_yo * mapY + ipx].CanOpen && GridY != ipy_M_yo) map[ipy_M_yo * mapY + ipx].Close();
@@ -84,7 +90,7 @@ namespace Raycasting_Engine
 					dy = Math.Sin(a) * 5;
 					return;
 				case EntityActions.Backwards:
-					if (!map[ipy * mapY + ipx_M_xo].IsSolid) X -= dx;
+					if (!map[ipy * mapY + ipx_M_xo].IsSolid) { X -= dx;IsMoving = true; }
 					if (!map[ipy_M_yo * mapY + ipx].IsSolid) Y -= dy;
 					return;
 				case EntityActions.Right:

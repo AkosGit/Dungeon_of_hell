@@ -107,14 +107,14 @@ namespace Raycasting_Engine
 
         public Wall() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
         {
-            this.image = new Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\test.jpg");
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\test.jpg";
         }
     }
     public class Wall2 : MapObject
     {
         public Wall2() : base(0, 0, Color.FromArgb(255, 226, 107, 139), true) 
         {
-            this.image = new Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\test.jpg");
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\test.jpg";
         }
     }
     public class Air : MapObject
@@ -124,7 +124,7 @@ namespace Raycasting_Engine
     public class Door : MapObject
     {
         public Door() : base(0, 0, Color.FromArgb(255, 123, 70, 23), true, true) {
-            this.image = new Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\test.jpg");
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\test.jpg";
         }
 
     }

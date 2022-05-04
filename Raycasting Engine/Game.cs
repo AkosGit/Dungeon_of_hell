@@ -80,14 +80,80 @@ namespace Raycasting_Engine
 
 			entities = new List<EntityObject>();
 			EntityObject test = new EntityObject(2, 2, 100,"Józsi", 40, mapS);
-			test.image = new Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
-			test.Sound = "sound\\test.mp3";
+			test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
 			EntityObject test2 = new EntityObject(2, 2, 400, "nem józsi", 50, mapS);
-			test2.image= new Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
-			test2.Sound = "sound\\test.mp3";
+			test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
 			entities.Add(test2);
 		}
+		void PlaySounds(EntityObject obj)
+		{
+			Random r = new Random();
+			const double MAXDISTFROMPLAYER = 600;
+			void UpdateDistanceFromPlayer(string name)
+			{
+				double dist = Distance(Player.X, Player.Y, obj.X, obj.Y, Player.A);
+				if (dist <= MAXDISTFROMPLAYER)
+				{
+					Audio_player.UpdateDistance(name, (float)(10 * (dist / MAXDISTFROMPLAYER)));
 
+				}
+			}
+			void PlayandUpdate(EntityObject obj, Audio_player.EnitySound key, bool playSound)
+			{
+				//check if one of the sound is playing and update distance based on player pos
+				bool isPlaying = false;
+				foreach (string name in obj.Sounds[key])
+				{
+					if (Audio_player.IsPlaying(name))
+					{
+						isPlaying = true;
+						UpdateDistanceFromPlayer(name);
+					}
+				}
+				if (!isPlaying && playSound)
+				{
+					//play random sound if non is playing
+					string soundname = obj.Sounds[key][r.Next(0, obj.Sounds[key].Count)];
+					Audio_player.Play(soundname);
+					UpdateDistanceFromPlayer(soundname);
+				}
+			}
+			if (obj is MovableEntityObject)
+			{
+				foreach (Audio_player.EnitySound key in obj.Sounds.Keys)
+				{
+					bool playSound = false;
+					if (key == Audio_player.EnitySound.walking)
+					{
+						if (((MovableEntityObject)obj).IsMoving)
+						{
+							//stop movement to avoid multiple sounds playing
+							playSound = true;
+							((MovableEntityObject)obj).IsMoving = false;
+						}
+						PlayandUpdate(obj, key, playSound);
+					}
+					if (key == Audio_player.EnitySound.hurting)
+					{
+						if (((MovableEntityObject)obj).IsHurting)
+						{
+							playSound = true;
+							((MovableEntityObject)obj).IsHurting = false;
+						}
+						PlayandUpdate(obj, key, playSound);
+					}
+					if (key == Audio_player.EnitySound.speaking)
+					{
+						if (((MovableEntityObject)obj).IsSpeaking)
+						{
+							playSound = true;
+							((MovableEntityObject)obj).IsSpeaking = false;
+						}
+						PlayandUpdate(obj, key, playSound);
+					}
+				}
+			}
+		}
 		public void DrawTurn()
 		{
 			canvas.Children.Clear();
@@ -98,6 +164,7 @@ namespace Raycasting_Engine
 			RGeometry.DrawRectangle(canvas,0, 250, 722, 250, 722, 500, 0, 500, Brushes.Aqua, Brushes.Transparent);
 			drawRays3D();
 			RenderItem();
+			PlaySounds(Player);
 			foreach (EntityObject ent in entities)
 			{
 				PlaySounds(ent);
@@ -269,11 +336,13 @@ namespace Raycasting_Engine
 				{
 					if (item.Key is MapObject)
 					{
-						RenderSide(SideA, Side.horizontal, ((MapObject)item.Key).image);
+						List<string> textures = new List<string>();
+						textures.Add(((MapObject)item.Key).image);
+						RenderSide(SideA, Side.horizontal,textures);
 					}
 					else if(item.Key is EntityObject)
 					{
-						RenderSide(SideA, Side.horizontal, ((EntityObject)item.Key).image);
+						RenderSide(SideA, Side.horizontal, ((EntityObject)item.Key).textures);
 
 					}
 				}
@@ -281,31 +350,16 @@ namespace Raycasting_Engine
 				{
 					if (item.Key is MapObject)
 					{
-						RenderSide(SideB, Side.vertical, ((MapObject)item.Key).image);
+						List<string> textures = new List<string>();
+						textures.Add(((MapObject)item.Key).image);
+						RenderSide(SideB, Side.vertical, textures);
 					}
 				}
 			}
 		}
-		void PlaySounds(EntityObject obj)
-        {
-			//TODO: remove sound when enity is dead
-			const double MAXDISTFROMPLAYER = 600;
-			//MessageBox.Show(dist.ToString());
-			double dist = Distance(Player.X, Player.Y, obj.X, obj.Y, Player.A);
-			if (dist<=MAXDISTFROMPLAYER)
-            {
-				string name = (obj).Name;
-
-				if (!Audio_player.inPlayer(name))
-                {
-					Audio_player.AddTrack(name, (obj).Sound,-1,false,true);
-					Audio_player.Play(name);
-                }
-				Audio_player.UpdateDistance(name,(float)(10*(dist/MAXDISTFROMPLAYER)));
-            }
-        }
-		void RenderSideParalel(List<RenderObject> render, Side side, Bitmap s)
+		void RenderSideParalel(List<RenderObject> render, Side side, List<string> textures)
 		{
+			Bitmap s = new Bitmap(textures[0]);
 			var uiContext = SynchronizationContext.Current;
 			Task.Run(() => { renderTask(render.ConvertAll(x => (RenderObject)x.Clone()), side,new Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\test.jpg"),uiContext); });
 
@@ -419,9 +473,10 @@ namespace Raycasting_Engine
 			}
 			//RGeometry.DrawRectangle(canvas,render.First().ScreenP1.X, render.First().ScreenP1.Y, render.Last().ScreenP2.X, render.Last().ScreenP2.Y, render.Last().ScreenP3.X, render.Last().ScreenP3.Y, render.First().ScreenP4.X, render.First().ScreenP4.Y, imgbrush, sideShadow);
 		}
-		void RenderSide(List<RenderObject> render, Side side, Bitmap s)
+		void RenderSide(List<RenderObject> render, Side side, List<string> textures)
 		{
 			const bool ENABLE_TEXTURES = true;
+			Bitmap s = new Bitmap(textures[0]);
 			double percentVisible;
 			Brush sideShadow = Brushes.Transparent;
 			Brush imgbrush = Brushes.AliceBlue;
@@ -539,11 +594,6 @@ namespace Raycasting_Engine
 		}
 		#endregion
 
-		#region Default shapes drawing
-		
-
-
-		#endregion
 	}
 }
 

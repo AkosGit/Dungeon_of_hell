@@ -8,7 +8,15 @@ using System.Windows.Media;
 
 namespace Utils
 {
-    public static class Audio_player{
+    public static class Audio_player {
+        public enum EnitySound
+        {
+            walking,hurting,speaking
+        }
+        public enum WeaponSound
+        {
+            shooting,reloading,walking
+        }
         static Dictionary<string, Audio> tracks;
         static Audio_player()
         {
@@ -21,7 +29,10 @@ namespace Utils
             //If distance is -1 volume will be mute 
             //max distance can specified below as a const
             Audio audio = new Audio(name,path,removeWhenEnded,islooping,distance);
-            tracks.Add(name, audio);
+            if (!tracks.ContainsKey(name))
+            {
+                tracks.Add(name, audio);
+            }
         }
         public static bool inPlayer(string name)
         {
@@ -42,6 +53,10 @@ namespace Utils
                 tracks.Remove(key);
             }
         }
+        public static bool IsPlaying(string name)
+        {
+            return tracks[name].isplaying;
+        }
 
         public static void StopPlayback(string name)
         {
@@ -56,8 +71,6 @@ namespace Utils
             //Update distance of object
             tracks[name].UpdateDistance(distance);
         }
-
-
     }
     public class Audio
     {
@@ -68,9 +81,11 @@ namespace Utils
         bool removeWhenEnded;
         string name;
         bool isloping;
+        public bool isplaying;
 
         public Audio(string name,string path, bool removeWhenEnded,bool islooping, int distance)
         {
+            isplaying = false;
             this.name = name;
             this.removeWhenEnded = removeWhenEnded;
             this.path = path;
@@ -83,7 +98,8 @@ namespace Utils
             mediaplayer.Open(new Uri(GlobalSettings.Settings.AssetsPath + path));
             mediaplayer.Volume = CalculateVolume(distance);
             mediaplayer.Play();
-
+            mediaplayer.MediaEnded += (object sender, EventArgs e) => { isplaying = false; };
+            isplaying = true;
             if (removeWhenEnded)
             {
                 mediaplayer.MediaEnded += Remove;
@@ -93,8 +109,10 @@ namespace Utils
                 mediaplayer.MediaEnded += Doloop;
             }
         }
+
         void Doloop(object sender, EventArgs e)
         {
+            isplaying = true;
             mediaplayer.Play();
         }
         private async void Remove(object sender, EventArgs e)

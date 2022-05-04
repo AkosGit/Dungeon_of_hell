@@ -17,7 +17,7 @@ namespace Raycasting_Engine
 		public bool CanOpen { get => canOpen; set => canOpen = value; }
 
 		Brush textureA;
-		public System.Drawing.Bitmap image { get; set; }
+		public string image { get; set; }
 		public Brush TextureA { get => textureA; set => textureA = value; }
 
 		public MapObject(int gridX, int gridY, Color A, bool isSolid = false, bool canOpen = false)
