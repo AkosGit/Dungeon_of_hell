@@ -61,20 +61,38 @@ namespace Raycasting_Engine
 		//render Item in hand
 		public void RenderItem()
 		{
+
 			Brush Selected = HUD.Inventory.SelectedItem.Holding;
-			if(HUD.Inventory.SelectedItem is FireArm)
+			if (HUD.Inventory.SelectedItem is FireArm)
             {
+				((FireArm)HUD.Inventory.SelectedItem).Tick();
 				if (((FireArm)HUD.Inventory.SelectedItem).IsShooting)
 				{
 					Selected = HUD.Inventory.SelectedItem.InUse;
 					((FireArm)HUD.Inventory.SelectedItem).IsShooting = false;
+
+				}
+				double pos = canvas.Width / 10 * 5;
+				double itemh = 64;
+				double itemw = 64;
+                if (((FireArm)HUD.Inventory.SelectedItem).IsReloading)
+                {
+					//when reloading put part of the gun out of frame
+					RGeometry.DrawRectangle(canvas, pos, canvas.ActualHeight+30, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height+30, Selected, Brushes.Transparent);
+				}
+				else
+                {
+					RGeometry.DrawRectangle(canvas, pos, canvas.ActualHeight, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height, Selected, Brushes.Transparent);
+
 				}
 			}
-			double pos = canvas.Width / 7 * 6;
-			double itemh = 30;
-			double itemw = 50;
-			RGeometry.DrawRectangle(canvas,pos, canvas.ActualHeight, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height, Selected, Brushes.Transparent);
-
+            else
+            {
+				double pos = canvas.Width / 7 * 6;
+				double itemh = 30;
+				double itemw = 50;
+				RGeometry.DrawRectangle(canvas, pos, canvas.ActualHeight, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height, Selected, Brushes.Transparent);
+			}
 		}
 		protected void LoadMapToInGameMap(Map map)
 		{

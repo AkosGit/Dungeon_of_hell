@@ -104,48 +104,13 @@ namespace Dungeon_of_hell.SinglePlayer
 			hud.Height = 722;
 			hud.Background = Brushes.DarkRed;
 
-			game = new SPMain(canvas,hud,InventorySLOST,CreatePistol());
+			game = new SPMain(canvas,hud,InventorySLOST,new Pistol("pistol", 100, 10, 30));
 
 			Canvas.Width = 722;
 			Canvas.Height = 500;
 			Canvas.Background = Brushes.Gray;
 
 		}
-		FireArm CreatePistol()
-        {
-			ImageBrush icon = new ImageBrush(RUtils.ImageSourceFromBitmap(
-				new System.Drawing.Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\Weapon\\Weapon_1_icon.png")));
-			ImageBrush holding = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\Weapon\\Weapon_1.png")));
-			ImageBrush shoot = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\Weapon\\Weapon_1_shoting.png")));
-			FireArm Pistol = new FireArm("pistol", icon, holding, shoot, 100, 10, 30);
 
-			Pistol.Sounds[Audio_player.WeaponSound.reloading].Add("pistol_reload_1");
-			Audio_player.AddTrack("pistol_reload_1", "sound\\pistol\\reload_pistol_1.mp3");
-			Pistol.Sounds[Audio_player.WeaponSound.reloading].Add("pistol_reload_2");
-			Audio_player.AddTrack("pistol_reload_2", "sound\\pistol\\reload_pistol_2.mp3");
-			Pistol.Sounds[Audio_player.WeaponSound.shooting].Add("pistol_shoot_1");
-			Audio_player.AddTrack("pistol_shoot_1", "sound\\pistol\\shooting_pistol_1.mp3");
-			Pistol.Sounds[Audio_player.WeaponSound.shooting].Add("pistol_shoot_2");
-			Audio_player.AddTrack("pistol_shoot_2", "sound\\pistol\\shooting_pistol_2.mp3");
-			Pistol.Sounds[Audio_player.WeaponSound.shooting].Add("pistol_shoot_3");
-			Audio_player.AddTrack("pistol_shoot_3", "sound\\pistol\\shooting_pistol_3.mp3");
-			Pistol.Sounds[Audio_player.WeaponSound.shooting].Add("pistol_shoot_4");
-			Audio_player.AddTrack("pistol_shoot_4", "sound\\pistol\\shooting_pistol_4.mp3");
-			//Pistol.Sounds[Audio_player.WeaponSound.walking].Add("pistol_walking_1");
-			//Audio_player.AddTrack("pistol_walking_1", "sound\\pistol\\walking_pistol_1.mp3");
-			//Pistol.Sounds[Audio_player.WeaponSound.walking].Add("pistol_walking_2");
-			//Audio_player.AddTrack("pistol_walking_2", "sound\\pistol\\walking_pistol_2.mp3");
-			//Pistol.Sounds[Audio_player.WeaponSound.shooting].Add("pistol_walking_3");
-			//Audio_player.AddTrack("pistol_walking_3", "sound\\pistol\\walking_pistol_3.mp3");
-			//Pistol.Sounds[Audio_player.WeaponSound.walking].Add("pistol_walking_4");
-			//Audio_player.AddTrack("pistol_walking_4", "sound\\pistol\\walking_pistol_4.mp3");
-			//Pistol.Sounds[Audio_player.WeaponSound.walking].Add("pistol_walking_5");
-			//Audio_player.AddTrack("pistol_walking_5", "sound\\pistol\\walking_pistol_5.mp3");
-			//Audio_player.ChangeVolume("pistol_walking_1", 20);
-			//Audio_player.ChangeVolume("pistol_walking_2", 20);
-			//Audio_player.ChangeVolume("pistol_walking_3", 20);
-			//Audio_player.ChangeVolume("pistol_walking_4", 20);
-			return Pistol;
-		}
 	}
 }

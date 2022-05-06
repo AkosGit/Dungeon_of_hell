@@ -100,24 +100,117 @@ namespace HUD
             }
         }
     }
+
     public enum ItemActions
     {
         Shoot,Reload
     }
-    public class FireArm : Item
+    public class Pistol: FireArm
     {
-        Random r;
+        public Pistol(string name,int ammo, int rounds, int damage): base(name, ammo, rounds, damage)
+        {
+            Icon = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\Weapon\\Weapon_1_icon.png")));
+            Holding = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\Weapon\\Weapon_1.png")));
+            InUse = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\Weapon\\Weapon_1_shoting.png")));
+            Sounds[Audio_player.WeaponSound.reloading].Add("pistol_reload_1");
+            Audio_player.AddTrack("pistol_reload_1", "sound\\pistol\\reload_pistol_1.mp3");
+
+            Sounds[Audio_player.WeaponSound.shooting].Add("pistol_shoot_1");
+            Audio_player.AddTrack("pistol_shoot_1", "sound\\pistol\\shooting_pistol_1.mp3");
+            Sounds[Audio_player.WeaponSound.shooting].Add("pistol_shoot_2");
+            Audio_player.AddTrack("pistol_shoot_2", "sound\\pistol\\shooting_pistol_2.mp3");
+            Sounds[Audio_player.WeaponSound.shooting].Add("pistol_shoot_3");
+            Audio_player.AddTrack("pistol_shoot_3", "sound\\pistol\\shooting_pistol_3.mp3");
+            Sounds[Audio_player.WeaponSound.shooting].Add("pistol_shoot_4");
+            Audio_player.AddTrack("pistol_shoot_4", "sound\\pistol\\shooting_pistol_4.mp3");
+
+            Sounds[Audio_player.WeaponSound.shooting].Add("pistol_last_round");
+            Audio_player.AddTrack("pistol_last_round", "sound\\pistol\\empty_shooting_pistol.mp3");
+
+            //Pistol.Sounds[Audio_player.WeaponSound.walking].Add("pistol_walking_1");
+            //Audio_player.AddTrack("pistol_walking_1", "sound\\pistol\\walking_pistol_1.mp3");
+            //Pistol.Sounds[Audio_player.WeaponSound.walking].Add("pistol_walking_2");
+            //Audio_player.AddTrack("pistol_walking_2", "sound\\pistol\\walking_pistol_2.mp3");
+            //Pistol.Sounds[Audio_player.WeaponSound.shooting].Add("pistol_walking_3");
+            //Audio_player.AddTrack("pistol_walking_3", "sound\\pistol\\walking_pistol_3.mp3");
+            //Pistol.Sounds[Audio_player.WeaponSound.walking].Add("pistol_walking_4");
+            //Audio_player.AddTrack("pistol_walking_4", "sound\\pistol\\walking_pistol_4.mp3");
+            //Pistol.Sounds[Audio_player.WeaponSound.walking].Add("pistol_walking_5");
+            //Audio_player.AddTrack("pistol_walking_5", "sound\\pistol\\walking_pistol_5.mp3");
+            //Audio_player.ChangeVolume("pistol_walking_1", 20);
+            //Audio_player.ChangeVolume("pistol_walking_2", 20);
+            //Audio_player.ChangeVolume("pistol_walking_3", 20);
+            //Audio_player.ChangeVolume("pistol_walking_4", 20);
+        }
+        public override void Shoot()
+        {
+            bool shotIsOngoing = false;
+            if (Rounds > 0)
+            {
+                foreach (var item in Sounds[Audio_player.WeaponSound.shooting])
+                {
+                    if (Audio_player.IsPlaying(item)) { shotIsOngoing = true; }
+                }
+                if (!Audio_player.IsPlaying("pistol_reload_1") && !shotIsOngoing)
+                {
+                    //reqerd for rendering item in hand
+                    IsShooting = true;
+                    if (Rounds == 1)
+                    {
+                        Audio_player.Play("pistol_last_round");
+                    }
+                    else
+                    {
+                        string soundname = Sounds[Audio_player.WeaponSound.shooting][r.Next(0, Sounds[Audio_player.WeaponSound.shooting].Count - 1)];
+                        Audio_player.Play(soundname);
+                    }
+                    Rounds--;
+                }
+            }
+        }
+        public override void Walking()
+        {
+
+        }
+        public override void Reload()
+        {
+            if (Ammo != 0)
+            {
+                //wait for reload to complete
+                if (!Audio_player.IsPlaying("pistol_reload_1"))
+                {
+                    IsReloading = true;
+                    Ammo--;
+                    Rounds = maxrounds;
+                    Audio_player.Play("pistol_reload_1");
+                }
+            }
+        }
+
+        public override void Tick()
+        {
+            //change state from previous tick
+            if (!Audio_player.IsPlaying("pistol_reload_1"))
+            {
+                IsReloading = false;
+            }
+        }
+    }
+    public abstract class FireArm : Item
+    {
+        protected Random r;
         public int Ammo { get; set; }
         public int Damage { get; set; }
         public int Rounds { get; set; }
-        private int maxrounds;
+        protected int maxrounds;
         public bool IsShooting { get; set; }
+        public bool IsReloading { get; set; }
 
-        public Dictionary<Audio_player.WeaponSound,List<string>> Sounds { get; set; }
+        public Dictionary<Audio_player.WeaponSound, List<string>> Sounds { get; set; }
 
-        public FireArm(string name, Brush Icon, Brush Holding, Brush InUse, int ammo,int rounds,int damage) :base(name, Icon, Holding, InUse)
+        public FireArm(string name, int ammo, int rounds, int damage) : base(name)
         {
-            
+
             Ammo = ammo;
             Damage = damage;
             this.Sounds = new Dictionary<Audio_player.WeaponSound, List<string>>();
@@ -128,53 +221,10 @@ namespace HUD
             maxrounds = rounds;
             r = new Random();
         }
-        void Play(Audio_player.WeaponSound key)
-        {
-            //check if one of the sound is playing and update distance based on player pos
-            bool isPlaying = false;
-            foreach (string name in Sounds[key])
-            {
-                if (Audio_player.IsPlaying(name))
-                {
-                    isPlaying = true;
-                }
-            }
-            if (!isPlaying)
-            {
-                //play random sound if non is playing
-                string soundname = Sounds[key][r.Next(0, Sounds[key].Count)];
-                Audio_player.Play(soundname);
-            }
-        }
-        public virtual void Shoot()
-        {
-            if (Rounds >= 0)
-            {
-                
-            }
-            else
-            {
-                Rounds--;
-                //reqerd for rendering item in hand
-                IsShooting = true;
-                Play(Audio_player.WeaponSound.shooting);
-            }
-
-        }
-        public virtual void Walking()
-        {
-            Play(Audio_player.WeaponSound.walking);
-
-        }
-        public virtual void Reload()
-        {
-            if (Ammo != 0)
-            {
-                Ammo--;
-                Rounds = maxrounds;
-                Play(Audio_player.WeaponSound.reloading);
-            }
-        }
+        public abstract void Shoot();
+        public abstract void Walking();
+        public abstract void Reload();
+        public abstract void Tick();
     }
     public class Item
     {
@@ -182,13 +232,11 @@ namespace HUD
         public Brush Icon { get; set; }
         public Brush Holding { get; set; }
         public Brush InUse { get; set; }
-        public Item(string name, Brush Icon,Brush Holding, Brush InUse)
+        public Item(string name)
         {
             Name = name;
-            this.Icon = Icon;
-            this.Holding = Holding;
-            this.InUse = InUse;
         }
     }
+
 
 }
