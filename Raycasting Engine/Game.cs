@@ -61,10 +61,11 @@ namespace Raycasting_Engine
 		//render Item in hand
 		public void RenderItem()
 		{
-
 			Brush Selected = HUD.Inventory.SelectedItem.Holding;
 			if (HUD.Inventory.SelectedItem is FireArm)
             {
+				//updates ammo display
+				HUD.UpdateAmmo();
 				((FireArm)HUD.Inventory.SelectedItem).Tick();
 				if (((FireArm)HUD.Inventory.SelectedItem).IsShooting)
 				{
@@ -501,7 +502,6 @@ namespace Raycasting_Engine
 		}
 		void RenderSide(List<RenderObject> render, Side side, List<string> textures)
 		{
-			const bool ENABLE_TEXTURES = true;
 			Bitmap s = new Bitmap(textures[0]);
 			double percentVisible;
 			Brush sideShadow = Brushes.Transparent;
@@ -534,9 +534,6 @@ namespace Raycasting_Engine
 			myPointCollection.Add(Point2);
 			myPointCollection.Add(Point3);
 			myPointCollection.Add(Point4);
-
-			if (ENABLE_TEXTURES)
-			{
 				//crop to image percent visible
 				int with = (int)(s.Width * percentVisible);
 				System.Drawing.Rectangle cropRect = new System.Drawing.Rectangle();
@@ -591,8 +588,6 @@ namespace Raycasting_Engine
 				((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(transform.Bitmap);
 				//((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(bit);
 				bit.Dispose();
-
-			}
 			//draw polygon
 			Polygon myPolygon = new Polygon();
 			myPolygon.Stroke = imgbrush;
@@ -609,9 +604,13 @@ namespace Raycasting_Engine
 			myPolygon2.VerticalAlignment = VerticalAlignment.Center;
 			myPolygon.Points = myPointCollection;
 			myPolygon2.Points = myPointCollection;
-
-			canvas.Children.Add(myPolygon);
-			canvas.Children.Add(myPolygon2);
+			System.Drawing.Point c = RUtils.CenterOfCanvas(canvas);
+			if ((c.X < Point1.X || c.X > Point3.X || c.Y < Point1.Y || c.Y > Point2.Y))
+			{
+				// Definitely not within the polygon!
+				canvas.Children.Add(myPolygon);
+				canvas.Children.Add(myPolygon2);
+			}
 			//RGeometry.DrawRectangle(canvas,render.First().ScreenP1.X, render.First().ScreenP1.Y, render.Last().ScreenP2.X, render.Last().ScreenP2.Y, render.Last().ScreenP3.X, render.Last().ScreenP3.Y, render.First().ScreenP4.X, render.First().ScreenP4.Y, imgbrush, sideShadow);
 		}
 		private double Distance(double ax, double ay, double bx, double by, double ang)

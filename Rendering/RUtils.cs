@@ -74,6 +74,14 @@ namespace Rendering
 			}
 			return points;
 		}
+		public static System.Drawing.Point CenterOfCanvas(Canvas c)
+        {
+			System.Drawing.Point p = new System.Drawing.Point();
+			p.X = (int)c.ActualWidth / 2;
+			p.Y = (int)c.ActualHeight / 2;
+			return p;
+
+		}
 		public static T Clone<T>(T source)
 		{
 			if (!typeof(T).IsSerializable)

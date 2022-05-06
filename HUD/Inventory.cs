@@ -144,14 +144,10 @@ namespace HUD
         }
         public override void Shoot()
         {
-            bool shotIsOngoing = false;
             if (Rounds > 0)
             {
-                foreach (var item in Sounds[Audio_player.WeaponSound.shooting])
-                {
-                    if (Audio_player.IsPlaying(item)) { shotIsOngoing = true; }
-                }
-                if (!Audio_player.IsPlaying("pistol_reload_1") && !shotIsOngoing)
+
+                if (!IsReloading && !shotIsOngoing)
                 {
                     //reqerd for rendering item in hand
                     IsShooting = true;
@@ -177,7 +173,7 @@ namespace HUD
             if (Ammo != 0)
             {
                 //wait for reload to complete
-                if (!Audio_player.IsPlaying("pistol_reload_1"))
+                if (!IsReloading)
                 {
                     IsReloading = true;
                     Ammo--;
@@ -189,11 +185,18 @@ namespace HUD
 
         public override void Tick()
         {
-            //change state from previous tick
+            //for long events that takes multiple ticks
             if (!Audio_player.IsPlaying("pistol_reload_1"))
             {
                 IsReloading = false;
             }
+            bool temp = false;
+            foreach (var item in Sounds[Audio_player.WeaponSound.shooting])
+            {
+                if (Audio_player.IsPlaying(item)) { temp = true; }
+            }
+            if (temp) { shotIsOngoing = true; }
+            else { shotIsOngoing = false; }
         }
     }
     public abstract class FireArm : Item
@@ -203,6 +206,7 @@ namespace HUD
         public int Damage { get; set; }
         public int Rounds { get; set; }
         protected int maxrounds;
+        protected bool shotIsOngoing;
         public bool IsShooting { get; set; }
         public bool IsReloading { get; set; }
 
