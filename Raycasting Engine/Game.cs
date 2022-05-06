@@ -61,7 +61,15 @@ namespace Raycasting_Engine
 		//render Item in hand
 		public void RenderItem()
 		{
-			Brush Selected = HUD.Inventory.SelectedItem.Texture;
+			Brush Selected = HUD.Inventory.SelectedItem.Holding;
+			if(HUD.Inventory.SelectedItem is FireArm)
+            {
+				if (((FireArm)HUD.Inventory.SelectedItem).IsShooting)
+				{
+					Selected = HUD.Inventory.SelectedItem.InUse;
+					((FireArm)HUD.Inventory.SelectedItem).IsShooting = false;
+				}
+			}
 			double pos = canvas.Width / 7 * 6;
 			double itemh = 30;
 			double itemw = 50;

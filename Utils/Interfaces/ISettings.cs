@@ -20,6 +20,6 @@ namespace Utils
     {
         public Key key { get; set; }
         public string Message { get; set; }
-        public EntityActions Usecase { get; set; }
+        public Enum Usecase { get; set; }
     }
 }

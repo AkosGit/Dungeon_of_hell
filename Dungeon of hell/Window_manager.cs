@@ -16,6 +16,8 @@ using System.Media;
 using System.Windows.Media;
 using System.Windows.Input;
 using Utils;
+using HUD;
+
 namespace Dungeon_of_hell
 {
     public class Window_manager : ObservableObject, IWindowManager
@@ -72,6 +74,9 @@ namespace Dungeon_of_hell
                 ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Left, key = Key.A, Message = "A" });
                 ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Right, key = Key.D, Message = "D" });
                 ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Use, key = Key.E, Message = "E" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = ItemActions.Shoot, key = Key.K, Message = "K" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = ItemActions.Reload, key = Key.R, Message = "R" });
+
             }
             view.getview += (string viewname) => { return GetView(viewname); };
             view.addview += (IViewModel model, Type typeofview) => { AddView(model, typeofview); };

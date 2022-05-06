@@ -15,12 +15,16 @@ namespace Utils
         }
         public enum WeaponSound
         {
-            shooting,reloading,walking
+            shooting,reloading,walking,outofammo
         }
         static Dictionary<string, Audio> tracks;
         static Audio_player()
         {
             tracks = new Dictionary<string, Audio>();
+        }
+        public static void ChangeVolume(string name, int percent)
+        {
+            tracks[name].ChangeVolume(percent);
         }
         public static void AddTrack(string name, string path, int distance = 0,bool removeWhenEnded=false, bool islooping=false)
         {
@@ -109,7 +113,10 @@ namespace Utils
                 mediaplayer.MediaEnded += Doloop;
             }
         }
-
+        public void ChangeVolume(int percent)
+        {
+            mediaplayer.Volume = GlobalSettings.Settings.Volume * (percent / 10);
+        }
         void Doloop(object sender, EventArgs e)
         {
             isplaying = true;
