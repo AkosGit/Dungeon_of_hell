@@ -52,6 +52,22 @@ namespace Rendering
 				return drawingGroup;
 			}
 		}
+		public static VisualBrush DrawText(string text, System.Windows.Media.Brush textcolor, System.Windows.Media.Brush back)
+		{
+			VisualBrush myVisualBrush = new VisualBrush();
+			StackPanel myStackPanel = new StackPanel();
+			myStackPanel.Background = back;
+			TextBlock someText = new TextBlock();
+			someText.Foreground = textcolor;
+			FontSizeConverter myFontSizeConverter = new FontSizeConverter();
+			someText.FontSize = (double)myFontSizeConverter.ConvertFrom("10pt");
+			someText.Text = text;
+			someText.Margin = new Thickness(2);
+			myStackPanel.Children.Add(someText);
+			myVisualBrush.Visual = myStackPanel;
+			return myVisualBrush;
+		}
+
 		[DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		public static extern bool DeleteObject([In] IntPtr hObject);

@@ -57,14 +57,12 @@ namespace HUD
 		public void UpdateHealth(int h)
         {
 			Health = h;
-			DrawingBrush healthBrush = new DrawingBrush(RUtils.DrawMyText(Health.ToString()));
-            RGeometry.DrawRectangle(hud, 0, (hud.Height / SLOTS) * 6, 0, (hud.Height / SLOTS) * 5, hud.Width, (hud.Height / SLOTS) * 5, hud.Width, (hud.Height / SLOTS) * 6, Brushes.DarkRed, Brushes.Black, 2);
-            RGeometry.DrawRectangle(hud,0, (hud.Height / SLOTS) * 6, 0, (hud.Height / SLOTS) * 5, hud.Width, (hud.Height / SLOTS) * 5, hud.Width, (hud.Height / SLOTS) * 6, healthBrush, Brushes.Black, 2);			
+            DrawingBrush healthBrush = new DrawingBrush(RUtils.DrawMyText(Health.ToString()));
+            RGeometry.DrawRectangle(hud, 0, (hud.Height / SLOTS) * 6, 0, (hud.Height / SLOTS) * 5, hud.Width, (hud.Height / SLOTS) * 5, hud.Width, (hud.Height / SLOTS) * 6, healthBrush, Brushes.Black, 2);
         }
         public void UpdateAmmo()
         {
-            DrawingBrush healthBrush = new DrawingBrush(RUtils.DrawMyText($"{((FireArm)Inventory.SelectedItem).Ammo}/{((FireArm)Inventory.SelectedItem).Rounds}"));
-            RGeometry.DrawRectangle(hud, 0, hud.Height, 0, (hud.Height / SLOTS) * 6, hud.ActualWidth, (hud.Height / SLOTS) * 6, hud.ActualWidth, hud.Height, Brushes.DarkRed, Brushes.Black, 2);
+            DrawingBrush healthBrush = new DrawingBrush(RUtils.DrawMyText($"{((FireArm)Inventory.SelectedItem).Ammo}/{((FireArm)Inventory.SelectedItem).Rounds}")); 
             RGeometry.DrawRectangle(hud, 0, hud.Height, 0, (hud.Height / SLOTS) * 6, hud.ActualWidth, (hud.Height / SLOTS) * 6, hud.ActualWidth, hud.Height, healthBrush, Brushes.Black, 2);
         }
 	}

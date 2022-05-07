@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Input;
 using Utils;
 using HUD;
+using Dungeon_of_hell.SinglePlayer;
 
 namespace Dungeon_of_hell
 {
@@ -160,10 +161,11 @@ namespace Dungeon_of_hell
         }
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            Audio_player.RemoveAll();
             if (ViewExists("Singleplayer")){
                 ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json", (ISingleplayer)viewModels[GetindexByName("Singleplayer")]);
+                ((SinglePlayerViewModel)GetView("Singleplayer")).timer1.Stop();
             }
+            Audio_player.RemoveAll();
             ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json", (IGlobalSettings)GlobalSettings.Settings);
             ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\Settings.json", (ISettings)GetView("Settings"));
         }

@@ -21,7 +21,7 @@ namespace Dungeon_of_hell.SinglePlayer
 		const int InventorySLOST = 7;
 		
 		public bool InGame { get; set; }
-		DispatcherTimer timer1;
+		public DispatcherTimer timer1;
 		TimeSpan time;
 		Boolean StopTimer;
 		SPMain game;
@@ -50,7 +50,7 @@ namespace Dungeon_of_hell.SinglePlayer
 			StopTimer = false;
 			InGame = true;
 			time = TimeSpan.FromDays(0);
-			timer1 = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 8), DispatcherPriority.Normal, delegate
+			timer1 = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 12), DispatcherPriority.Normal, delegate
 			{
 				if (StopTimer)
 				{
@@ -58,6 +58,8 @@ namespace Dungeon_of_hell.SinglePlayer
 				}
 				time = time.Add(TimeSpan.FromMilliseconds(1));
 				//handle multiple keydowns
+				//game.HUD.UpdateAmmo();
+				//game.HUD.UpdateHealth(game.Player.Health);
 				var binds = GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings");
 				foreach (Binding k in binds)
 				{
@@ -93,7 +95,6 @@ namespace Dungeon_of_hell.SinglePlayer
 				}
 				game.DrawTurn();
 			}, Application.Current.Dispatcher);
-
 			timer1.Start();
 		}
 		private void SetDefaults()

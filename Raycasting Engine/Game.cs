@@ -64,15 +64,13 @@ namespace Raycasting_Engine
 			Brush Selected = HUD.Inventory.SelectedItem.Holding;
 			if (HUD.Inventory.SelectedItem is FireArm)
             {
-				//updates ammo display
-				HUD.UpdateAmmo();
-				((FireArm)HUD.Inventory.SelectedItem).Tick();
+				//updates ammo display;
 				if (((FireArm)HUD.Inventory.SelectedItem).IsShooting)
 				{
 					Selected = HUD.Inventory.SelectedItem.InUse;
 					((FireArm)HUD.Inventory.SelectedItem).IsShooting = false;
-
 				}
+				((FireArm)HUD.Inventory.SelectedItem).Tick();
 				double pos = canvas.Width / 10 * 5;
 				double itemh = 64;
 				double itemw = 64;
@@ -80,6 +78,7 @@ namespace Raycasting_Engine
                 {
 					//when reloading put part of the gun out of frame
 					RGeometry.DrawRectangle(canvas, pos, canvas.ActualHeight+30, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height+30, Selected, Brushes.Transparent);
+		
 				}
 				else
                 {
@@ -543,7 +542,7 @@ namespace Raycasting_Engine
 				using (Graphics gdi = Graphics.FromImage(bit))
 				{
 					//if left side is not visible so texturing dosent start from the left side
-					if (render.First().ScreenP1.X < 1 && percentVisible < 0.8)
+					if (render.First().ScreenP1.X ==0 && percentVisible < 0.8)
 					{
 						//rotate from center to cut from right end
 						float centerX = s.Width / 2F;
@@ -563,7 +562,7 @@ namespace Raycasting_Engine
 				Bitmap bit2 = new Bitmap(bit.Width, bit.Height);
 				using (Graphics gdi = Graphics.FromImage(bit2))
 				{
-					if (render.First().ScreenP1.X < 1 && percentVisible < 0.8)
+					if (render.First().ScreenP1.X==0 && percentVisible < 0.8)
 					{
 						float centerX = bit.Width / 2F;
 						float centerY = bit.Height / 2F;
@@ -578,16 +577,15 @@ namespace Raycasting_Engine
 					}
 
 				}
-				//Transform by 4 corners
-				Rendering.FreeTransform transform = new Rendering.FreeTransform();
-				transform.Bitmap = bit2;
-				transform.FourCorners = RUtils.PointsToPointF(myPointCollection);
-				//apply image to brush
-				imgbrush = new ImageBrush();
-				((ImageBrush)imgbrush).Stretch = Stretch.UniformToFill;
-				((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(transform.Bitmap);
-				//((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(bit);
-				bit.Dispose();
+			//Transform by 4 corners
+			Rendering.FreeTransform transform = new Rendering.FreeTransform();
+			transform.Bitmap = bit2;
+			transform.FourCorners = RUtils.PointsToPointF(myPointCollection);
+			//apply image to brush
+			imgbrush = new ImageBrush();
+			((ImageBrush)imgbrush).Stretch = Stretch.Fill;
+			((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(transform.Bitmap);
+			bit.Dispose();
 			//draw polygon
 			Polygon myPolygon = new Polygon();
 			myPolygon.Stroke = imgbrush;
@@ -605,12 +603,24 @@ namespace Raycasting_Engine
 			myPolygon.Points = myPointCollection;
 			myPolygon2.Points = myPointCollection;
 			System.Drawing.Point c = RUtils.CenterOfCanvas(canvas);
-			if ((c.X < Point1.X || c.X > Point3.X || c.Y < Point1.Y || c.Y > Point2.Y))
-			{
-				// Definitely not within the polygon!
+			if(HUD.Inventory.SelectedItem is FireArm)
+            {
+				if (Point1.X <= c.X && Point1.Y <= c.Y && Point3.X >= c.X && Point3.Y >= c.Y && ((FireArm)HUD.Inventory.SelectedItem).IsShooting)
+				{
+
+				}
+				else
+				{
+					canvas.Children.Add(myPolygon);
+					canvas.Children.Add(myPolygon2);
+				}
+			}
+            else
+            {
 				canvas.Children.Add(myPolygon);
 				canvas.Children.Add(myPolygon2);
 			}
+
 			//RGeometry.DrawRectangle(canvas,render.First().ScreenP1.X, render.First().ScreenP1.Y, render.Last().ScreenP2.X, render.Last().ScreenP2.Y, render.Last().ScreenP3.X, render.Last().ScreenP3.Y, render.First().ScreenP4.X, render.First().ScreenP4.Y, imgbrush, sideShadow);
 		}
 		private double Distance(double ax, double ay, double bx, double by, double ang)

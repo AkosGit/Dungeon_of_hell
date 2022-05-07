@@ -74,6 +74,7 @@ namespace HUD
         }
         void render()
         {
+            hud.Children.Clear();
             //rerender inventory slots
             double slotHeight = hud.Height / (Slots + HEALTHBARSLOTS);
             //MessageBox.Show(slotHeight.ToString());
