@@ -50,7 +50,7 @@ namespace Dungeon_of_hell.SinglePlayer
 			StopTimer = false;
 			InGame = true;
 			time = TimeSpan.FromDays(0);
-			timer1 = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 12), DispatcherPriority.Normal, delegate
+			timer1 = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 10), DispatcherPriority.Normal, delegate
 			{
 				if (StopTimer)
 				{
