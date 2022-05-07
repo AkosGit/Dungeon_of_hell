@@ -353,6 +353,7 @@ namespace Raycasting_Engine
 			}
 			//sorting items in order of height: back to fron rendering of objects
 			renderingList = renderingList.OrderByDescending(x => x.Value.Min(z => z.Height)).ToDictionary(z => z.Key, y => y.Value);
+			List<Task<RenderResult>> rresults = new List<Task<RenderResult>>();
 			foreach (var item in renderingList)
 			{
 				//Seperate each visible side of obj
@@ -364,11 +365,11 @@ namespace Raycasting_Engine
 					{
 						List<string> textures = new List<string>();
 						textures.Add(((MapObject)item.Key).image);
-						RenderSide(SideA, Side.horizontal,textures);
+						rresults.Add(RenderSide(SideA, Side.horizontal,textures));
 					}
 					else if(item.Key is EntityObject)
 					{
-						RenderSide(SideA, Side.horizontal, ((EntityObject)item.Key).textures);
+						rresults.Add(RenderSide(SideA, Side.horizontal, ((EntityObject)item.Key).textures));
 
 					}
 				}
@@ -378,12 +379,43 @@ namespace Raycasting_Engine
 					{
 						List<string> textures = new List<string>();
 						textures.Add(((MapObject)item.Key).image);
-						RenderSide(SideB, Side.vertical, textures);
+						rresults.Add(RenderSide(SideB, Side.vertical, textures));
 					}
 				}
 			}
+			MakePolygons(rresults);
 		}
-		Bitmap MakeImage(List<string> textures, double percentVisible, PointCollection myPointCollection, List<RenderObject> render)
+		async void MakePolygons(List<Task<RenderResult>> renderResults)
+        {
+			RenderResult[] r =await Task.WhenAll(renderResults.ToArray());
+            foreach (RenderResult item in r)
+            {
+				//apply image to brush
+				ImageBrush imgbrush = new ImageBrush();
+				((ImageBrush)imgbrush).Stretch = Stretch.Fill;
+				((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(item.Bitmap);
+				//draw polygon
+				Polygon myPolygon = new Polygon();
+				myPolygon.Stroke = imgbrush;
+				myPolygon.Fill = imgbrush;
+				myPolygon.StrokeThickness = 0;
+				myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
+				myPolygon.VerticalAlignment = VerticalAlignment.Center;
+
+				Polygon myPolygon2 = new Polygon();
+				//myPolygon2.Stroke = sideShadow;
+				//myPolygon2.Fill = sideShadow;
+				//myPolygon2.StrokeThickness = 0;
+				//myPolygon2.HorizontalAlignment = HorizontalAlignment.Left;
+				//myPolygon2.VerticalAlignment = VerticalAlignment.Center;
+				//myPolygon2.Points = myPointCollection;
+				myPolygon.Points = item.p;
+				canvas.Children.Add(myPolygon);
+
+			}
+
+        }
+		RenderResult MakeImage(List<string> textures, double percentVisible, PointCollection myPointCollection, List<RenderObject> render)
         {
 			Bitmap s = new Bitmap(textures[0]);
 			int with = (int)(s.Width * percentVisible);
@@ -433,9 +465,9 @@ namespace Raycasting_Engine
 			Rendering.FreeTransform transform = new Rendering.FreeTransform();
 			transform.Bitmap = bit2;
 			transform.FourCorners = RUtils.PointsToPointF(myPointCollection);
-			return transform.Bitmap;
+			return new RenderResult() { Bitmap = transform.Bitmap, p=myPointCollection };
 		}
-		void RenderSide(List<RenderObject> render, Side side, List<string> textures)
+		Task<RenderResult> RenderSide(List<RenderObject> render, Side side, List<string> textures)
 		{
 			double percentVisible;
 			Brush sideShadow = Brushes.Transparent;
@@ -469,48 +501,8 @@ namespace Raycasting_Engine
 			myPointCollection.Add(Point3);
 			myPointCollection.Add(Point4);
 			Bitmap s;
-			//s = await Task.Run(() => { return MakeImage((List<string>)RUtils.DeepCopy(textures), percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), render); });
-			s = MakeImage((List<string>)RUtils.DeepCopy(textures), percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), render);
-			//apply image to brush
-			imgbrush = new ImageBrush();
-			((ImageBrush)imgbrush).Stretch = Stretch.Fill;
-			((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(s);
-			//draw polygon
-			Polygon myPolygon = new Polygon();
-			myPolygon.Stroke = imgbrush;
-			myPolygon.Fill = imgbrush;
-			myPolygon.StrokeThickness = 0;
-			myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
-			myPolygon.VerticalAlignment = VerticalAlignment.Center;
-
-			Polygon myPolygon2 = new Polygon();
-			myPolygon2.Stroke = sideShadow;
-			myPolygon2.Fill = sideShadow;
-			myPolygon2.StrokeThickness = 0;
-			myPolygon2.HorizontalAlignment = HorizontalAlignment.Left;
-			myPolygon2.VerticalAlignment = VerticalAlignment.Center;
-			myPolygon.Points = myPointCollection;
-			myPolygon2.Points = myPointCollection;
-			System.Drawing.Point c = RUtils.CenterOfCanvas(canvas);
-			if(HUD.Inventory.SelectedItem is FireArm)
-            {
-				if (Point1.X <= c.X && Point1.Y <= c.Y && Point3.X >= c.X && Point3.Y >= c.Y && ((FireArm)HUD.Inventory.SelectedItem).IsShooting)
-				{
-
-				}
-				else
-				{
-					canvas.Children.Add(myPolygon);
-					canvas.Children.Add(myPolygon2);
-				}
-			}
-            else
-            {
-				canvas.Children.Add(myPolygon);
-				canvas.Children.Add(myPolygon2);
-			}
-
-			//RGeometry.DrawRectangle(canvas,render.First().ScreenP1.X, render.First().ScreenP1.Y, render.Last().ScreenP2.X, render.Last().ScreenP2.Y, render.Last().ScreenP3.X, render.Last().ScreenP3.Y, render.First().ScreenP4.X, render.First().ScreenP4.Y, imgbrush, sideShadow);
+			Func<RenderResult> f = ()=> { return MakeImage((List<string>)RUtils.DeepCopy(textures), percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), render); };
+			return new Task<RenderResult>(f);
 		}
 		private double Distance(double ax, double ay, double bx, double by, double ang)
 		{
@@ -519,5 +511,11 @@ namespace Raycasting_Engine
 		#endregion
 
 	}
+	public class RenderResult
+    {
+		public Bitmap Bitmap;
+		public PointCollection p;
+
+    }
 }
 
