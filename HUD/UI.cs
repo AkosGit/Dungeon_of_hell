@@ -19,7 +19,7 @@ namespace HUD
             this.SLOTS = slots;
             this.hud = hud;
             hud.Height = 500;
-            ChangeHealth(100);
+            UpdateHealth(100);
             Inventory = new Inventory(hud,SLOTS,defitem);
         }
         public void Input(Key key)
@@ -54,10 +54,11 @@ namespace HUD
                 }
             }
         }
-		public void ChangeHealth(int h)
+		public void UpdateHealth(int h)
         {
 			Health = h;
 			DrawingBrush healthBrush = new DrawingBrush(RUtils.DrawMyText(Health.ToString()));
+            RGeometry.DrawRectangle(hud, 0, (hud.Height / SLOTS) * 6, 0, (hud.Height / SLOTS) * 5, hud.Width, (hud.Height / SLOTS) * 5, hud.Width, (hud.Height / SLOTS) * 6, Brushes.DarkRed, Brushes.Black, 2);
             RGeometry.DrawRectangle(hud,0, (hud.Height / SLOTS) * 6, 0, (hud.Height / SLOTS) * 5, hud.Width, (hud.Height / SLOTS) * 5, hud.Width, (hud.Height / SLOTS) * 6, healthBrush, Brushes.Black, 2);			
         }
         public void UpdateAmmo()

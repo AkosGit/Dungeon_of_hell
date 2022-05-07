@@ -105,6 +105,94 @@ namespace HUD
     {
         Shoot,Reload
     }
+    public class Shotgun: FireArm
+    {
+        bool ammo_prepare;
+        public Shotgun(string name, int ammo, int rounds, int damage): base(name, ammo, rounds, damage)
+        {
+            Icon = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\Weapon\\Weapon_3_icon.png")));
+            Holding = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\Weapon\\Weapon_3.png")));
+            InUse = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\Weapon\\Weapon_3_shoting.png")));
+            Sounds[Audio_player.WeaponSound.reloading].Add("shotgun_reload_1");
+            Audio_player.AddTrack("shotgun_reload_1", "sound\\shotgun\\shotgun_reload.mp3");
+
+            Sounds[Audio_player.WeaponSound.shooting].Add("shotgun_shoot_1");
+            Audio_player.AddTrack("shotgun_shoot_1", "sound\\shotgun\\shotgun_shooting.mp3");
+            Sounds[Audio_player.WeaponSound.shooting].Add("shotgun_prepare_ammo");
+            Audio_player.AddTrack("shotgun_prepare_ammo", "sound\\shotgun\\shotgun_pammo.mp3");
+            
+        }
+        public override void Shoot()
+        {
+            
+            if (Rounds > 0)
+            {
+
+                if (!IsReloading && !shotIsOngoing)
+                {
+                    //reqerd for rendering item in hand
+                    IsShooting = true;
+                    if (Rounds == 1)
+                    {
+                    }
+                    else
+                    {
+                        string soundname = Sounds[Audio_player.WeaponSound.shooting][r.Next(0, Sounds[Audio_player.WeaponSound.shooting].Count - 1)];
+                        Audio_player.Play(soundname);
+                    }
+                    Rounds=Rounds-2;
+                }
+            }
+        }
+        public override void Walking()
+        {
+
+        }
+        public override void Reload()
+        {
+            if (Ammo != 0)
+            {
+                //wait for reload to complete
+                if (!IsReloading)
+                {
+                    IsReloading = true;
+                    Ammo--;
+                    Rounds = maxrounds;
+                    Audio_player.Play("shotgun_reload_1");
+                }
+            }
+        }
+
+        public override void Tick()
+        {
+            //for long events that takes multiple ticks
+            if (!Audio_player.IsPlaying("shotgun_reload_1"))
+            {
+                IsReloading = false;
+            }
+            bool temp = false;
+            foreach (var item in Sounds[Audio_player.WeaponSound.shooting])
+            {
+                if (Audio_player.IsPlaying(item)) { temp = true; }
+            }
+            if (temp) { 
+                shotIsOngoing = true;
+            }
+            else {
+                //directly after shot
+                if (Rounds>=2&& shotIsOngoing && !ammo_prepare)
+                {
+                    Audio_player.Play("shotgun_prepare_ammo");
+                    ammo_prepare = true;
+                }
+                if (ammo_prepare && !Audio_player.IsPlaying("shotgun_prepare_ammo"))
+                {
+                    shotIsOngoing = false;
+                    ammo_prepare = false;
+                }
+            }
+        }
+    }
     public class Pistol: FireArm
     {
         public Pistol(string name,int ammo, int rounds, int damage): base(name, ammo, rounds, damage)
@@ -221,6 +309,7 @@ namespace HUD
             Sounds[Audio_player.WeaponSound.reloading] = new List<string>();
             Sounds[Audio_player.WeaponSound.shooting] = new List<string>();
             Sounds[Audio_player.WeaponSound.walking] = new List<string>();
+            Sounds[Audio_player.WeaponSound.other] = new List<string>();
             this.Rounds = rounds;
             maxrounds = rounds;
             r = new Random();

@@ -11,11 +11,11 @@ namespace Utils
     public static class Audio_player {
         public enum EnitySound
         {
-            walking,hurting,speaking
+            walking,hurting,speaking,other
         }
         public enum WeaponSound
         {
-            shooting,reloading,walking,outofammo
+            shooting,reloading,walking,other
         }
         static Dictionary<string, Audio> tracks;
         static Audio_player()
