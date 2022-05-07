@@ -58,8 +58,8 @@ namespace Dungeon_of_hell.SinglePlayer
 				}
 				time = time.Add(TimeSpan.FromMilliseconds(1));
 				//handle multiple keydowns
-				//game.HUD.UpdateAmmo();
-				//game.HUD.UpdateHealth(game.Player.Health);
+				game.HUD.UpdateAmmo();
+				game.HUD.UpdateHealth(game.Player.Health);
 				var binds = GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings");
 				foreach (Binding k in binds)
 				{
