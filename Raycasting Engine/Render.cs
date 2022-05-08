@@ -40,16 +40,15 @@ namespace Raycasting_Engine
 			Brush Selected = HUD.Inventory.SelectedItem.Holding;
 			if (HUD.Inventory.SelectedItem is FireArm)
 			{
-				//updates ammo display;
 				if (((FireArm)HUD.Inventory.SelectedItem).IsShooting)
 				{
 					Selected = HUD.Inventory.SelectedItem.InUse;
 					((FireArm)HUD.Inventory.SelectedItem).IsShooting = false;
 				}
 				((FireArm)HUD.Inventory.SelectedItem).Tick();
-				double pos = canvas.Width / 10 * 5;
-				double itemh = 64;
-				double itemw = 64;
+				double pos = canvas.Width / 10 * 5 - 20;
+				double itemh = 128;
+				double itemw = 128;
 				if (((FireArm)HUD.Inventory.SelectedItem).IsReloading)
 				{
 					//when reloading put part of the gun out of frame
