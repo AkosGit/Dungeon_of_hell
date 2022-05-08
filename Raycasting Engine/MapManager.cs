@@ -24,24 +24,24 @@ namespace Raycasting_Engine
             Map main = new Map()
             {
                 map = new MapObject[]
-                {
-                    new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(),
-                    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-                    new Wall(), new Air(), new Air(), new Wall2(), new Air(), new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Wall2(), new Air(), new Wall(),
-                    new Wall(), new Air(), new Wall(), new Wall(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Wall(), new Air(), new Air(), new Air(), new Wall(),
-                    new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-                    new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-                    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-                    new Wall(), new Wall(), new Air(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Air(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(),
-                    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-                    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
-                    new Wall(), new Air(), new Air(), new Wall(), new Air(), new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Wall(), new Air(), new Wall2(),
-                    new Wall(), new Air(), new Wall(), new Wall(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Wall(), new Air(), new Air(), new Air(), new Wall2(),
-                    new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
-                    new Wall(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Wall(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-                    new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-                    new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(),
-                },
+    {
+                    new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(),
+                    new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
+                    new Wood(), new Air(), new Air(), new Brick(), new Air(), new Wood(), new Air(), new Wood(), new Air(), new Air(), new Air(), new Wood(), new Air(), new Brick(), new Air(), new Wood(),
+                    new Wood(), new Air(), new Wood(), new Wood(), new Air(), new Air(), new Air(), new Wood(), new Air(), new Air(), new Wood(), new Wood(), new Air(), new Air(), new Air(), new Wood(),
+                    new Wood(), new Air(), new Wood(), new Air(), new Air(), new Air(), new Air(), new Wood(), new Air(), new Air(), new Wood(), new Air(), new Air(), new Air(), new Air(), new Wood(),
+                    new Wood(), new Air(), new Wood(), new Air(), new Air(), new Air(), new Air(), new Wood(), new Air(), new Air(), new Wood(), new Air(), new Air(), new Air(), new Air(), new Wood(),
+                    new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
+                    new Wood(), new Wood(), new Air(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Air(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(),
+                    new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
+                    new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Brick(),
+                    new Wood(), new Air(), new Air(), new Wood(), new Air(), new Wood(), new Air(), new Wood(), new Air(), new Air(), new Air(), new Wood(), new Air(), new Wood(), new Air(), new Brick(),
+                    new Wood(), new Air(), new Wood(), new Wood(), new Air(), new Air(), new Air(), new Wood(), new Air(), new Air(), new Wood(), new Wood(), new Air(), new Air(), new Air(), new Brick(),
+                    new Wood(), new Air(), new Wood(), new Air(), new Air(), new Air(), new Air(), new Wood(), new Air(), new Air(), new Wood(), new Air(), new Air(), new Air(), new Air(), new Brick(),
+                    new Wood(), new Air(), new Wood(), new Air(), new Air(), new Air(), new Air(), new Wood(), new Air(), new Air(), new Wood(), new Air(), new Air(), new Air(), new Air(), new Wood(),
+                    new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
+                    new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(),
+    },
                 EntityMap = new EntityObject[16],
                 MapName = "Main",
                 MapX = 16,
@@ -55,22 +55,22 @@ namespace Raycasting_Engine
             {
                 map = new MapObject[]
             {
-                new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(),
-                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Door(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
-                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
-                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
-                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall2(),
-                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-                new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wall(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wall(),
-                new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(), new Wall(),
+                new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(),
+                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
+                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
+                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
+                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
+                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
+                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
+                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Door(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
+                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
+                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Brick(),
+                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Brick(),
+                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Brick(),
+                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Brick(),
+                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
+                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
+                new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(),
             },
                 MapName = "Test",
                 MapX = 16,
@@ -102,19 +102,96 @@ namespace Raycasting_Engine
         }
 
     }
-    public class Wall : MapObject
+    //hell walls
+    public class Rock : MapObject
     {
 
-        public Wall() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
+        public Rock() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
         {
-            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\test.jpg";
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall 1.jpg";
         }
     }
-    public class Wall2 : MapObject
+    //between map
+    //between 1-4 when multiple material texture +lava
+    public class Between1 : MapObject
     {
-        public Wall2() : base(0, 0, Color.FromArgb(255, 226, 107, 139), true) 
+
+        public Between1() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
         {
-            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\test.jpg";
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall 3.jpg";
+        }
+    }
+    public class Between2 : MapObject
+    {
+
+        public Between2() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
+        {
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall 4.jpg";
+        }
+    }
+    public class Between3 : MapObject
+    {
+
+        public Between3() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
+        {
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall 5 .jpg";
+        }
+    }
+    public class Between4 : MapObject
+    {
+
+        public Between4() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
+        {
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall 8.jpg";
+        }
+    }
+    public class BrickBetween : MapObject
+    {
+
+        public BrickBetween() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
+        {
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall 8.jpg";
+        }
+    }
+    public class WoodBetween : MapObject
+    {
+
+        public WoodBetween() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
+        {
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall 8.jpg";
+        }
+    }
+    //uni walls
+    //brick + glass + wood
+    public class InBetweenUni : MapObject
+    {
+
+        public InBetweenUni() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
+        {
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall 2.jpg";
+        }
+    }
+    public class Window : MapObject
+    {
+
+        public Window() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
+        {
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Window Wall .jpg";
+        }
+    }
+    public class Wood : MapObject
+    {
+
+        public Wood() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
+        {
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wood Wall.jpg";
+        }
+    }
+    public class Brick : MapObject
+    {
+        public Brick() : base(0, 0, Color.FromArgb(255, 226, 107, 139), true) 
+        {
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Brick Wall.jpg";
         }
     }
     public class Air : MapObject

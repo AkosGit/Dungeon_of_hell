@@ -27,10 +27,12 @@ namespace Raycasting_Engine
     {
 		Canvas canvas;
 		UI HUD;
-		public RenderGame(Canvas canvas, UI HUD, Dictionary<GameObject, List<RenderObject>> renderlist)
+		Action<bool> Isready;
+		public RenderGame(Canvas canvas, UI HUD, Dictionary<GameObject, List<RenderObject>> renderlist, Action<bool> Isready)
         {
 			this.canvas = canvas;
 			this.HUD = HUD;
+			this.Isready = Isready;
 			DoRender(renderlist);
         }
 		public void RenderItem()
@@ -74,6 +76,7 @@ namespace Raycasting_Engine
 			List<Task<System.Drawing.Bitmap>> tasks = new List<Task<System.Drawing.Bitmap>>();
 			List<PointCollection> points = new List<PointCollection>();
 			List<Brush> shadows = new List<Brush>();
+			List<GameObject> objs = new List<GameObject>();
 			foreach (var item in renderingList)
 			{
 				//Seperate each visible side of obj
@@ -88,6 +91,7 @@ namespace Raycasting_Engine
 						tasks.Add(r.task);
 						points.Add(r.p);
 						shadows.Add(Brushes.Transparent);
+						objs.Add(item.Key);
 					}
 					else if (item.Key is EntityObject)
 					{
@@ -95,6 +99,7 @@ namespace Raycasting_Engine
 						tasks.Add(r.task);
 						points.Add(r.p);
 						shadows.Add(Brushes.Transparent);
+						objs.Add(item.Key);
 					}
 				}
 				if (SideB.Count != 0)
@@ -106,12 +111,13 @@ namespace Raycasting_Engine
 						tasks.Add(r.task);
 						points.Add(r.p);
 						shadows.Add(new SolidColorBrush(shadow));
+						objs.Add(item.Key);
 					}
 				}
 			}
 			await Task.WhenAll(tasks.ToArray());
 			canvas.Children.Clear();
-			RGeometry.DrawRectangle(canvas, 0, 250, 722, 250, 722, 500, 0, 500, Brushes.Aqua, Brushes.Transparent);
+			RGeometry.DrawRectangle(canvas, 0, 250, 722, 250, 722, 500, 0, 500, new SolidColorBrush(Color.FromArgb(0, (byte)79, (byte)65, (byte)52)), Brushes.Transparent);
 			for (int i = 0; i < tasks.Count; i++)
 			{
 				//apply image to brush
@@ -134,10 +140,21 @@ namespace Raycasting_Engine
 				myPolygon2.VerticalAlignment = VerticalAlignment.Center;
 				myPolygon2.Points = points[i];
 				myPolygon.Points = points[i];
+				Point c = RUtils.CenterOfCanvas(canvas);
+				GameObject obj = objs[i];
+				if (HUD.Inventory.SelectedItem is FireArm && obj is EntityObject) 
+				{
+					//if enemy has been hit
+					if (points[i][0].X <= c.X && points[i][0].Y <= c.Y && points[i][2].X >= c.X && points[i][2].Y >= c.Y && ((FireArm)HUD.Inventory.SelectedItem).IsShooting)
+					{
+						((EntityObject)obj).Health =- ((FireArm)HUD.Inventory.SelectedItem).Damage;
+					}
+				}
 				canvas.Children.Add(myPolygon);
 				canvas.Children.Add(myPolygon2);
 			}
 			RenderItem();
+			Isready?.Invoke(true);
 		}
 		System.Drawing.Bitmap MakeImage(string texture, double percentVisible, PointCollection myPointCollection, List<RenderObject> render)
 		{

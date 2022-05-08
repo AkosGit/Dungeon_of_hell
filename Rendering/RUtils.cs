@@ -16,6 +16,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Reflection;
+using Point = System.Windows.Point;
 
 namespace Rendering
 {
@@ -91,9 +92,9 @@ namespace Rendering
 			}
 			return points;
 		}
-		public static System.Drawing.Point CenterOfCanvas(Canvas c)
+		public static Point CenterOfCanvas(Canvas c)
         {
-			System.Drawing.Point p = new System.Drawing.Point();
+			Point p = new Point();
 			p.X = (int)c.ActualWidth / 2;
 			p.Y = (int)c.ActualHeight / 2;
 			return p;
