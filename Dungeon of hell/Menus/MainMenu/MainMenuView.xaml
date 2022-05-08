@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="Dungeon_of_hell.MainMenuView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="722" Background="OrangeRed">
+    <Viewbox>
+        <StackPanel MinHeight="350" Style="{StaticResource Stack}">
+            <TextBlock Text="Dungeon of Hell" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   FontWeight="Bold" FontSize="18" Style="{StaticResource Text}"
+                   />
+        <Button Width="100" Height="20" Content="SinglePlayer" Style="{StaticResource MenuButton}" Command="{Binding Path=SinglePlayerView}">
+        </Button>
+        <Button Width="100" Height="20" Content="Multiplayer" Style="{StaticResource MenuButton}" Command="{Binding Path=MultiplayerView}" IsEnabled="False">
+        </Button>
+            <Button Width="100" Height="20" Content="Settings" Style="{StaticResource MenuButton}" Command="{Binding Path=SettingsView}">
+        </Button>
+    </StackPanel>
+        </Viewbox>
+</UserControl>

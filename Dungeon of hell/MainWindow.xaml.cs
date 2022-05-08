@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,17 +13,38 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Dungeon_of_hell.Engine;
+using Dungeon_of_hell.SinglePlayer;
 
 namespace Dungeon_of_hell
 {
-	/// <summary>
-	/// Interaction logic for MainWindow.xaml
-	/// </summary>
-	public partial class MainWindow : Window
-	{
-		public MainWindow()
-		{
-			InitializeComponent();
-		}
-	}
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        Window_manager manager;
+        public MainWindow()
+        {
+
+            manager = new Window_manager();
+            InitializeComponent();
+            DataContext = manager;
+            Closing += manager.OnWindowClosing;
+			manager.AddView(new MainMenuViewModel(), typeof(MainMenuView));
+            manager.AddView(new SettingsViewModel(), typeof(SettingsView));
+            manager.ChangePrimaryView("MainMenu");
+            
+            if (bool.Parse(ConfigurationManager.AppSettings.Get("IsTest")) == true)
+			{
+                manager.AddView(new SinglePlayerViewModel(), typeof(SinglePlayerView));
+                manager.ChangePrimaryView("Singleplayer");
+            }
+        }
+
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            manager.KeyDown(sender, e);
+        }
+    }
 }

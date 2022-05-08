@@ -4,6 +4,29 @@
              xmlns:local="clr-namespace:Dungeon_of_hell"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <Style TargetType="Button" x:Key="MenuButton">
+                <Setter Property="Background" Value="White" />
+                <Setter Property="Margin" Value="0,11,0,0"></Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border x:Name="Border" Background="{TemplateBinding Background}" CornerRadius="5"
+                                    Margin="-3"
+                                    BorderBrush="Black" BorderThickness="2" IsEnabled="{TemplateBinding IsEnabled}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="TextBlock" x:Key="Text">
+                <Setter Property="Margin" Value="0,7,0,5"></Setter>
+            </Style>
+            <Style TargetType="StackPanel" x:Key="Stack">
+                <Setter Property="Margin" Value="0,5,0,5"></Setter>
+            </Style>
+            
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
