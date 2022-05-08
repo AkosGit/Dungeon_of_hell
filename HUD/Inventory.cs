@@ -157,7 +157,7 @@ namespace HUD
                 if (!IsReloading)
                 {
                     IsReloading = true;
-                    Ammo--;
+                    Ammo = Ammo - (maxrounds - Rounds);
                     Rounds = maxrounds;
                     Audio_player.Play("shotgun_reload_1");
                 }
@@ -265,7 +265,7 @@ namespace HUD
                 if (!IsReloading)
                 {
                     IsReloading = true;
-                    Ammo--;
+                    Ammo = Ammo-(maxrounds - Rounds);
                     Rounds = maxrounds;
                     Audio_player.Play("pistol_reload_1");
                 }

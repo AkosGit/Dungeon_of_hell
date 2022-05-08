@@ -352,8 +352,8 @@ namespace Raycasting_Engine
 			}
 			//sorting items in order of height: back to fron rendering of objects
 			renderingList = renderingList.OrderBy(x => x.Value.Min(z => { if (z is RenderEntity) return (z as RenderEntity).originalWallHeight; else return z.Height; })).ToDictionary(z => z.Key, y => y.Value);
-			RenderGame render = new RenderGame(canvas, HUD, renderingList);
-			IsReady = true;
+			RenderGame render = new RenderGame(canvas, HUD, renderingList,(bool ready)=> { IsReady = ready; });
+			//IsReady = true;
 		}
 		float sign(PointF p1, PointF p2, PointF p3)
 		{
