@@ -63,7 +63,7 @@ namespace Raycasting_Engine
 		{
 			Brush Selected = HUD.Inventory.SelectedItem.Holding;
 			if (HUD.Inventory.SelectedItem is FireArm)
-            {
+			{
 				//updates ammo display;
 				if (((FireArm)HUD.Inventory.SelectedItem).IsShooting)
 				{
@@ -74,20 +74,20 @@ namespace Raycasting_Engine
 				double pos = canvas.Width / 10 * 5;
 				double itemh = 64;
 				double itemw = 64;
-                if (((FireArm)HUD.Inventory.SelectedItem).IsReloading)
-                {
+				if (((FireArm)HUD.Inventory.SelectedItem).IsReloading)
+				{
 					//when reloading put part of the gun out of frame
-					RGeometry.DrawRectangle(canvas, pos, canvas.ActualHeight+30, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height+30, Selected, Brushes.Transparent);
-		
+					RGeometry.DrawRectangle(canvas, pos, canvas.ActualHeight + 30, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height + 30, Selected, Brushes.Transparent);
+
 				}
 				else
-                {
+				{
 					RGeometry.DrawRectangle(canvas, pos, canvas.ActualHeight, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height, Selected, Brushes.Transparent);
 
 				}
 			}
-            else
-            {
+			else
+			{
 				double pos = canvas.Width / 7 * 6;
 				double itemh = 30;
 				double itemw = 50;
@@ -105,7 +105,7 @@ namespace Raycasting_Engine
 			this.player = map.Player;
 
 			entities = new List<EntityObject>();
-			EntityObject test = new EntityObject(2, 2, 100,"Józsi", 40, mapS);
+			EntityObject test = new EntityObject(2, 2, 100, "Józsi", 40, mapS);
 			test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
 			EntityObject test2 = new EntityObject(2, 2, 400, "nem józsi", 50, mapS);
 			test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
@@ -182,12 +182,10 @@ namespace Raycasting_Engine
 		}
 		public void DrawTurn()
 		{
-			canvas.Children.Clear();
 			//drawMap2D();
 			//DrawPayer();
 			//Canvas.Width = 722;
 			//Canvas.Height = 500;
-			RGeometry.DrawRectangle(canvas,0, 250, 722, 250, 722, 500, 0, 500, Brushes.Aqua, Brushes.Transparent);
 			drawRays3D();
 			RenderItem();
 			PlaySounds(Player);
@@ -208,7 +206,7 @@ namespace Raycasting_Engine
 					Brush color;
 					if (map[y * mapY + x].IsSolid) color = Brushes.White; else color = Brushes.Black;
 					xo = x * mapS; yo = y * mapS;
-					RGeometry.DrawRectangle(canvas,xo + 1, yo + 1, xo + 1, yo + mapS - 1, xo + mapS - 1, yo + mapS - 1, xo + mapS - 1, yo + 1, color, new SolidColorBrush(Colors.Transparent), 0);
+					RGeometry.DrawRectangle(canvas, xo + 1, yo + 1, xo + 1, yo + mapS - 1, xo + mapS - 1, yo + mapS - 1, xo + mapS - 1, yo + 1, color, new SolidColorBrush(Colors.Transparent), 0);
 				}
 			}
 		}
@@ -281,9 +279,9 @@ namespace Raycasting_Engine
 					mx = (int)(rx) >> 6; my = (int)(ry) >> 6; mp = my * mapX + mx;
 					if (mp > 0 && mp < mapX * mapY && entities.Where(x => x.IsHere(mx, my)).Count() > 0)
 					{
-						foreach (EntityObject entity in entities.Where(x => x.IsHere(mx, my))) 
+						foreach (EntityObject entity in entities.Where(x => x.IsHere(mx, my)))
 						{
-							if(!visibleEntities.Contains(entity)) tmpEntities.Add(entity); tmpEnitiesDistances.Add(Distance(player.X, player.Y, entity.X, entity.Y, ra));
+							if (!visibleEntities.Contains(entity)) tmpEntities.Add(entity); tmpEnitiesDistances.Add(Distance(player.X, player.Y, entity.X, entity.Y, ra));
 						}
 					}
 					if (mp > 0 && mp < mapX * mapY && map[mp].IsSolid)
@@ -336,11 +334,11 @@ namespace Raycasting_Engine
 					double entityH = mapS * 500 / disE; if (entityH > 500) { entityH = 500; }
 					double entityO = 250 - entityH / 2;
 					renderingList.Add(entity, new List<RenderObject>());
-					renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(r * 9 + MoveRight - (entity.Width/2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO), new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO), Brushes.Green, entityH));
-					
+					renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO), new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO), Brushes.Green, entityH));
+
 				}
 				//RGeometry.DrawRectangle(canvas,r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
-				
+
 				Side side;
 				if (addedShadow != Brushes.Transparent) side = Side.vertical;
 				else side = Side.horizontal;
@@ -353,7 +351,12 @@ namespace Raycasting_Engine
 			}
 			//sorting items in order of height: back to fron rendering of objects
 			renderingList = renderingList.OrderByDescending(x => x.Value.Min(z => z.Height)).ToDictionary(z => z.Key, y => y.Value);
-			List<Task<RenderResult>> rresults = new List<Task<RenderResult>>();
+			Render(renderingList);
+		}
+		async void Render(Dictionary<GameObject, List<RenderObject>> renderingList)
+		{
+			List<Task<System.Drawing.Bitmap>> tasks = new List<Task<System.Drawing.Bitmap>>();
+			List<PointCollection> points = new List<PointCollection>();
 			foreach (var item in renderingList)
 			{
 				//Seperate each visible side of obj
@@ -365,11 +368,15 @@ namespace Raycasting_Engine
 					{
 						List<string> textures = new List<string>();
 						textures.Add(((MapObject)item.Key).image);
-						rresults.Add(RenderSide(SideA, Side.horizontal,textures));
+						RenderResult r = RenderSide(SideA, Side.horizontal, textures);
+						tasks.Add(r.task);
+						points.Add(r.p);
 					}
-					else if(item.Key is EntityObject)
+					else if (item.Key is EntityObject)
 					{
-						rresults.Add(RenderSide(SideA, Side.horizontal, ((EntityObject)item.Key).textures));
+						RenderResult r= RenderSide(SideA, Side.horizontal, ((EntityObject)item.Key).textures);
+						tasks.Add(r.task);
+						points.Add(r.p);
 
 					}
 				}
@@ -379,21 +386,20 @@ namespace Raycasting_Engine
 					{
 						List<string> textures = new List<string>();
 						textures.Add(((MapObject)item.Key).image);
-						rresults.Add(RenderSide(SideB, Side.vertical, textures));
+						RenderResult r=(RenderSide(SideB, Side.vertical, textures));
+						tasks.Add(r.task);
+						points.Add(r.p);
 					}
 				}
 			}
-			MakePolygons(rresults);
-		}
-		async void MakePolygons(List<Task<RenderResult>> renderResults)
-        {
-			RenderResult[] r =await Task.WhenAll(renderResults.ToArray());
-            foreach (RenderResult item in r)
-            {
+			await Task.WhenAll(tasks.ToArray());
+			RGeometry.DrawRectangle(canvas, 0, 250, 722, 250, 722, 500, 0, 500, Brushes.Aqua, Brushes.Transparent);
+			for (int i = 0; i < tasks.Count; i++)
+			{
 				//apply image to brush
 				ImageBrush imgbrush = new ImageBrush();
 				((ImageBrush)imgbrush).Stretch = Stretch.Fill;
-				((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(item.Bitmap);
+				((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(tasks[i].Result);
 				//draw polygon
 				Polygon myPolygon = new Polygon();
 				myPolygon.Stroke = imgbrush;
@@ -409,14 +415,12 @@ namespace Raycasting_Engine
 				//myPolygon2.HorizontalAlignment = HorizontalAlignment.Left;
 				//myPolygon2.VerticalAlignment = VerticalAlignment.Center;
 				//myPolygon2.Points = myPointCollection;
-				myPolygon.Points = item.p;
+				myPolygon.Points = points[i];
 				canvas.Children.Add(myPolygon);
-
 			}
-
-        }
-		RenderResult MakeImage(List<string> textures, double percentVisible, PointCollection myPointCollection, List<RenderObject> render)
-        {
+		}
+		System.Drawing.Bitmap MakeImage(List<string> textures, double percentVisible, PointCollection myPointCollection, List<RenderObject> render)
+		{
 			Bitmap s = new Bitmap(textures[0]);
 			int with = (int)(s.Width * percentVisible);
 			System.Drawing.Rectangle cropRect = new System.Drawing.Rectangle();
@@ -465,9 +469,9 @@ namespace Raycasting_Engine
 			Rendering.FreeTransform transform = new Rendering.FreeTransform();
 			transform.Bitmap = bit2;
 			transform.FourCorners = RUtils.PointsToPointF(myPointCollection);
-			return new RenderResult() { Bitmap = transform.Bitmap, p=myPointCollection };
+			return transform.Bitmap;
 		}
-		Task<RenderResult> RenderSide(List<RenderObject> render, Side side, List<string> textures)
+		RenderResult RenderSide(List<RenderObject> render, Side side, List<string> textures)
 		{
 			double percentVisible;
 			Brush sideShadow = Brushes.Transparent;
@@ -500,22 +504,21 @@ namespace Raycasting_Engine
 			myPointCollection.Add(Point2);
 			myPointCollection.Add(Point3);
 			myPointCollection.Add(Point4);
-			Bitmap s;
-			Func<RenderResult> f = ()=> { return MakeImage((List<string>)RUtils.DeepCopy(textures), percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), render); };
-			return new Task<RenderResult>(f);
+			Task < System.Drawing.Bitmap > task = Task.Run(() => { return MakeImage((List<string>)RUtils.DeepCopy(textures), percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), render.Select(x => (RenderObject)x.Clone()).ToList()); });
+			return new RenderResult() { p = myPointCollection, task = task };
 		}
 		private double Distance(double ax, double ay, double bx, double by, double ang)
 		{
 			return Math.Sqrt(Math.Pow(bx - ax, 2) + Math.Pow(by - ay, 2));
 		}
-		#endregion
+		public class RenderResult
+		{
+			public Task<System.Drawing.Bitmap> task;
+			public PointCollection p;
 
-	}
-	public class RenderResult
-    {
-		public Bitmap Bitmap;
-		public PointCollection p;
-
+		}
+        #endregion
     }
 }
+
 
