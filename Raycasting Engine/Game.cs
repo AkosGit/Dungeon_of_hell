@@ -313,6 +313,13 @@ namespace Raycasting_Engine
 				while (dof < MaxL)
 				{
 					mx = (int)(rx) >> 6; my = (int)(ry) >> 6; mp = my * mapX + mx;
+					if (mp > 0 && mp < mapX * mapY && entities.Where(x => x.IsHere(mx, my)).Count() > 0)
+					{
+						foreach (EntityObject entity in entities.Where(x => x.IsHere(mx, my)))
+						{
+							if (!tmpEntities.Contains(entity)) tmpEntities.Add(entity);
+						}
+					}
 					if (mp > 0 && mp < mapX * mapY && map[mp].IsSolid) { vx = rx; vy = ry; disV = Distance(player.X, player.Y, vx, vy, ra); typeV = map[mp].IsSolid; mpV = mp; dof = MaxL; }
 					else { rx += xo; ry += yo; dof += 1; }
 				}
