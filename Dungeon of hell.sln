@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.1.32210.238
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31727.386
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dungeon of hell", "Dungeon of hell\Dungeon of hell.csproj", "{042190AC-04C9-42ED-B0D1-0CF23F565D86}"
 EndProject
@@ -20,9 +20,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HUD", "HUD\HUD.csproj", "{5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rendering", "Rendering\Rendering.csproj", "{9628FA1D-8224-4421-830A-227646FD9772}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCPListener", "TCPListener\TCPListener.csproj", "{2B8B25CC-CCBD-47FC-9D85-F8A4F4F9F6E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCPListener", "TCPListener\TCPListener.csproj", "{2B8B25CC-CCBD-47FC-9D85-F8A4F4F9F6E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCPClient", "TCPClient\TCPClient.csproj", "{FF44EFE1-F816-4C59-8D54-E9B140688F7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCPClient", "TCPClient\TCPClient.csproj", "{FF44EFE1-F816-4C59-8D54-E9B140688F7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

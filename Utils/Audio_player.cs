@@ -59,7 +59,15 @@ namespace Utils
         }
         public static bool IsPlaying(string name)
         {
-            return tracks[name].isplaying;
+			try
+			{
+                return tracks[name].isplaying;
+            }
+			catch (KeyNotFoundException)
+			{
+                return false;
+            }
+            
         }
 
         public static void StopPlayback(string name)
