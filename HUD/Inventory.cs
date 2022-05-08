@@ -18,14 +18,15 @@ namespace HUD
     {
         const int HEALTHBARSLOTS = 2;
         public Key[] InvKeys = { Key.D1, Key.D2, Key.D3, Key.D4, Key.D5 };
-        List<Item> Items { get; set; }
+        List<Item> items { get; set; }
+        public List<Item> Items { get=> items; }
         public int Slots { get; set; }
         Canvas hud;
         public Item SelectedItem { get; private set; }
         public Inventory(Canvas hud,int slots, Item defitem)
         {
-            Items = new List<Item>();
-            Items.Add(defitem);
+            items = new List<Item>();
+            items.Add(defitem);
             SelectedItem = defitem;
             this.hud = hud;
             Slots = slots - 2; //minus health bar space
@@ -33,23 +34,23 @@ namespace HUD
         }
         public void AddItem(Item item)
         {
-            if (Items.Count <= Slots)
+            if (items.Count <= Slots)
             {
-                Items.Add(item);
+                items.Add(item);
                 render();
             }
         }
         public Item GetItemByIndex(int i)
         {
-            return Items[i];
+            return items[i];
         }
         public bool IsitemInInventory(Item item)
         {
-            return Items.Contains(item);
+            return items.Contains(item);
         }
         public bool IsitemInInventory(int i)
         {
-            if (Items.Count>= i)
+            if (items.Count>= i)
             {
                 return true;
             }
@@ -59,13 +60,13 @@ namespace HUD
         {
             if (IsitemInInventory(item))
             {
-                Items.Remove(item);
+                items.Remove(item);
                 render();
             }
         }
         public List<Item> GetItems()
         {
-            return Items;
+            return items;
         }
         public void SelectItem(Item item)
         {
@@ -83,7 +84,7 @@ namespace HUD
             Brush Texture;
             for (int i = 0; i < Slots; i++)
             {
-                if (IsitemInInventory(i+1) && Items[i] == SelectedItem)
+                if (IsitemInInventory(i+1) && items[i] == SelectedItem)
                 {
                     outline = Brushes.Black;
                 }
@@ -93,7 +94,7 @@ namespace HUD
                 }
                 if (IsitemInInventory(i+1))
                 {
-                    Texture = Items[i].Icon;
+                    Texture = items[i].Icon;
                 }
                 else { Texture = Brushes.Transparent; }
                 RGeometry.DrawRectangleNoShadow(hud,0, height - slotHeight, 0,height, hud.Width, height, hud.Width, height-slotHeight, Texture, outline, 4);

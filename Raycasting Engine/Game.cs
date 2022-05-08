@@ -70,14 +70,18 @@ namespace Raycasting_Engine
 			this.player = map.Player;
 
 			entities = new List<EntityObject>();
-			Enemy test = new Enemy(2, 2, mapS, "Józsi", 360, 240);
+			Enemy test = new Enemy(1, 1, mapS, "Józsi", 360, 240);
 			test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
 			test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
 			entities.Add(test);
-			Enemy test2 = new Enemy(1, 1, mapS, "Béla", 360, 240);
+			Enemy test2 = new Enemy(4, 4, mapS, "Béla", 360, 240);
 			test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
 			test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
 			entities.Add(test2);
+
+			Props health1 = new Props(2, 2, mapS, "Medkit", 360, 360, PropType.heal);
+			health1.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\medkit.png");
+			entities.Add(health1);
 		}
 		void PlaySounds(EntityObject obj)
 		{
@@ -345,8 +349,23 @@ namespace Raycasting_Engine
 					{
 						if ((entity as Enemy).IsEnemyDead) (entity as Enemy).EnemyIsDead();
 						if (!(entity as Enemy).IsActive) (entity as Enemy).Activate();
-						if ((entity as Enemy).CanShoot) { player.Hit(); }
-						
+						else (entity as Enemy).Move(new Rendering.Vector(new PointF((float)entity.X, (float)entity.Y), new PointF((float)player.X, (float)player.Y)), map, mapX, mapY);
+						if ((entity as Enemy).CanShoot) player.Hit();
+					}
+					if(entity is Props)
+					{
+						if (entity.IsHere(player.GridX, player.GridY))
+						{
+							if((entity as Props).Type == PropType.heal) Player.Heal();
+							if ((entity as Props).Type == PropType.ammo)
+							{
+								foreach(Item item in HUD.Inventory.Items)
+								{
+									if (item is FireArm) (item as FireArm).Ammo += 30;
+								}
+							}
+							if ((entity as Props).Type != PropType.key || (entity as Props).Type != PropType.prop) entities.Remove(entity);
+						}
 					}
 					renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(PlaceOnScreenX - (entity.Width / 2) / (500 / entityH), (entityH + entityO) - entity.Height / (500 / entityH)), new Point(PlaceOnScreenX + (entity.Width / 2) / (500 / entityH), (entityH + entityO) - entity.Height / (500 / entityH)), new Point(PlaceOnScreenX + (entity.Width / 2) / (500 / entityH), entityH + entityO), new Point(PlaceOnScreenX - (entity.Width / 2) / (500 / entityH), entityH + entityO), Brushes.Green, entityH));
 					

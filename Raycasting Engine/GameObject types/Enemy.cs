@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,11 +51,29 @@ namespace Raycasting_Engine.GameObject_types
             actualTexture = 1;
 
             isAlive = false;
+            isActive = false;
 		}
 
         public void Activate()
 		{
-            isActive = true;
+            if(isAlive) isActive = true;
 		}
+        
+        public void Move(Vector move, MapObject[] map, int mapX, int mapY)
+		{
+            dx = move.X / (move.Magnitude);
+            dy = move.Y / (move.Magnitude);
+
+            int xo = 0; if (dx < 0) { xo = -20; } else xo = 20;
+            int yo = 0; if (dy < 0) { yo = -20; } else yo = 20;
+            int ipx = (int)X / 64; int ipx_P_xo = (int)(X + xo) / 64; int ipx_M_xo = (int)(X - xo) / 64;
+            int ipy = (int)Y / 64; int ipy_P_yo = (int)(Y + yo) / 64; int ipy_M_yo = (int)(Y - yo) / 64;
+
+            GridX = (int)X / 64;
+            GridY = (int)Y / 64;
+
+            if (!map[ipy * mapY + ipx_P_xo].IsSolid) { X += dx; IsMoving = true; }
+            if (!map[ipy_P_yo * mapY + ipx].IsSolid) Y += dy;
+        }
     }
 }

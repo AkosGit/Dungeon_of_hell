@@ -46,7 +46,7 @@ namespace Raycasting_Engine
 		}
         public void Heal()
 		{
-            health += 100;
+            health = 100;
 		}
     }
 }
