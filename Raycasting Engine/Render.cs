@@ -116,7 +116,7 @@ namespace Raycasting_Engine
 			}
 			await Task.WhenAll(tasks.ToArray());
 			canvas.Children.Clear();
-			RGeometry.DrawRectangle(canvas, 0, 250, 722, 250, 722, 500, 0, 500, new SolidColorBrush(Color.FromArgb(0, (byte)79, (byte)65, (byte)52)), Brushes.Transparent);
+			RGeometry.DrawRectangle(canvas, 0, 250, 722, 250, 722, 500, 0, 500, new SolidColorBrush(Color.FromArgb(255, (byte)79, (byte)65, (byte)52)), Brushes.Transparent);
 			for (int i = 0; i < tasks.Count; i++)
 			{
 				//apply image to brush
