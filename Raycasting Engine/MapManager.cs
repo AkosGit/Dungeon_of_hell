@@ -48,7 +48,7 @@ namespace Raycasting_Engine
                 MapY = 16,
                 MapS = 64,
                 MaxL = 16,
-                Player = new Player(10, 9, 64)
+                Player = new Player(2, 2, 64)
             };
             AddMap(main);
             Map test = new Map()
