@@ -45,55 +45,19 @@ namespace Raycasting_Engine
 		public UI HUD;
 		public Player Player { get => player; set => player = value; }
 		public List<EntityObject> entities;
-
+		public bool IsReady;
 		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, Map mainmap = null)
 		{
 
 			MapManager = new MapManager();
 			HUD = new UI(hud, Inventoryslots, defitem);
-			shadow = Color.FromArgb(50, 0, 0, 0);
 			this.canvas = canvas;
 			if (mainmap == null) mainmap = MapManager.GetMap("Main");
 
 			LoadMapToInGameMap(mainmap);
 
 		}
-		//render Item in hand
-		public void RenderItem()
-		{
-			Brush Selected = HUD.Inventory.SelectedItem.Holding;
-			if (HUD.Inventory.SelectedItem is FireArm)
-			{
-				//updates ammo display;
-				if (((FireArm)HUD.Inventory.SelectedItem).IsShooting)
-				{
-					Selected = HUD.Inventory.SelectedItem.InUse;
-					((FireArm)HUD.Inventory.SelectedItem).IsShooting = false;
-				}
-				((FireArm)HUD.Inventory.SelectedItem).Tick();
-				double pos = canvas.Width / 10 * 5;
-				double itemh = 64;
-				double itemw = 64;
-				if (((FireArm)HUD.Inventory.SelectedItem).IsReloading)
-				{
-					//when reloading put part of the gun out of frame
-					RGeometry.DrawRectangle(canvas, pos, canvas.ActualHeight + 30, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height + 30, Selected, Brushes.Transparent);
 
-				}
-				else
-				{
-					RGeometry.DrawRectangle(canvas, pos, canvas.ActualHeight, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height, Selected, Brushes.Transparent);
-
-				}
-			}
-			else
-			{
-				double pos = canvas.Width / 7 * 6;
-				double itemh = 30;
-				double itemw = 50;
-				RGeometry.DrawRectangle(canvas, pos, canvas.ActualHeight, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height, Selected, Brushes.Transparent);
-			}
-		}
 		protected void LoadMapToInGameMap(Map map)
 		{
 			this.map = map.map;
@@ -182,12 +146,14 @@ namespace Raycasting_Engine
 		}
 		public void DrawTurn()
 		{
+			IsReady = false;
 			//drawMap2D();
 			//DrawPayer();
 			//Canvas.Width = 722;
 			//Canvas.Height = 500;
+			//canvas.Children.Clear();
+			//RGeometry.DrawRectangle(canvas, 0, 250, 722, 250, 722, 500, 0, 500, Brushes.Aqua, Brushes.Transparent);
 			drawRays3D();
-			RenderItem();
 			PlaySounds(Player);
 			foreach (EntityObject ent in entities)
 			{
@@ -351,171 +317,13 @@ namespace Raycasting_Engine
 			}
 			//sorting items in order of height: back to fron rendering of objects
 			renderingList = renderingList.OrderByDescending(x => x.Value.Min(z => z.Height)).ToDictionary(z => z.Key, y => y.Value);
-			Render(renderingList);
+			RenderGame render =new RenderGame(canvas,HUD,renderingList);
+			IsReady = true;
 		}
-		async void Render(Dictionary<GameObject, List<RenderObject>> renderingList)
-		{
-			List<Task<System.Drawing.Bitmap>> tasks = new List<Task<System.Drawing.Bitmap>>();
-			List<PointCollection> points = new List<PointCollection>();
-			foreach (var item in renderingList)
-			{
-				//Seperate each visible side of obj
-				List<RenderObject> SideA = item.Value.Where(y => y.Side == Side.horizontal).ToList();
-				List<RenderObject> SideB = item.Value.Where(y => y.Side == Side.vertical).ToList();
-				if (SideA.Count != 0)
-				{
-					if (item.Key is MapObject)
-					{
-						List<string> textures = new List<string>();
-						textures.Add(((MapObject)item.Key).image);
-						RenderResult r = RenderSide(SideA, Side.horizontal, textures);
-						tasks.Add(r.task);
-						points.Add(r.p);
-					}
-					else if (item.Key is EntityObject)
-					{
-						RenderResult r= RenderSide(SideA, Side.horizontal, ((EntityObject)item.Key).textures);
-						tasks.Add(r.task);
-						points.Add(r.p);
 
-					}
-				}
-				if (SideB.Count != 0)
-				{
-					if (item.Key is MapObject)
-					{
-						List<string> textures = new List<string>();
-						textures.Add(((MapObject)item.Key).image);
-						RenderResult r=(RenderSide(SideB, Side.vertical, textures));
-						tasks.Add(r.task);
-						points.Add(r.p);
-					}
-				}
-			}
-			await Task.WhenAll(tasks.ToArray());
-			RGeometry.DrawRectangle(canvas, 0, 250, 722, 250, 722, 500, 0, 500, Brushes.Aqua, Brushes.Transparent);
-			for (int i = 0; i < tasks.Count; i++)
-			{
-				//apply image to brush
-				ImageBrush imgbrush = new ImageBrush();
-				((ImageBrush)imgbrush).Stretch = Stretch.Fill;
-				((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(tasks[i].Result);
-				//draw polygon
-				Polygon myPolygon = new Polygon();
-				myPolygon.Stroke = imgbrush;
-				myPolygon.Fill = imgbrush;
-				myPolygon.StrokeThickness = 0;
-				myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
-				myPolygon.VerticalAlignment = VerticalAlignment.Center;
-
-				Polygon myPolygon2 = new Polygon();
-				//myPolygon2.Stroke = sideShadow;
-				//myPolygon2.Fill = sideShadow;
-				//myPolygon2.StrokeThickness = 0;
-				//myPolygon2.HorizontalAlignment = HorizontalAlignment.Left;
-				//myPolygon2.VerticalAlignment = VerticalAlignment.Center;
-				//myPolygon2.Points = myPointCollection;
-				myPolygon.Points = points[i];
-				canvas.Children.Add(myPolygon);
-			}
-		}
-		System.Drawing.Bitmap MakeImage(List<string> textures, double percentVisible, PointCollection myPointCollection, List<RenderObject> render)
-		{
-			Bitmap s = new Bitmap(textures[0]);
-			int with = (int)(s.Width * percentVisible);
-			System.Drawing.Rectangle cropRect = new System.Drawing.Rectangle();
-			cropRect.Width = with;
-			cropRect.Height = s.Height;
-			Bitmap bit = new Bitmap(with, s.Height);
-			using (Graphics gdi = Graphics.FromImage(bit))
-			{
-				//if left side is not visible so texturing dosent start from the left side
-				if (render.First().ScreenP1.X == 0 && percentVisible < 0.8)
-				{
-					//rotate from center to cut from right end
-					float centerX = s.Width / 2F;
-					float centerY = s.Height / 2F;
-					gdi.TranslateTransform(centerX, centerY);
-					gdi.RotateTransform(180.0F);
-					gdi.TranslateTransform(-centerX, -centerY);
-					//cropping to rect
-					gdi.DrawImage(s, -cropRect.X, -cropRect.Y);
-				}
-				else
-				{
-					gdi.DrawImage(s, -cropRect.X, -cropRect.Y);
-				}
-			}
-			//a new bitmap is required to flip the image back
-			Bitmap bit2 = new Bitmap(bit.Width, bit.Height);
-			using (Graphics gdi = Graphics.FromImage(bit2))
-			{
-				if (render.First().ScreenP1.X == 0 && percentVisible < 0.8)
-				{
-					float centerX = bit.Width / 2F;
-					float centerY = bit.Height / 2F;
-					gdi.TranslateTransform(centerX, centerY);
-					gdi.RotateTransform(180.0F);
-					gdi.TranslateTransform(-centerX, -centerY);
-					gdi.DrawImage(bit, 0, 0);
-				}
-				else
-				{
-					gdi.DrawImage(bit, 0, 0);
-				}
-
-			}
-			//Transform by 4 corners
-			Rendering.FreeTransform transform = new Rendering.FreeTransform();
-			transform.Bitmap = bit2;
-			transform.FourCorners = RUtils.PointsToPointF(myPointCollection);
-			return transform.Bitmap;
-		}
-		RenderResult RenderSide(List<RenderObject> render, Side side, List<string> textures)
-		{
-			double percentVisible;
-			Brush sideShadow = Brushes.Transparent;
-			Brush imgbrush = Brushes.AliceBlue;
-			//find visible portion
-			if (render.Count == 1)
-			{
-				if (render[0] is RenderEntity) { percentVisible = 1; }
-				else { percentVisible = 0.1; }
-			}
-			else
-			{
-				if (side == Side.vertical)
-				{
-					percentVisible = (Math.Abs((render.Last().FlatY) - (render.First().FlatY))) / 62;
-					sideShadow = new SolidColorBrush(shadow);
-				}
-				else { percentVisible = (Math.Abs((render.Last().FlatX) - (render.First().FlatX))) / 62; }
-			}
-			//avoid visible percentages rounded to 0;
-			if (percentVisible < 0.1) { percentVisible = 0.1; }
-
-			Point Point1 = new Point(render.First().ScreenP1.X, render.First().ScreenP1.Y);
-			Point Point2 = new Point(render.Last().ScreenP2.X, render.Last().ScreenP2.Y);
-			Point Point3 = new Point(render.Last().ScreenP3.X, render.Last().ScreenP3.Y);
-			Point Point4 = new Point(render.First().ScreenP4.X, render.First().ScreenP4.Y);
-
-			PointCollection myPointCollection = new PointCollection();
-			myPointCollection.Add(Point1);
-			myPointCollection.Add(Point2);
-			myPointCollection.Add(Point3);
-			myPointCollection.Add(Point4);
-			Task < System.Drawing.Bitmap > task = Task.Run(() => { return MakeImage((List<string>)RUtils.DeepCopy(textures), percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), render.Select(x => (RenderObject)x.Clone()).ToList()); });
-			return new RenderResult() { p = myPointCollection, task = task };
-		}
 		private double Distance(double ax, double ay, double bx, double by, double ang)
 		{
 			return Math.Sqrt(Math.Pow(bx - ax, 2) + Math.Pow(by - ay, 2));
-		}
-		public class RenderResult
-		{
-			public Task<System.Drawing.Bitmap> task;
-			public PointCollection p;
-
 		}
         #endregion
     }
