@@ -202,7 +202,9 @@ namespace Raycasting_Engine
 			//find visible portion
 			if (render.Count == 1)
 			{
-				if (render[0] is RenderEntity) { percentVisible = 1; }
+				if (render[0] is RenderEntity) { 
+					percentVisible = 1; 
+				}
 				else { percentVisible = 0.1; }
 			}
 			else
