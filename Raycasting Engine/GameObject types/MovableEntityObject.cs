@@ -17,10 +17,10 @@ namespace Raycasting_Engine
 {
 	public class MovableEntityObject : EntityObject
 	{
-		const double PI = 3.1415926535;
-		double dx;
-		double dy;
-		double a;
+		protected const double PI = 3.1415926535;
+		protected double dx;
+		protected double dy;
+		protected double a;
 		//for playing walking sound
 		public bool IsMoving;
 		public bool IsHurting;
@@ -32,14 +32,10 @@ namespace Raycasting_Engine
 		public double Dx { get => dx; set => dx = value; }
 		public double Dy { get => dy; set => dy = value; }
 
-		public MovableEntityObject(int gridX, int gridY,  int mapS,string name, bool isSolid = false, int a = 0, Dictionary<Audio_player.EnitySound, List<string>> Sounds =null)
-			: base(gridX, gridY, mapS,name, 0, 0, isSolid,Sounds)
+		public MovableEntityObject(int gridX, int gridY,  int mapS,string name, double he = 0, double wi = 0, bool isSolid = false, int a = 0, Dictionary<Audio_player.EnitySound, List<string>> Sounds =null)
+			: base(gridX, gridY, mapS,name, he, wi, isSolid,Sounds)
 		{
-			X = gridX * mapS;
-			Y = gridY * mapS;
-			this.a = a;
-			dx = Math.Cos((PI / 180) * this.a);
-			dy = Math.Sin((PI / 180) * this.a);
+
 		}
 		public bool CanMoveForward(MapObject[] map, int mapY)
         {

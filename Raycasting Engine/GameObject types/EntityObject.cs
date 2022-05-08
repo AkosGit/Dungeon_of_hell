@@ -17,8 +17,8 @@ namespace Raycasting_Engine
 		protected double y;
 		protected double z;
 
-		private double height;
-		private double width;
+		protected double height;
+		protected double width;
 
 		protected bool visible;
 		protected int health;
@@ -32,6 +32,7 @@ namespace Raycasting_Engine
 		public double Z { get => z; set => z = value; }
 
 		public List<string> textures { get; set; }
+		public int actualTexture { get; set; }
 
 		protected bool Visible { get => visible; set => visible = value; }
 		public int Health { get => health; set => health = value; }
@@ -51,6 +52,7 @@ namespace Raycasting_Engine
 			height = he;
 			width = wi;
 			textures = new List<string>();
+			actualTexture = 0;
 		}
 		public bool IsHere(int mapX, int mapY)
 		{

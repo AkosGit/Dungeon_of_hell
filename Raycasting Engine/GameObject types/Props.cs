@@ -6,16 +6,20 @@ using System.Threading.Tasks;
 
 namespace Raycasting_Engine
 {
+	public enum PropType
+	{
+		heal, ammo, key, prop
+	}
 	class Props : EntityObject
 	{
+		PropType type;
 
-		public Props(int gridX, int gridY, int mapS,string name, int z, bool visible, int x = 0, int y = 0, bool isSolid = false) : base(gridX, gridY, mapS,name, 0, 0, isSolid)
+		public PropType Type { get => type; }
+		public Props(int gridX, int gridY, int mapS, string name, double he = 0, double wi = 0, bool isSolid = false, PropType type = PropType.prop, bool visible = true) 
+			: base(gridX, gridY, mapS,name, he, wi, isSolid)
 		{
-			this.x = gridX * mapS + x;
-			this.y = gridY * mapS + y;
-			this.z = z;
-
 			this.visible = visible;
+			this.type = type;
 		}
 	}
 }

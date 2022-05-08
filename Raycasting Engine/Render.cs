@@ -83,16 +83,15 @@ namespace Raycasting_Engine
 				{
 					if (item.Key is MapObject)
 					{
-						List<string> textures = new List<string>();
-						textures.Add(((MapObject)item.Key).image);
-						RenderResult r = RenderSide(SideA, Side.horizontal, textures);
+						string texture = ((MapObject)item.Key).image;
+						RenderResult r = RenderSide(SideA, Side.horizontal, texture);
 						tasks.Add(r.task);
 						points.Add(r.p);
 						shadows.Add(Brushes.Transparent);
 					}
 					else if (item.Key is EntityObject)
 					{
-						RenderResult r = RenderSide(SideA, Side.horizontal, ((EntityObject)item.Key).textures);
+						RenderResult r = RenderSide(SideA, Side.horizontal, ((EntityObject)item.Key).textures[((EntityObject)item.Key).actualTexture]);
 						tasks.Add(r.task);
 						points.Add(r.p);
 						shadows.Add(Brushes.Transparent);
@@ -102,9 +101,8 @@ namespace Raycasting_Engine
 				{
 					if (item.Key is MapObject)
 					{
-						List<string> textures = new List<string>();
-						textures.Add(((MapObject)item.Key).image);
-						RenderResult r = (RenderSide(SideB, Side.vertical, textures));
+						string texture = ((MapObject)item.Key).image;
+						RenderResult r = (RenderSide(SideB, Side.vertical, texture));
 						tasks.Add(r.task);
 						points.Add(r.p);
 						shadows.Add(new SolidColorBrush(shadow));
@@ -141,9 +139,9 @@ namespace Raycasting_Engine
 			}
 			RenderItem();
 		}
-		System.Drawing.Bitmap MakeImage(List<string> textures, double percentVisible, PointCollection myPointCollection, List<RenderObject> render)
+		System.Drawing.Bitmap MakeImage(string texture, double percentVisible, PointCollection myPointCollection, List<RenderObject> render)
 		{
-			Bitmap s = new Bitmap(textures[0]);
+			Bitmap s = new Bitmap(texture);
 			int with = (int)(s.Width * percentVisible);
 			System.Drawing.Rectangle cropRect = new System.Drawing.Rectangle();
 			cropRect.Width = with;
@@ -193,7 +191,7 @@ namespace Raycasting_Engine
 			transform.FourCorners = RUtils.PointsToPointF(myPointCollection);
 			return transform.Bitmap;
 		}
-		RenderResult RenderSide(List<RenderObject> render, Side side, List<string> textures)
+		RenderResult RenderSide(List<RenderObject> render, Side side, string texture)
 		{
 			Color shadow = Color.FromArgb(50, 0, 0, 0);
 			double percentVisible;
@@ -229,7 +227,7 @@ namespace Raycasting_Engine
 			myPointCollection.Add(Point2);
 			myPointCollection.Add(Point3);
 			myPointCollection.Add(Point4);
-			Task<System.Drawing.Bitmap> task = Task.Run(() => { return MakeImage((List<string>)RUtils.DeepCopy(textures), percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), render.Select(x => (RenderObject)x.Clone()).ToList()); });
+			Task<System.Drawing.Bitmap> task = Task.Run(() => { return MakeImage((string)RUtils.DeepCopy(texture), percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), render.Select(x => (RenderObject)x.Clone()).ToList()); });
 			return new RenderResult() { p = myPointCollection, task = task };
 		}
     }

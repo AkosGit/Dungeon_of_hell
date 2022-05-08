@@ -9,8 +9,17 @@ namespace Raycasting_Engine
 {
     public class Player : MovableEntityObject, IPlayer
     {
-        public Player(int gridX, int gridY, int mapS, bool isSolid = false, int a = 0) : base(gridX, gridY, mapS, "Player", isSolid, a)
+        Random r;
+        int armor;
+        public Player(int gridX, int gridY, int mapS, int armor = 14, bool isSolid = false, int a = 0) 
+            : base(gridX, gridY, mapS, "Player", 0, 0, isSolid, a)
         {
+            X = gridX * mapS;
+            Y = gridY * mapS;
+            this.a = a;
+            dx = Math.Cos((PI / 180) * this.a);
+            dy = Math.Sin((PI / 180) * this.a);
+
             Sounds = new Dictionary<Audio_player.EnitySound, List<string>>();
             Sounds[Audio_player.EnitySound.walking] = new List<string>();
             Sounds[Audio_player.EnitySound.walking].Add("player_moving2");
@@ -23,6 +32,21 @@ namespace Raycasting_Engine
             Audio_player.AddTrack("player_moving5", "sound\\walking\\walking_wood_5.mp3");
             Sounds[Audio_player.EnitySound.walking].Add("player_moving6");
             Audio_player.AddTrack("player_moving6", "sound\\walking\\walking_wood_6.mp3");
+
+            r = new Random();
+            this.armor = armor;
         }
+        
+        public void Hit()
+		{
+            if(r.Next(0,20) > armor)
+			{
+                health -= r.Next(5, 15);
+			}
+		}
+        public void Heal()
+		{
+            health += 100;
+		}
     }
 }
