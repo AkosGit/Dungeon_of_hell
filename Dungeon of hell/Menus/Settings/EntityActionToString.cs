@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HUD;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -13,20 +14,35 @@ namespace Dungeon_of_hell
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            EntityActions action = (EntityActions)value;
-			switch (action)
-			{
-				case EntityActions.Forward:
-					return "Forward";
-				case EntityActions.Left:
-					return "Left";
-				case EntityActions.Backwards:
-					return "Backwards";
-				case EntityActions.Right:
-					return "Right";
-				default:
-					return "Use";
+			if(value is EntityActions)
+            {
+				EntityActions action = (EntityActions)value;
+				switch (action)
+				{
+					case EntityActions.Forward:
+						return "Forward";
+					case EntityActions.Left:
+						return "Left";
+					case EntityActions.Backwards:
+						return "Backwards";
+					case EntityActions.Right:
+						return "Right";
+					default:
+						return "Use";
+				}
 			}
+			if(value is ItemActions)
+            {
+				ItemActions action = (ItemActions)value;
+				switch (action)
+				{
+					case ItemActions.Shoot:
+						return "Shoot";
+					case ItemActions.Reload:
+						return "Reload";
+				}
+			}
+			return "NON";
 		}
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

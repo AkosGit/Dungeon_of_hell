@@ -7,12 +7,13 @@
              d:DesignHeight="500" d:DesignWidth="722" Background="OrangeRed">
     <Viewbox>
         <StackPanel MinHeight="350" Style="{StaticResource Stack}">
-            <TextBlock Text="Dungeon of Hell" VerticalAlignment="Center" HorizontalAlignment="Center" 
-                   FontWeight="Bold" FontSize="18" Style="{StaticResource Text}"
-                   />
-        <Button Width="100" Height="20" Content="SinglePlayer" Style="{StaticResource MenuButton}" Command="{Binding Path=SinglePlayerView}">
+            <Image Source="{Binding Logo}" Width="300" Margin="35,0,0,0" VerticalAlignment="Center">
+            </Image>
+            <Button Width="100" Height="20" Content="New game" Style="{StaticResource MenuButton}" Command="{Binding Path=NewGameView}">
         </Button>
-        <Button Width="100" Height="20" Content="Multiplayer" Style="{StaticResource MenuButton}" Command="{Binding Path=MultiplayerView}" IsEnabled="False">
+            <Button Width="100" Height="20" Content="Load game" Style="{StaticResource MenuButton}" Command="{Binding Path=LoadSaveView}">
+            </Button>
+            <Button Width="100" Height="20" Content="Multiplayer" Style="{StaticResource MenuButton}" Command="{Binding Path=MultiplayerView}" IsEnabled="False">
         </Button>
             <Button Width="100" Height="20" Content="Settings" Style="{StaticResource MenuButton}" Command="{Binding Path=SettingsView}">
         </Button>

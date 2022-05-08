@@ -46,7 +46,7 @@ namespace Raycasting_Engine
 					((FireArm)HUD.Inventory.SelectedItem).IsShooting = false;
 				}
 				((FireArm)HUD.Inventory.SelectedItem).Tick();
-				double pos = canvas.Width / 10 * 5 - 20;
+				double pos = canvas.Width / 10 * 5 - 25;
 				double itemh = 128;
 				double itemw = 128;
 				if (((FireArm)HUD.Inventory.SelectedItem).IsReloading)
