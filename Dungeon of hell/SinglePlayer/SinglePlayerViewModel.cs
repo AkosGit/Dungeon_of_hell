@@ -50,7 +50,7 @@ namespace Dungeon_of_hell.SinglePlayer
 			StopTimer = false;
 			InGame = true;
 			time = TimeSpan.FromDays(0);
-			timer1 = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 10), DispatcherPriority.Normal, delegate
+			timer1 = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 60), DispatcherPriority.Normal, delegate
 			{
 				if (StopTimer)
 				{
@@ -63,7 +63,7 @@ namespace Dungeon_of_hell.SinglePlayer
 				var binds = GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings");
 				foreach (Binding k in binds)
 				{
-					if (Keyboard.IsKeyDown(k.key))
+					if (Keyboard.IsKeyDown(k.key) && game.IsReady)
 					{
 						if(k.Usecase is EntityActions)
                         {
