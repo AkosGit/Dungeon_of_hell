@@ -45,55 +45,19 @@ namespace Raycasting_Engine
 		public UI HUD;
 		public Player Player { get => player; set => player = value; }
 		public List<EntityObject> entities;
-
+		public bool IsReady;
 		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, Map mainmap = null)
 		{
 
 			MapManager = new MapManager();
 			HUD = new UI(hud, Inventoryslots, defitem);
-			shadow = Color.FromArgb(50, 0, 0, 0);
 			this.canvas = canvas;
 			if (mainmap == null) mainmap = MapManager.GetMap("Main");
 
 			LoadMapToInGameMap(mainmap);
 
 		}
-		//render Item in hand
-		public void RenderItem()
-		{
-			Brush Selected = HUD.Inventory.SelectedItem.Holding;
-			if (HUD.Inventory.SelectedItem is FireArm)
-            {
-				//updates ammo display;
-				if (((FireArm)HUD.Inventory.SelectedItem).IsShooting)
-				{
-					Selected = HUD.Inventory.SelectedItem.InUse;
-					((FireArm)HUD.Inventory.SelectedItem).IsShooting = false;
-				}
-				((FireArm)HUD.Inventory.SelectedItem).Tick();
-				double pos = canvas.Width / 10 * 5;
-				double itemh = 64;
-				double itemw = 64;
-                if (((FireArm)HUD.Inventory.SelectedItem).IsReloading)
-                {
-					//when reloading put part of the gun out of frame
-					RGeometry.DrawRectangle(canvas, pos, canvas.ActualHeight+30, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height+30, Selected, Brushes.Transparent);
-		
-				}
-				else
-                {
-					RGeometry.DrawRectangle(canvas, pos, canvas.ActualHeight, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height, Selected, Brushes.Transparent);
 
-				}
-			}
-            else
-            {
-				double pos = canvas.Width / 7 * 6;
-				double itemh = 30;
-				double itemw = 50;
-				RGeometry.DrawRectangle(canvas, pos, canvas.ActualHeight, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height, Selected, Brushes.Transparent);
-			}
-		}
 		protected void LoadMapToInGameMap(Map map)
 		{
 			this.map = map.map;
@@ -183,14 +147,14 @@ namespace Raycasting_Engine
 		}
 		public void DrawTurn()
 		{
-			canvas.Children.Clear();
+			IsReady = false;
 			//drawMap2D();
 			//DrawPayer();
 			//Canvas.Width = 722;
 			//Canvas.Height = 500;
-			RGeometry.DrawRectangle(canvas,0, 250, 722, 250, 722, 500, 0, 500, Brushes.Aqua, Brushes.Transparent);
+			//canvas.Children.Clear();
+			//RGeometry.DrawRectangle(canvas, 0, 250, 722, 250, 722, 500, 0, 500, Brushes.Aqua, Brushes.Transparent);
 			drawRays3D();
-			RenderItem();
 			PlaySounds(Player);
 			foreach (EntityObject ent in entities)
 			{
@@ -334,7 +298,7 @@ namespace Raycasting_Engine
 				//DrawLine(r * 8 + MoveRight, lineO, r * 8 + MoveRight, lineH + lineO, color, 8);
 				//DrawRectangle(r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
 				//RGeometry.DrawRectangle(canvas,r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
-				
+
 				Side side;
 				if (addedShadow != Brushes.Transparent) side = Side.vertical;
 				else side = Side.horizontal;
@@ -565,8 +529,8 @@ namespace Raycasting_Engine
 		{
 			return Math.Sqrt(Math.Pow(bx - ax, 2) + Math.Pow(by - ay, 2));
 		}
-		#endregion
-
-	}
+        #endregion
+    }
 }
+
 
