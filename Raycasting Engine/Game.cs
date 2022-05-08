@@ -22,6 +22,7 @@ using Rendering;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using Raycasting_Engine.GameObject_types;
 
 namespace Raycasting_Engine
 {
@@ -69,11 +70,13 @@ namespace Raycasting_Engine
 			this.player = map.Player;
 
 			entities = new List<EntityObject>();
-			EntityObject test = new EntityObject(2, 2, mapS, "Józsi", 360, 240);
+			Enemy test = new Enemy(2, 2, mapS, "Józsi", 360, 240);
 			test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+			test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
 			entities.Add(test);
-			EntityObject test2 = new EntityObject(1, 1, mapS, "Béla", 360, 240);
+			Enemy test2 = new Enemy(1, 1, mapS, "Béla", 360, 240);
 			test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+			test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
 			entities.Add(test2);
 		}
 		void PlaySounds(EntityObject obj)
@@ -338,7 +341,15 @@ namespace Raycasting_Engine
 					{
 						renderingList.Add(entity, new List<RenderObject>());
 					}
+					if(entity is Enemy)
+					{
+						if ((entity as Enemy).IsEnemyDead) (entity as Enemy).EnemyIsDead();
+						if (!(entity as Enemy).IsActive) (entity as Enemy).Activate();
+						if ((entity as Enemy).CanShoot) { player.Hit(); }
+						
+					}
 					renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(PlaceOnScreenX - (entity.Width / 2) / (500 / entityH), (entityH + entityO) - entity.Height / (500 / entityH)), new Point(PlaceOnScreenX + (entity.Width / 2) / (500 / entityH), (entityH + entityO) - entity.Height / (500 / entityH)), new Point(PlaceOnScreenX + (entity.Width / 2) / (500 / entityH), entityH + entityO), new Point(PlaceOnScreenX - (entity.Width / 2) / (500 / entityH), entityH + entityO), Brushes.Green, entityH));
+					
 				}
 
 				//visibleEntities.Add(entity);

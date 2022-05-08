@@ -106,7 +106,7 @@ namespace Dungeon_of_hell.SinglePlayer
 			hud.Background = Brushes.DarkRed;
 
 			game = new SPMain(canvas,hud,InventorySLOST,new Pistol("pistol", 100, 13, 15));
-			game.HUD.Inventory.AddItem(new Shotgun("shotgun", 80, 8, 50));
+			game.HUD.Inventory.AddItem(new Shotgun("shotgun", 80, 8, 40));
 			Canvas.Width = 722;
 			Canvas.Height = 500;
 			Canvas.Background = Brushes.Gray;

@@ -10,8 +10,6 @@ namespace SinglePlayer
 {
 	public class SPMain : Game
 	{
-		string[] maps;
-
 		public SPMain(Canvas canvas,Canvas hud,int Inventoryslots, Item defitem, Map map = null)
 			:base(canvas,hud, Inventoryslots,defitem,map)
 		{
