@@ -105,9 +105,10 @@ namespace Raycasting_Engine
 			this.player = map.Player;
 
 			entities = new List<EntityObject>();
-			EntityObject test = new EntityObject(2, 2, 100,"Józsi", 40, mapS);
+			EntityObject test = new EntityObject(2, 2, mapS, "Józsi", 360, 240);
 			test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
-			EntityObject test2 = new EntityObject(2, 2, 400, "nem józsi", 50, mapS);
+			entities.Add(test);
+			EntityObject test2 = new EntityObject(1, 1, mapS, "Béla", 360, 240);
 			test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
 			entities.Add(test2);
 		}
@@ -258,13 +259,14 @@ namespace Raycasting_Engine
 			int me;
 			Dictionary<GameObject, List<RenderObject>> renderingList = new Dictionary<GameObject, List<RenderObject>>();
 			List<EntityObject> visibleEntities = new List<EntityObject>();
+			Rendering.Vector startVector = new Rendering.Vector();
+			Rendering.Vector endVector = new Rendering.Vector();
 
+			List<EntityObject> tmpEntities = new List<EntityObject>();
 			ra = player.A - DR * 40; if (ra < 0) { ra += 2 * PI; }
 			if (ra > 2 * PI) { ra -= 2 * PI; }
 			for (r = 0; r < 80; r++)
 			{
-				List<EntityObject> tmpEntities = new List<EntityObject>(); //Used for tempolary saving in ray enemies.
-				List<double> tmpEnitiesDistances = new List<double>();
 				GameObject toBeRendered = null;
 				//Check Horizontals
 				dof = 0;
@@ -276,14 +278,17 @@ namespace Raycasting_Engine
 				if (ra > PI) { ry = (((int)player.Y >> 6) << 6) - 0.0001; rx = (player.Y - ry) * aTan + player.X; yo = -64; xo = -yo * aTan; } //looking up
 				if (ra < PI) { ry = (((int)player.Y >> 6) << 6) + 64; rx = (player.Y - ry) * aTan + player.X; yo = 64; xo = -yo * aTan; } //looking down
 				if (ra == 0 || ra == PI) { rx = player.X; ry = player.Y; dof = MaxL; }
+				if (r == 0) startVector = new Rendering.Vector(new PointF((float)player.X, (float)player.Y), new PointF((float)rx, (float)ry));
+				if (r == 79) endVector = new Rendering.Vector(new PointF((float)player.X, (float)player.Y), new PointF((float)rx, (float)ry));
+
 				while (dof < MaxL)
 				{
 					mx = (int)(rx) >> 6; my = (int)(ry) >> 6; mp = my * mapX + mx;
 					if (mp > 0 && mp < mapX * mapY && entities.Where(x => x.IsHere(mx, my)).Count() > 0)
 					{
-						foreach (EntityObject entity in entities.Where(x => x.IsHere(mx, my))) 
+						foreach (EntityObject entity in entities.Where(x => x.IsHere(mx, my)))
 						{
-							if(!visibleEntities.Contains(entity)) tmpEntities.Add(entity); tmpEnitiesDistances.Add(Distance(player.X, player.Y, entity.X, entity.Y, ra));
+							if (!tmpEntities.Contains(entity)) tmpEntities.Add(entity);
 						}
 					}
 					if (mp > 0 && mp < mapX * mapY && map[mp].IsSolid)
@@ -328,17 +333,6 @@ namespace Raycasting_Engine
 				double lineO = 250 - lineH / 2;
 				//DrawLine(r * 8 + MoveRight, lineO, r * 8 + MoveRight, lineH + lineO, color, 8);
 				//DrawRectangle(r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
-				foreach (EntityObject entity in tmpEntities)
-				{
-					visibleEntities.Add(entity);
-					double disE = Distance(player.X, player.Y, entity.X, entity.Y, ca);
-					disE = disE * Math.Cos(ca);
-					double entityH = mapS * 500 / disE; if (entityH > 500) { entityH = 500; }
-					double entityO = 250 - entityH / 2;
-					renderingList.Add(entity, new List<RenderObject>());
-					renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(r * 9 + MoveRight - (entity.Width/2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO), new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO), Brushes.Green, entityH));
-					
-				}
 				//RGeometry.DrawRectangle(canvas,r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
 				
 				Side side;
@@ -351,8 +345,43 @@ namespace Raycasting_Engine
 				renderingList[toBeRendered].Add(new RenderObject(rx, ry, side, new Point(r * 9 + MoveRight - 5, lineO), new Point(r * 9 + MoveRight + 5, lineO), new Point(r * 9 + MoveRight + 5, lineH + lineO), new Point(r * 9 + MoveRight - 5, lineH + lineO), brush));
 
 			}
+			foreach (EntityObject entity in tmpEntities)
+			{
+
+				Rendering.Vector entityVector = new Rendering.Vector(new PointF((float)player.X, (float)player.Y), new PointF((float)entity.X, (float)entity.Y));
+				double Angle = Math.Acos(entityVector.DotProduct(startVector) / (startVector.Magnitude * entityVector.Magnitude)) / DR;
+
+
+				double PlaceOnScreenPercent = Angle / 80;
+				double PlaceOnScreenX = canvas.ActualWidth * PlaceOnScreenPercent;
+
+				//double ca = player.A - Angle * DR; if (ca < 0) { ca += 2 * PI; }
+				//if (ca > 2 * PI) { ca -= 2 * PI; }
+				double disE = Distance(player.X, player.Y, entity.X, entity.Y, 0);
+				double entityH = mapS * 500 / disE; if (entityH > 500) { entityH = 500; }
+				double entityO = 250 - entityH / 2;
+
+				if (PointInTriangle(new PointF((float)entity.X, (float)entity.Y), new PointF((float)player.X, (float)player.Y), new PointF((float)(player.X + startVector.X * 20), (float)(player.Y + startVector.Y * 20)), new PointF((float)(player.X + endVector.X * 20), (float)(player.Y + endVector.Y*20))))
+				{
+					if (!renderingList.Keys.Contains(entity))
+					{
+						renderingList.Add(entity, new List<RenderObject>());
+					}
+					renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(PlaceOnScreenX - (entity.Width / 2) / (500 / entityH), (entityH + entityO) - entity.Height / (500 / entityH)), new Point(PlaceOnScreenX + (entity.Width / 2) / (500 / entityH), (entityH + entityO) - entity.Height / (500 / entityH)), new Point(PlaceOnScreenX + (entity.Width / 2) / (500 / entityH), entityH + entityO), new Point(PlaceOnScreenX - (entity.Width / 2) / (500 / entityH), entityH + entityO), Brushes.Green, entityH));
+				}
+
+				//visibleEntities.Add(entity);
+				//double disE = Distance(player.X, player.Y, entity.X, entity.Y, ca);
+				//disE = disE * Math.Cos(ca);
+				//double entityH = mapS * 500 / disE; if (entityH > 500) { entityH = 500; }
+				//double entityO = 250 - entityH / 2;
+				//renderingList.Add(entity, new List<RenderObject>());
+				//renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO), new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO), Brushes.Green, entityH));
+
+			}
 			//sorting items in order of height: back to fron rendering of objects
-			renderingList = renderingList.OrderByDescending(x => x.Value.Min(z => z.Height)).ToDictionary(z => z.Key, y => y.Value);
+			renderingList = renderingList.OrderBy(x => x.Value.Min(z => { if (z is RenderEntity) return (z as RenderEntity).originalWallHeight; else return z.Height; })).ToDictionary(z => z.Key, y => y.Value);
+
 			foreach (var item in renderingList)
 			{
 				//Seperate each visible side of obj
@@ -383,6 +412,26 @@ namespace Raycasting_Engine
 				}
 			}
 		}
+		float sign(PointF p1, PointF p2, PointF p3)
+		{
+			return (p1.X - p3.X) * (p2.Y - p3.Y) - (p2.X - p3.X) * (p1.Y - p3.Y);
+		}
+
+		bool PointInTriangle(PointF pt, PointF v1, PointF v2, PointF v3)
+		{
+			float d1, d2, d3;
+			bool has_neg, has_pos;
+
+			d1 = sign(pt, v1, v2);
+			d2 = sign(pt, v2, v3);
+			d3 = sign(pt, v3, v1);
+
+			has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+			has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+
+			return !(has_neg && has_pos);
+		}
+
 		Bitmap MakeImage(List<string> textures, double percentVisible, PointCollection myPointCollection, List<RenderObject> render)
         {
 			Bitmap s = new Bitmap(textures[0]);

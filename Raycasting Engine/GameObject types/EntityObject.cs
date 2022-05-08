@@ -44,6 +44,8 @@ namespace Raycasting_Engine
 		{
 			this.gridX = gridX;
 			this.gridY = gridY;
+			x = gridX * mapS + mapS / 2;
+			y = gridY * mapS + mapS / 2;
 			health = 100;
 			this.name = name;
 			height = he;
