@@ -19,7 +19,9 @@ namespace HUD
             this.SLOTS = slots;
             this.hud = hud;
             hud.Height = 500;
+            UpdateCredit(0);
             UpdateHealth(100);
+
             Inventory = new Inventory(hud,SLOTS,defitem);
         }
         public void Input(Key key)
@@ -54,20 +56,31 @@ namespace HUD
                 }
             }
         }
-        private void Text(double x, double y, string text, Color color, Color back)
+        private void Text(double x, double y, string text, Color color, Color back, string text2)
         {
-            TextBlock textBlock = new TextBlock();
+            
             StackPanel stack = new StackPanel();
-            textBlock.Text = text;
-            stack.Width = hud.Width;
+
+            stack.Width = hud.Width-6;
             stack.Height = hud.Height / SLOTS;
+
             stack.Background= new SolidColorBrush(back);
-            textBlock.FontSize = 30;
+            TextBlock textBlock = new TextBlock();
+            textBlock.Text = text;
+            textBlock.FontSize = 25;
             textBlock.HorizontalAlignment = HorizontalAlignment.Center;
             textBlock.VerticalAlignment = VerticalAlignment.Center;
             textBlock.Foreground = new SolidColorBrush(color);
             textBlock.Background = new SolidColorBrush(back);
+            TextBlock textBlock2 = new TextBlock();
+            textBlock2.Text = text2;
+            textBlock2.FontSize = 25;
+            textBlock2.HorizontalAlignment = HorizontalAlignment.Center;
+            textBlock2.VerticalAlignment = VerticalAlignment.Center;
+            textBlock2.Foreground = new SolidColorBrush(color);
+            textBlock2.Background = new SolidColorBrush(back);
             stack.Children.Add(textBlock);
+            stack.Children.Add(textBlock2);
             hud.Children.Add(stack);
             Canvas.SetLeft(stack, x);
             Canvas.SetTop(stack, y);
@@ -75,15 +88,15 @@ namespace HUD
         public void UpdateHealth(int h)
         {
 			Health = h;
-            Text(0, ((hud.Height / SLOTS) * 5)-5, h.ToString(), Colors.Yellow,Colors.DarkRed );
-            //DrawingBrush healthBrush = new DrawingBrush(RUtils.DrawMyText(Health.ToString()));
-            //RGeometry.DrawRectangle(hud, 0, (hud.Height / SLOTS) * 6, 0, (hud.Height / SLOTS) * 5, hud.Width, (hud.Height / SLOTS) * 5, hud.Width, (hud.Height / SLOTS) * 6, healthBrush, Brushes.Black, 2);
+            Text(0, (((hud.Height / SLOTS) * 4) + 5), $"Health", Colors.Yellow, Colors.DarkRed, Health.ToString());
         }
         public void UpdateAmmo()
         {
-            Text(0, (hud.Height / SLOTS) * 6, $"{((FireArm)Inventory.SelectedItem).Ammo}/{((FireArm)Inventory.SelectedItem).Rounds}", Colors.Yellow, Colors.DarkRed);
-            //DrawingBrush healthBrush = new DrawingBrush(RUtils.DrawMyText($"{((FireArm)Inventory.SelectedItem).Ammo}/{((FireArm)Inventory.SelectedItem).Rounds}")); 
-            //RGeometry.DrawRectangle(hud, 0, hud.Height, 0, (hud.Height / SLOTS) * 6, hud.ActualWidth, (hud.Height / SLOTS) * 6, hud.ActualWidth, hud.Height, healthBrush, Brushes.Black, 2);
+            Text(0, (hud.Height / SLOTS) * 5 + 5, $"Ammo", Colors.Yellow, Colors.DarkRed, $"{((FireArm)Inventory.SelectedItem).Ammo}/{ ((FireArm)Inventory.SelectedItem).Rounds}");
         }
-	}
+        public void UpdateCredit(int Credit)
+        {
+            Text(0, ((hud.Height / SLOTS) * 6) + 5 , "Credit", Colors.Yellow, Colors.DarkRed,Credit.ToString());
+        }
+    }
 }

@@ -18,7 +18,14 @@ namespace Dungeon_of_hell
         public MainMenuViewModel()
         {
             Name = "MainMenu";
-            SinglePlayerView = new RelayCommand(() =>
+            NewGameView = new RelayCommand(() =>
+            {
+                Audio_player.Play("menuSelect");
+                AddView(new SinglePlayerViewModel(), typeof(SinglePlayerView));
+                AddView(new SingleplayerInGameMenuViewModel(), typeof(SingleplayerInGameMenuView));
+                ChangePrimaryView("Singleplayer");
+            });
+            LoadSaveView = new RelayCommand(() =>
             {
                 Audio_player.Play("menuSelect");
                 if (!GlobalSettings.Settings.DisableSaving && File.Exists(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json"))
@@ -35,14 +42,14 @@ namespace Dungeon_of_hell
             MultiplayerView = new RelayCommand(() =>
             {
                 Audio_player.Play("menuSelect");
-                if (!GlobalSettings.Settings.DisableSaving &&  File.Exists(GlobalSettings.Settings.AssetsPath + "Save\\Multiplayer.json"))
+                if (!GlobalSettings.Settings.DisableSaving && File.Exists(GlobalSettings.Settings.AssetsPath + "Save\\Multiplayer.json"))
                 {
-                        AddView((IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Multiplayer.json", typeof(MultiPlayerViewModel)), typeof(MultiPlayerView));
+                    AddView((IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Multiplayer.json", typeof(MultiPlayerViewModel)), typeof(MultiPlayerView));
                 }
                 else
                 {
-                        AddView(new MultiPlayerViewModel(), typeof(MultiPlayerView));
-                }                
+                    AddView(new MultiPlayerViewModel(), typeof(MultiPlayerView));
+                }
                 AddView(new MultiplayerInGameMenuViewModel(), typeof(MultiplayerInGameMenuView));
                 ChangePrimaryView("Multiplayer");
             });
@@ -53,7 +60,9 @@ namespace Dungeon_of_hell
 
             });
         }
-        public ICommand SinglePlayerView { get; set; }
+        public string Logo { get { return GlobalSettings.Settings.AssetsPath + "img\\logo.png"; } }
+        public ICommand NewGameView { get; set; }
+        public ICommand LoadSaveView { get; set; }
         public ICommand MultiplayerView { get; set; }
         public ICommand SettingsView { get; set; }
 

@@ -9,6 +9,7 @@ namespace Raycasting_Engine
 {
     public class Player : MovableEntityObject, IPlayer
     {
+        public int Credit { get; set; }
         Random r;
         int armor;
         public Player(int gridX, int gridY, int mapS, int armor = 14, bool isSolid = false, int a = 0) 

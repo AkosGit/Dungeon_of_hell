@@ -16,7 +16,7 @@ namespace HUD
     
     public class Inventory
     {
-        const int HEALTHBARSLOTS = 2;
+        const int HEALTHBARSLOTS = 3;
         public Key[] InvKeys = { Key.D1, Key.D2, Key.D3, Key.D4, Key.D5 };
         List<Item> items { get; set; }
         public List<Item> Items { get=> items; }
@@ -29,7 +29,7 @@ namespace HUD
             items.Add(defitem);
             SelectedItem = defitem;
             this.hud = hud;
-            Slots = slots - 2; //minus health bar space
+            Slots = slots - HEALTHBARSLOTS; //minus health bar space
             render();
         }
         public void AddItem(Item item)
@@ -97,7 +97,12 @@ namespace HUD
                     Texture = items[i].Icon;
                 }
                 else { Texture = Brushes.Transparent; }
-                RGeometry.DrawRectangleNoShadow(hud,0, height - slotHeight, 0,height, hud.Width, height, hud.Width, height-slotHeight, Texture, outline, 4);
+                double margin = 4;
+                if (i == Slots-1)
+                {
+                    margin = 0;
+                }
+                RGeometry.DrawRectangleNoShadow(hud, 0, height - slotHeight +margin, 0, height, hud.Width, height, hud.Width, height - slotHeight+margin, Texture, outline, 5);
                 height = height - slotHeight;
             }
         }
@@ -152,7 +157,7 @@ namespace HUD
         }
         public override void Reload()
         {
-            if (Ammo != 0)
+            if (Ammo != 0 && Rounds!=maxrounds)
             {
                 //wait for reload to complete
                 if (!IsReloading)
@@ -260,7 +265,7 @@ namespace HUD
         }
         public override void Reload()
         {
-            if (Ammo != 0)
+            if (Ammo != 0 && Rounds != maxrounds)
             {
                 //wait for reload to complete
                 if (!IsReloading)
