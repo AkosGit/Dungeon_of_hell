@@ -72,9 +72,11 @@ namespace Raycasting_Engine
 			entities = new List<EntityObject>();
 			Enemy test = new Enemy(2, 2, mapS, "Józsi", 360, 240);
 			test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+			test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
 			entities.Add(test);
 			Enemy test2 = new Enemy(1, 1, mapS, "Béla", 360, 240);
 			test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+			test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
 			entities.Add(test2);
 		}
 		void PlaySounds(EntityObject obj)

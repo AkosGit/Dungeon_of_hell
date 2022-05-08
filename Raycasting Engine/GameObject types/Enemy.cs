@@ -30,7 +30,7 @@ namespace Raycasting_Engine.GameObject_types
         }
 
 
-        public Enemy(int gridX, int gridY, int mapS, string name, double he = 0, double wi = 0, int minTimeToShoot = 50, bool isSolid = false, int a = 0) 
+        public Enemy(int gridX, int gridY, int mapS, string name, double he = 0, double wi = 0, int minTimeToShoot = 30, bool isSolid = false, int a = 0) 
             : base(gridX, gridY, mapS, name, he, wi, isSolid, a)
         {
             Sounds = new Dictionary<Audio_player.EnitySound, List<string>>();
@@ -45,12 +45,10 @@ namespace Raycasting_Engine.GameObject_types
 
         public void EnemyIsDead()
 		{
-            this.height = 3;
-            this.width = 3;
-            if (textures.Count > 3)
-			{
-                actualTexture = 4;
-			}
+            this.height = 149;
+            this.width = 596;
+            actualTexture = 1;
+
             isAlive = false;
 		}
 

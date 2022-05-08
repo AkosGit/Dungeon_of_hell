@@ -147,7 +147,7 @@ namespace Raycasting_Engine
 					//if enemy has been hit
 					if (points[i][0].X <= c.X && points[i][0].Y <= c.Y && points[i][2].X >= c.X && points[i][2].Y >= c.Y && ((FireArm)HUD.Inventory.SelectedItem).IsShooting)
 					{
-						((EntityObject)obj).Health =- ((FireArm)HUD.Inventory.SelectedItem).Damage;
+						((EntityObject)obj).Health -= ((FireArm)HUD.Inventory.SelectedItem).Damage;
 					}
 				}
 				canvas.Children.Add(myPolygon);
