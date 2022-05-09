@@ -9,6 +9,7 @@ namespace Raycasting_Engine
 {
     public class Player : MovableEntityObject, IPlayer
     {
+        public string Place { get; set; }
         public int Credit { get; set; }
         Random r;
         public int armor { get; set; }

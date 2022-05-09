@@ -6,7 +6,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:Dungeon_of_hell"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" PreviewKeyDown="Window_PreviewKeyDown">
+        Title="Dungeon of Hell (demo)" Height="450" Width="800" PreviewKeyDown="Window_PreviewKeyDown">
 
     <Grid>
         <ContentControl Content="{Binding PrimaryViewModel,UpdateSourceTrigger=PropertyChanged}" Name="Primary"/>

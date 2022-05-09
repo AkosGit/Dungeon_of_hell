@@ -10,7 +10,7 @@ namespace Raycasting_Engine
 	{
 		heal, ammo, key, prop
 	}
-	class Props : EntityObject
+	public class Props : Enemy
 	{
 		PropType type;
 

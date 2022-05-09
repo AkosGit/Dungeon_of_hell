@@ -93,9 +93,9 @@ namespace Raycasting_Engine
 						shadows.Add(Brushes.Transparent);
 						objs.Add(item.Key);
 					}
-					else if (item.Key is EntityObject)
+					else if (item.Key is Enemy)
 					{
-						RenderResult r = RenderSide(item.Key, SideA, Side.horizontal, ((EntityObject)item.Key).textures[((EntityObject)item.Key).actualTexture]);
+						RenderResult r = RenderSide(item.Key, SideA, Side.horizontal, ((Enemy)item.Key).textures[((Enemy)item.Key).actualTexture]);
 						tasks.Add(r.task);
 						points.Add(r.p);
 						shadows.Add(Brushes.Transparent);
@@ -142,13 +142,13 @@ namespace Raycasting_Engine
 				myPolygon.Points = points[i];
 				Point c = RUtils.CenterOfCanvas(canvas);
 				GameObject obj = objs[i];
-				if (HUD.Inventory.SelectedItem is FireArm && obj is Enemy) 
+				if (HUD.Inventory.SelectedItem is FireArm && obj is GameObject_types.Enemy) 
 				{
 					//if enemy has been hit
 					if (points[i][0].X <= c.X && points[i][0].Y <= c.Y && points[i][2].X >= c.X && points[i][2].Y >= c.Y && ((FireArm)HUD.Inventory.SelectedItem).IsShooting)
 					{
-						((Enemy)obj).Health -= ((FireArm)HUD.Inventory.SelectedItem).Damage;
-						((Enemy)obj).IsHurting = true;
+						((GameObject_types.Enemy)obj).Health -= ((FireArm)HUD.Inventory.SelectedItem).Damage;
+						((GameObject_types.Enemy)obj).IsHurting = true;
 					}
 				}
 				canvas.Children.Add(myPolygon);

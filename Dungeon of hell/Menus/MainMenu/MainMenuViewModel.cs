@@ -28,15 +28,9 @@ namespace Dungeon_of_hell
             LoadSaveView = new RelayCommand(() =>
             {
                 Audio_player.Play("menuSelect");
-                if (!GlobalSettings.Settings.DisableSaving && File.Exists(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json"))
-                {
-                    AddView((IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer", typeof(SinglePlayerViewModel)), typeof(SinglePlayerView));
-                }
-                else
-                {
-                    AddView(new SinglePlayerViewModel(), typeof(SinglePlayerView));
-                }
+                AddView(new SinglePlayerViewModel(), typeof(SinglePlayerView));
                 AddView(new SingleplayerInGameMenuViewModel(), typeof(SingleplayerInGameMenuView));
+                UpdateViewProperty("Singleplayer", "LoadSave", true);
                 ChangePrimaryView("Singleplayer");
             });
             MultiplayerView = new RelayCommand(() =>
@@ -59,10 +53,17 @@ namespace Dungeon_of_hell
                 ChangePrimaryView("Settings");
 
             });
+            Quit = new RelayCommand(() =>
+            {
+                Audio_player.Play("menuSelect");
+                Environment.Exit(0);
+
+            });
         }
         public string Background { get { return GlobalSettings.Settings.AssetsPath + "img\\MainMenuBackground.png"; } }
         public string Logo { get { return GlobalSettings.Settings.AssetsPath + "img\\logo.png"; } }
         public ICommand NewGameView { get; set; }
+        public ICommand Quit { get; set; }
         public ICommand LoadSaveView { get; set; }
         public ICommand MultiplayerView { get; set; }
         public ICommand SettingsView { get; set; }

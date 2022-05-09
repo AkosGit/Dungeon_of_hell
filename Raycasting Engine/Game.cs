@@ -46,18 +46,26 @@ namespace Raycasting_Engine
 		public MapManager MapManager;
 		public UI HUD;
 		public Player Player { get => player; set => player = value; }
-		public List<EntityObject> entities;
+		public List<Enemy> entities;
 		public bool IsReady;
 		public event LoadNextMap LoadNextMapEvent;
 		protected Point finishzone;
 		protected Item key;
-		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string map)
+		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string map,Player p, List<Enemy> entities)
 		{
 
 			MapManager = new MapManager();
 			HUD = new UI(hud, Inventoryslots, defitem);
 			this.canvas = canvas;
-			LoadMapToInGameMap(MapManager.GetMap(map));
+            if (p != null)
+            {
+				LoadMapToInGameMap(MapManager.GetMap(map),p,entities);
+			}
+            else
+            {
+				LoadMapToInGameMap(MapManager.GetMap(map));
+			}
+
 		}
 
 		protected void LoadMapToInGameMap(Map map)
@@ -68,14 +76,31 @@ namespace Raycasting_Engine
 			mapY = map.MapY;
 			mapS = map.MapS;
 			Mapname = map.MapName;
-
 			this.player = map.Player;
-
 			entities = map.EntityMap.ToList();
 			finishzone = map.FinishZone;
 			key = map.Key;
+			player.Place = map.MapName;
 		}
-		void PlaySounds(EntityObject obj)
+		protected void LoadMapToInGameMap(Map map, Player p, List<Enemy> entities)
+		{
+			this.map = map.map;
+			MaxL = map.MaxL;
+			mapX = map.MapX;
+			mapY = map.MapY;
+			mapS = map.MapS;
+			Mapname = map.MapName;
+			this.player = map.Player;
+			this.player.X = p.X;
+			this.player.Y = p.Y;
+			this.player.GridX = p.GridX;
+			this.player.GridY = p.GridY;
+			this.entities = entities;
+			finishzone = map.FinishZone;
+			key = map.Key;
+			player.Place = map.MapName;
+		}
+		void PlaySounds(Enemy obj)
 		{
 			Random r = new Random();
 			const double MAXDISTFROMPLAYER = 600;
@@ -88,7 +113,7 @@ namespace Raycasting_Engine
 
 				}
 			}
-			void PlayandUpdate(EntityObject obj, Audio_player.EnitySound key, bool playSound)
+			void PlayandUpdate(Enemy obj, Audio_player.EnitySound key, bool playSound)
 			{
 				//check if one of the sound is playing and update distance based on player pos
 				bool isPlaying = false;
@@ -160,7 +185,7 @@ namespace Raycasting_Engine
 			}
 			drawRays3D();
 			PlaySounds(Player);
-			foreach (EntityObject ent in entities)
+			foreach (Enemy ent in entities)
 			{
 				PlaySounds(ent);
 			}
@@ -226,11 +251,11 @@ namespace Raycasting_Engine
 			typeV = false;
 			int me;
 			Dictionary<GameObject, List<RenderObject>> renderingList = new Dictionary<GameObject, List<RenderObject>>();
-			List<EntityObject> visibleEntities = new List<EntityObject>();
+			List<Enemy> visibleEntities = new List<Enemy>();
 			Rendering.Vector startVector = new Rendering.Vector();
 			Rendering.Vector endVector = new Rendering.Vector();
 
-			List<EntityObject> tmpEntities = new List<EntityObject>();
+			List<Enemy> tmpEntities = new List<Enemy>();
 			ra = player.A - DR * 40; if (ra < 0) { ra += 2 * PI; }
 			if (ra > 2 * PI) { ra -= 2 * PI; }
 			for (r = 0; r < 80; r++)
@@ -254,7 +279,7 @@ namespace Raycasting_Engine
 					mx = (int)(rx) >> 6; my = (int)(ry) >> 6; mp = my * mapX + mx;
 					if (mp > 0 && mp < mapX * mapY && entities.Where(x => x.IsHere(mx, my)).Count() > 0)
 					{
-						foreach (EntityObject entity in entities.Where(x => x.IsHere(mx, my)))
+						foreach (Enemy entity in entities.Where(x => x.IsHere(mx, my)))
 						{
 							if (!tmpEntities.Contains(entity)) tmpEntities.Add(entity);
 						}
@@ -283,7 +308,7 @@ namespace Raycasting_Engine
 					mx = (int)(rx) >> 6; my = (int)(ry) >> 6; mp = my * mapX + mx;
 					if (mp > 0 && mp < mapX * mapY && entities.Where(x => x.IsHere(mx, my)).Count() > 0)
 					{
-						foreach (EntityObject entity in entities.Where(x => x.IsHere(mx, my)))
+						foreach (Enemy entity in entities.Where(x => x.IsHere(mx, my)))
 						{
 							if (!tmpEntities.Contains(entity)) tmpEntities.Add(entity);
 						}
@@ -320,7 +345,7 @@ namespace Raycasting_Engine
 				renderingList[toBeRendered].Add(new RenderObject(rx, ry, side, new Point(r * 9 + MoveRight - 5, lineO), new Point(r * 9 + MoveRight + 5, lineO), new Point(r * 9 + MoveRight + 5, lineH + lineO), new Point(r * 9 + MoveRight - 5, lineH + lineO), brush));
 
 			}
-			foreach (EntityObject entity in tmpEntities)
+			foreach (Enemy entity in tmpEntities)
 			{
 
 				Rendering.Vector entityVector = new Rendering.Vector(new PointF((float)player.X, (float)player.Y), new PointF((float)entity.X, (float)entity.Y));
@@ -342,12 +367,12 @@ namespace Raycasting_Engine
 					{
 						renderingList.Add(entity, new List<RenderObject>());
 					}
-					if(entity is Enemy)
+					if(entity is GameObject_types.Enemy)
 					{
-						if ((entity as Enemy).IsEnemyDead) (entity as Enemy).EnemyIsDead();
-						if (!(entity as Enemy).IsActive) (entity as Enemy).Activate();
-						else (entity as Enemy).Move(new Rendering.Vector(new PointF((float)entity.X, (float)entity.Y), new PointF((float)player.X, (float)player.Y)), map, mapX, mapY);
-						if ((entity as Enemy).CanShoot) player.Hit();
+						if ((entity as GameObject_types.Enemy).IsEnemyDead) (entity as GameObject_types.Enemy).EnemyIsDead();
+						if (!(entity as GameObject_types.Enemy).IsActive) (entity as GameObject_types.Enemy).Activate();
+						else (entity as GameObject_types.Enemy).Move(new Rendering.Vector(new PointF((float)entity.X, (float)entity.Y), new PointF((float)player.X, (float)player.Y)), map, mapX, mapY);
+						if ((entity as GameObject_types.Enemy).CanShoot) player.Hit();
 					}
 					if(entity is Props)
 					{

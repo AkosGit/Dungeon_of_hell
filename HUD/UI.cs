@@ -89,15 +89,16 @@ namespace HUD
         }
         public void UpdateAmmo()
         {
-            Text(0, (hud.Height / SLOTS) * 5 + 5, $"Ammo", Colors.Yellow, Colors.DarkRed, $"{((FireArm)Inventory.SelectedItem).Ammo}/{ ((FireArm)Inventory.SelectedItem).Rounds}");
+            if (Inventory.SelectedItem is FireArm)
+            {
+                Text(0, (hud.Height / SLOTS) * 5 + 5, $"Ammo", Colors.Yellow, Colors.DarkRed, $"{((FireArm)Inventory.SelectedItem).Ammo}/{ ((FireArm)Inventory.SelectedItem).Rounds}");
+
+            }
         }
         public void UpdateCredit(int Credit)
         {
-            if(Inventory.SelectedItem is FireArm)
-            {
-                Text(0, ((hud.Height / SLOTS) * 6) + 5, "Credit", Colors.Yellow, Colors.DarkRed, Credit.ToString());
 
-            }
+            Text(0, ((hud.Height / SLOTS) * 6) + 5, "Credit", Colors.Yellow, Colors.DarkRed, Credit.ToString());
         }
     }
 }

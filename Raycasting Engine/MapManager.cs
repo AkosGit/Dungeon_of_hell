@@ -39,7 +39,7 @@ namespace Raycasting_Engine
                     new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
                     new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(),
     },
-                EntityMap = new EntityObject[16],
+                EntityMap = new Enemy[16],
                 MapName = "Main",
                 MapX = 16,
                 MapY = 16,
@@ -48,12 +48,12 @@ namespace Raycasting_Engine
                 Player = new Player(2, 2, 64)
             };
 
-            List<EntityObject> entities = new List<EntityObject>();
-            Enemy test = new Enemy(1, 1, main.MapS, "Józsi", 360, 240);
+            List<Enemy> entities = new List<Enemy>();
+            GameObject_types.Enemy test = new GameObject_types.Enemy(1, 1, main.MapS, "Józsi", 360, 240);
             test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
             test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(test);
-            Enemy test2 = new Enemy(4, 4, main.MapS, "Béla", 360, 240);
+            GameObject_types.Enemy test2 = new GameObject_types.Enemy(4, 4, main.MapS, "Béla", 360, 240);
             test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
             test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(test2);
@@ -99,34 +99,34 @@ namespace Raycasting_Engine
                 MaxL = 16,
                 Player = new Player(1, 14, 64)
             };
-            entities = new List<EntityObject>();
+            entities = new List<Enemy>();
 
-            Enemy enemy1 = new Enemy(14, 1, map1.MapS, "Analízis", 360, 240);
+            GameObject_types.Enemy enemy1 = new GameObject_types.Enemy(14, 1, map1.MapS, "Analízis", 360, 240);
             enemy1.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
             enemy1.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(enemy1);
 
-            Enemy enemy2 = new Enemy(6, 5, map1.MapS, "Dimat", 360, 240);
+            GameObject_types.Enemy enemy2 = new GameObject_types.Enemy(6, 5, map1.MapS, "Dimat", 360, 240);
             enemy2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
             enemy2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(enemy2);
 
-            Enemy enemy3 = new Enemy(1, 5, map1.MapS, "Bev Infó", 360, 240);
+            GameObject_types.Enemy enemy3 = new GameObject_types.Enemy(1, 5, map1.MapS, "Bev Infó", 360, 240);
             enemy3.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
             enemy3.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(enemy3);
 
-            Enemy enemy4 = new Enemy(7, 10, map1.MapS, "Villanytan", 360, 240);
+            GameObject_types.Enemy enemy4 = new GameObject_types.Enemy(7, 10, map1.MapS, "Villanytan", 360, 240);
             enemy4.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
             enemy4.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(enemy4);
 
-            Enemy enemy5 = new Enemy(12, 5, map1.MapS, "Makró", 360, 240);
+            GameObject_types.Enemy enemy5 = new GameObject_types.Enemy(12, 5, map1.MapS, "Makró", 360, 240);
             enemy5.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
             enemy5.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(enemy5);
 
-            Enemy enemy6 = new Enemy(14, 10, map1.MapS, "Szoftver fejlesztés", 360, 240);
+            GameObject_types.Enemy enemy6 = new GameObject_types.Enemy(14, 10, map1.MapS, "Szoftver fejlesztés", 360, 240);
             enemy6.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
             enemy6.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(enemy6);
