@@ -151,6 +151,7 @@ namespace Raycasting_Engine
 				}
 				canvas.Children.Add(myPolygon);
 				canvas.Children.Add(myPolygon2);
+				tasks[i].Result.Dispose();
 			}
 			RenderItem();
 			Isready?.Invoke(true);
@@ -201,9 +202,11 @@ namespace Raycasting_Engine
 				}
 
 			}
+			bit.Dispose();
 			//Transform by 4 corners
 			Rendering.FreeTransform transform = new Rendering.FreeTransform();
 			transform.Bitmap = bit2;
+			bit2.Dispose();
 			transform.FourCorners = RUtils.PointsToPointF(myPointCollection);
 			return transform.Bitmap;
 		}
