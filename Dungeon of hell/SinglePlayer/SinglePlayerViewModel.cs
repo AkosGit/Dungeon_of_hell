@@ -41,7 +41,7 @@ namespace Dungeon_of_hell.SinglePlayer
 		{
 			ObservableCollection<Binding> sb = GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings");
 			if (e.Key == Key.Escape){ChangeSecondaryView("SingleplayerInGameMenu");}
-			else if (e.Key == Key.E) { game.LoadNextMap(); }
+			//else if (e.Key == Key.E) { game.LoadNextMap(); }
             else if (game.HUD.Inventory.InvKeys.Contains(e.Key)) { 
 				game.HUD.Input(e.Key); }	
 		}

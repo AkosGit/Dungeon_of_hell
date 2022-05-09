@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Raycasting_Engine.GameObject_types;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -50,36 +51,101 @@ namespace Raycasting_Engine
                 MaxL = 16,
                 Player = new Player(2, 2, 64)
             };
+
+            List<EntityObject> entities = new List<EntityObject>();
+            Enemy test = new Enemy(1, 1, main.MapS, "Józsi", 360, 240);
+            test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+            test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
+            entities.Add(test);
+            Enemy test2 = new Enemy(4, 4, main.MapS, "Béla", 360, 240);
+            test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+            test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
+            entities.Add(test2);
+
+            Props health1 = new Props(2, 2, main.MapS, "Medkit", 360, 360, PropType.heal);
+            health1.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\medkit.png");
+            entities.Add(health1);
+
+            Props key = new Props(4, 4, main.MapS, "BlueKey", 360, 360, PropType.key);
+            key.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\medkit.png");
+            entities.Add(key);
+
+            main.EntityMap = entities.ToArray();
+            main.SetDefaults();
             AddMap(main);
-            Map test = new Map()
+
+
+            Map map1 = new Map()
             {
                 map = new MapObject[]
             {
-                new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(),
-                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
-                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
-                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
-                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
-                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
-                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
-                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Door(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
-                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
-                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Brick(),
-                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Brick(),
-                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Brick(),
-                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Brick(),
-                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
-                new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Wood(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Wood(),
-                new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(),
+                new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(),
+                new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Rock(),
+                new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Rock(),
+                new Rock(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Rock(),  new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Air(), new Air(), new Rock(),
+                new Rock(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Rock(),
+                new Rock(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Rock(),
+                new Rock(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Rock(),
+                new Rock(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Rock(),
+                new Rock(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Rock(),
+                new Rock(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Brick(),
+                new Rock(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Brick(),
+                new Rock(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Brick(),
+                new Rock(), new Door(), new Rock(), new Rock(), new Air(), new Air(), new Rock(),  new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Air(), new Rock(), new Brick(),
+                new Rock(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(), new Air(), new Rock(),
+                new Rock(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(), new Air(), new Rock(),
+                new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(),
             },
-                MapName = "Test",
+                MapName = "map1",
                 MapX = 16,
                 MapY = 16,
                 MapS = 64,
                 MaxL = 16,
-                Player = new Player(2, 2, 64)
+                Player = new Player(1, 14, 64)
             };
-            AddMap(test);
+            entities = new List<EntityObject>();
+
+            Enemy enemy1 = new Enemy(14, 1, map1.MapS, "Analízis", 360, 240);
+            enemy1.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+            enemy1.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
+            entities.Add(enemy1);
+
+            Enemy enemy2 = new Enemy(6, 5, map1.MapS, "Dimat", 360, 240);
+            enemy2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+            enemy2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
+            entities.Add(enemy2);
+
+            Enemy enemy3 = new Enemy(1, 5, map1.MapS, "Bev Infó", 360, 240);
+            enemy3.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+            enemy3.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
+            entities.Add(enemy3);
+
+            Enemy enemy4 = new Enemy(7, 10, map1.MapS, "Villanytan", 360, 240);
+            enemy4.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+            enemy4.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
+            entities.Add(enemy4);
+
+            Enemy enemy5 = new Enemy(12, 5, map1.MapS, "Makró", 360, 240);
+            enemy5.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+            enemy5.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
+            entities.Add(enemy5);
+
+            Enemy enemy6 = new Enemy(14, 10, map1.MapS, "Szoftver fejlesztés", 360, 240);
+            enemy6.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+            enemy6.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
+            entities.Add(enemy6);
+
+            Props health2 = new Props(14, 9, main.MapS, "Medkit", 360, 360, PropType.heal);
+            health2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\medkit.png");
+            entities.Add(health2);
+
+            Props redKey = new Props(9, 14, main.MapS, "RedKey", 360, 360, PropType.key);
+            redKey.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\medkit.png");
+            entities.Add(redKey);
+
+            map1.EntityMap = entities.ToArray();
+            map1.SetDefaults();
+            AddMap(map1);
         }
         void LoadMaps()
         {

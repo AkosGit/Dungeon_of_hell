@@ -26,6 +26,7 @@ using Raycasting_Engine.GameObject_types;
 
 namespace Raycasting_Engine
 {
+	public delegate void LoadNextMap();
 	public class Game
 	{
 		const double PI = 3.1415926535;
@@ -47,6 +48,9 @@ namespace Raycasting_Engine
 		public Player Player { get => player; set => player = value; }
 		public List<EntityObject> entities;
 		public bool IsReady;
+		public event LoadNextMap LoadNextMapEvent;
+		protected Point finishzone;
+		protected Item key;
 		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, Map mainmap = null)
 		{
 
@@ -69,19 +73,9 @@ namespace Raycasting_Engine
 
 			this.player = map.Player;
 
-			entities = new List<EntityObject>();
-			Enemy test = new Enemy(1, 1, mapS, "Józsi", 360, 240);
-			test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
-			test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
-			entities.Add(test);
-			Enemy test2 = new Enemy(4, 4, mapS, "Béla", 360, 240);
-			test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
-			test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
-			entities.Add(test2);
-
-			Props health1 = new Props(2, 2, mapS, "Medkit", 360, 360, PropType.heal);
-			health1.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\medkit.png");
-			entities.Add(health1);
+			entities = map.EntityMap.ToList();
+			finishzone = map.FinishZone;
+			key = map.Key;
 		}
 		void PlaySounds(EntityObject obj)
 		{
@@ -161,6 +155,11 @@ namespace Raycasting_Engine
 			//Canvas.Height = 500;
 			//canvas.Children.Clear();
 			//RGeometry.DrawRectangle(canvas, 0, 250, 722, 250, 722, 500, 0, 500, Brushes.Aqua, Brushes.Transparent);
+			if (player.GridX == finishzone.X && player.GridY == finishzone.Y && HUD.Inventory.Items.Contains(key))
+			{
+				HUD.Inventory.RemoveItem(key);
+				LoadNextMapEvent?.Invoke();
+			}
 			drawRays3D();
 			PlaySounds(Player);
 			foreach (EntityObject ent in entities)
@@ -356,15 +355,28 @@ namespace Raycasting_Engine
 					{
 						if (entity.IsHere(player.GridX, player.GridY))
 						{
-							if((entity as Props).Type == PropType.heal) Player.Heal();
+							if ((entity as Props).Type == PropType.heal) 
+							{
+								Player.Heal();
+								entities.Remove(entity);
+							}
+
 							if ((entity as Props).Type == PropType.ammo)
 							{
 								foreach(Item item in HUD.Inventory.Items)
 								{
-									if (item is FireArm) (item as FireArm).Ammo += 30;
+									if (item is FireArm)
+									{
+										(item as FireArm).Ammo += 30;
+										entities.Remove(entity);
+									}
 								}
 							}
-							if ((entity as Props).Type != PropType.key || (entity as Props).Type != PropType.prop) entities.Remove(entity);
+							if((entity as Props).Type == PropType.key)
+							{
+								HUD.Inventory.AddItem(key);
+								entities.Remove(entity);
+							}
 						}
 					}
 					renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(PlaceOnScreenX - (entity.Width / 2) / (500 / entityH), (entityH + entityO) - entity.Height / (500 / entityH)), new Point(PlaceOnScreenX + (entity.Width / 2) / (500 / entityH), (entityH + entityO) - entity.Height / (500 / entityH)), new Point(PlaceOnScreenX + (entity.Width / 2) / (500 / entityH), entityH + entityO), new Point(PlaceOnScreenX - (entity.Width / 2) / (500 / entityH), entityH + entityO), Brushes.Green, entityH));

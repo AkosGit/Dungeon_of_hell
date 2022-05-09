@@ -15,8 +15,8 @@ namespace Raycasting_Engine
         public Player(int gridX, int gridY, int mapS, int armor = 14, bool isSolid = false, int a = 0) 
             : base(gridX, gridY, mapS, "Player", 0, 0, isSolid, a)
         {
-            X = gridX * mapS;
-            Y = gridY * mapS;
+            x = gridX * mapS + mapS / 2;
+            y = gridY * mapS + mapS / 2;
             this.a = a;
             dx = Math.Cos((PI / 180) * this.a);
             dy = Math.Sin((PI / 180) * this.a);
