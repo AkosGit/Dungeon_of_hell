@@ -6,8 +6,11 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace Utils
 {
@@ -16,13 +19,19 @@ namespace Utils
     {
         public static void Write<T>(string path, T contents)
         {
+            path = path + ".json";
             if (!GlobalSettings.Settings.DisableSaving)
             {
-                File.WriteAllText(path, System.Text.Json.JsonSerializer.Serialize(contents));
+                File.WriteAllText(path, Newtonsoft.Json.JsonConvert.SerializeObject(contents, typeof(T), Formatting.Indented,
+                        new JsonSerializerSettings()
+                        {
+                            Culture = System.Globalization.CultureInfo.InvariantCulture,
+                        }));
             }
         }
         public static object Read(string path, Type type) 
         {
+            path = path + ".json";
             if (!GlobalSettings.Settings.DisableSaving)
             {
                 string file = File.ReadAllText(path).Replace(".0", "");

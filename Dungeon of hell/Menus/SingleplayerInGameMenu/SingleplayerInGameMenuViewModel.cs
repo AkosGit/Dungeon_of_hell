@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
+﻿using Dungeon_of_hell.SinglePlayer;
+using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace Dungeon_of_hell
             MainMenuView = new RelayCommand(() =>
             {
                 Audio_player.Play("menuSelect");
-                ObjectManager.Write<ISingleplayer>(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json", (ISingleplayer)GetView("Singleplayer"));
+                ObjectManager.Write<SinglePlayerViewModel>(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer", (SinglePlayerViewModel)GetView("Singleplayer"));
                 RemoveView("Singleplayer");
                 ChangePrimaryView("MainMenu");
                 ClearSecondView();

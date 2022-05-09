@@ -14,27 +14,35 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Utils;
 using Rendering;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
+
 namespace Dungeon_of_hell.SinglePlayer
 {
-	public class SinglePlayerViewModel : ViewModel, ISingleplayer
+	public class SinglePlayerViewModel : ViewModel
 	{
 		const int InventorySLOST = 7;
 
 		//for saving
-		public IPlayer Player { get { return game.Player; } set { player = value; } }
-		private IPlayer player;
+		public Player Player { get { return game.Player; } set { player = value; } }
+		[JsonIgnore]
+		private Player player;
 		public string Mapname { get { return game.Mapname; } set { mapname = value; } }
-		public List<Item> InventoryItems { get { return game.HUD.Inventory.items; } set { inventoryitems = value; } }
-		List<Item> inventoryitems;
-
+		//[JsonIgnore]
+		public List<Item> Items { get { return game.HUD.Inventory.items; } set { items = value; } }
+		List<Item> items;
+		[JsonIgnore]
+		protected SPMain game;
 		private string mapname;
+		[JsonIgnore]
 		public DispatcherTimer timer1;
 		TimeSpan time;
 		Boolean StopTimer;
-		SPMain game;
 		private Canvas canvas;
 		private Canvas hud;
+		[JsonIgnore]
 		public Canvas HUD { get { return hud; } set { SetProperty(ref hud, value); } }
+		[JsonIgnore]
 		public Canvas Canvas { get { return canvas; } set { SetProperty(ref canvas, value); } }
 		public SinglePlayerViewModel()
 		{
@@ -47,7 +55,8 @@ namespace Dungeon_of_hell.SinglePlayer
 			ObservableCollection<Binding> sb = GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings");
 			if (e.Key == Key.Escape){ChangeSecondaryView("SingleplayerInGameMenu");}
             else if (game.HUD.Inventory.InvKeys.Contains(e.Key)) { 
-				game.HUD.Input(e.Key); }	
+				game.HUD.Input(e.Key); 
+			}	
 		}
 		private void StartGame()
 		{
@@ -116,12 +125,11 @@ namespace Dungeon_of_hell.SinglePlayer
 			if (player != null)
             {
 				//load saved player
-				//game.Player = (Player)player;
+				game.Player = (Player)player;
             }
-            if (inventoryitems != null)
+            if (items != null)
             {
-				game.HUD.Inventory.items = inventoryitems;
-				game.HUD.Inventory.render();
+				game.HUD.Inventory.items = items;
             }
 
 		}

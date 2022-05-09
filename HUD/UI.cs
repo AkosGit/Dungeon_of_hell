@@ -93,7 +93,11 @@ namespace HUD
         }
         public void UpdateCredit(int Credit)
         {
-            Text(0, ((hud.Height / SLOTS) * 6) + 5 , "Credit", Colors.Yellow, Colors.DarkRed,Credit.ToString());
+            if(Inventory.SelectedItem is FireArm)
+            {
+                Text(0, ((hud.Height / SLOTS) * 6) + 5, "Credit", Colors.Yellow, Colors.DarkRed, Credit.ToString());
+
+            }
         }
     }
 }

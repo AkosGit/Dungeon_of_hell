@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Newtonsoft.Json;
 using Rendering;
 using Utils;
 using Utils.Interfaces;
@@ -160,7 +160,7 @@ namespace HUD
         }
         public override void Reload()
         {
-            if (Ammo != 0 && Rounds!=maxrounds)
+            if (Ammo - (maxrounds - Rounds)>=0 && Rounds!=maxrounds)
             {
                 //wait for reload to complete
                 if (!IsReloading)
@@ -268,7 +268,7 @@ namespace HUD
         }
         public override void Reload()
         {
-            if (Ammo != 0 && Rounds != maxrounds)
+            if (Ammo - (maxrounds - Rounds) >= 0 && Rounds != maxrounds)
             {
                 //wait for reload to complete
                 if (!IsReloading)
@@ -299,6 +299,7 @@ namespace HUD
     }
     public abstract class FireArm : Item
     {
+        [JsonIgnore]
         protected Random r;
         public int Ammo { get; set; }
         public int Damage { get; set; }
@@ -307,7 +308,7 @@ namespace HUD
         public bool shotIsOngoing { get; set; }
         public bool IsShooting { get; set; }
         public bool IsReloading { get; set; }
-
+        [JsonIgnore]
         public Dictionary<Audio_player.WeaponSound, List<string>> Sounds { get; set; }
 
         public FireArm(string name, int ammo, int rounds, int damage) : base(name)

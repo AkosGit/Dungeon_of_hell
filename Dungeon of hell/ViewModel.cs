@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,9 @@ namespace Dungeon_of_hell
 {
     public abstract class ViewModel : ObservableObject,IViewModel
     {
+        [JsonIgnore]
         public string Name { get; set; }
+        [JsonIgnore]
         public object ViewId { get; set; }
         public event Action<string> changeprimaryviewEvent;
         public event Action<string> changesecondaryviewEvent;

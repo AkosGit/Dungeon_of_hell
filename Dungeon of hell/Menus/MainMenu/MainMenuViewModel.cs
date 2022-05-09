@@ -30,7 +30,7 @@ namespace Dungeon_of_hell
                 Audio_player.Play("menuSelect");
                 if (!GlobalSettings.Settings.DisableSaving && File.Exists(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json"))
                 {
-                    AddView((IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json", typeof(SinglePlayerViewModel)), typeof(SinglePlayerView));
+                    AddView((IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer", typeof(SinglePlayerViewModel)), typeof(SinglePlayerView));
                 }
                 else
                 {
@@ -42,9 +42,9 @@ namespace Dungeon_of_hell
             MultiplayerView = new RelayCommand(() =>
             {
                 Audio_player.Play("menuSelect");
-                if (!GlobalSettings.Settings.DisableSaving && File.Exists(GlobalSettings.Settings.AssetsPath + "Save\\Multiplayer.json"))
+                if (!GlobalSettings.Settings.DisableSaving && File.Exists(GlobalSettings.Settings.AssetsPath + "Save\\Multiplayer"))
                 {
-                    AddView((IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Multiplayer.json", typeof(MultiPlayerViewModel)), typeof(MultiPlayerView));
+                    AddView((IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Multiplayer", typeof(MultiPlayerViewModel)), typeof(MultiPlayerView));
                 }
                 else
                 {
