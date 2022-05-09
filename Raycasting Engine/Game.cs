@@ -141,6 +141,15 @@ namespace Raycasting_Engine
 						}
 						PlayandUpdate(obj, key, playSound);
 					}
+					if (key == Audio_player.EnitySound.shooting)
+					{
+						if (((MovableEntityObject)obj).IsShooting)
+						{
+							playSound = true;
+							((MovableEntityObject)obj).IsShooting = false;
+						}
+						PlayandUpdate(obj, key, playSound);
+					}
 				}
 			}
 		}
@@ -177,7 +186,7 @@ namespace Raycasting_Engine
 					Brush color;
 					if (map[y * mapY + x].IsSolid) color = Brushes.White; else color = Brushes.Black;
 					xo = x * mapS; yo = y * mapS;
-					RGeometry.DrawRectangle(canvas,xo + 1, yo + 1, xo + 1, yo + mapS - 1, xo + mapS - 1, yo + mapS - 1, xo + mapS - 1, yo + 1, color, new SolidColorBrush(Colors.Transparent), 0);
+					RGeometry.DrawRectangle(canvas, xo + 1, yo + 1, xo + 1, yo + mapS - 1, xo + mapS - 1, yo + mapS - 1, xo + mapS - 1, yo + 1, color, new SolidColorBrush(Colors.Transparent), 0);
 				}
 			}
 		}
@@ -336,49 +345,59 @@ namespace Raycasting_Engine
 				double entityH = mapS * 500 / disE; if (entityH > 500) { entityH = 500; }
 				double entityO = 250 - entityH / 2;
 
-				if (PointInTriangle(new PointF((float)entity.X, (float)entity.Y), new PointF((float)player.X, (float)player.Y), new PointF((float)(player.X + startVector.X * 20), (float)(player.Y + startVector.Y * 20)), new PointF((float)(player.X + endVector.X * 20), (float)(player.Y + endVector.Y*20))))
+				if (PointInTriangle(new PointF((float)entity.X, (float)entity.Y), new PointF((float)player.X, (float)player.Y), new PointF((float)(player.X + startVector.X * 20), (float)(player.Y + startVector.Y * 20)), new PointF((float)(player.X + endVector.X * 20), (float)(player.Y + endVector.Y * 20))))
 				{
 					if (!renderingList.Keys.Contains(entity))
 					{
 						renderingList.Add(entity, new List<RenderObject>());
 					}
-					if(entity is Enemy)
+					if (entity is Enemy)
 					{
-						if ((entity as Enemy).IsEnemyDead) (entity as Enemy).EnemyIsDead();
-						if (!(entity as Enemy).IsActive) (entity as Enemy).Activate();
-						else (entity as Enemy).Move(new Rendering.Vector(new PointF((float)entity.X, (float)entity.Y), new PointF((float)player.X, (float)player.Y)), map, mapX, mapY);
-						if ((entity as Enemy).CanShoot) player.Hit();
-					}
-					if(entity is Props)
-					{
-						if (entity.IsHere(player.GridX, player.GridY))
+						if ((entity as Enemy).IsAlive)
 						{
-							if ((entity as Props).Type == PropType.heal) 
-							{
-								Player.Heal();
-								entities.Remove(entity);
-							}
-
-							if ((entity as Props).Type == PropType.ammo)
-							{
-								foreach(Item item in HUD.Inventory.Items)
-								{
-									if (item is FireArm)
-									{
-										(item as FireArm).Ammo += 30;
-										entities.Remove(entity);
-									}
-								}
-							}
-							if((entity as Props).Type == PropType.key)
-							{
-								HUD.Inventory.AddItem(key);
-								entities.Remove(entity);
-							}
+							if ((entity as Enemy).IsEnemyDead) { (entity as Enemy).EnemyIsDead(); player.Credit = +(entity as Enemy).Credit; HUD.UpdateCredit(player.Credit); }
+							if (!(entity as Enemy).IsActive) (entity as Enemy).Activate();
+							else (entity as Enemy).Move(new Rendering.Vector(new PointF((float)entity.X, (float)entity.Y), new PointF((float)player.X, (float)player.Y)), map, mapX, mapY);
+							if ((entity as Enemy).CanShoot) if(player.Hit()) PayerWindowActionHelperHurt();
 						}
 					}
 					renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(PlaceOnScreenX - (entity.Width / 2) / (500 / entityH), (entityH + entityO) - entity.Height / (500 / entityH)), new Point(PlaceOnScreenX + (entity.Width / 2) / (500 / entityH), (entityH + entityO) - entity.Height / (500 / entityH)), new Point(PlaceOnScreenX + (entity.Width / 2) / (500 / entityH), entityH + entityO), new Point(PlaceOnScreenX - (entity.Width / 2) / (500 / entityH), entityH + entityO), Brushes.Green, entityH));
-					
+
+				}
+				if (entity is Props)
+				{
+					if (entity.IsHere(player.GridX, player.GridY))
+					{
+						if ((entity as Props).Type == PropType.heal)
+						{
+							Player.Heal();
+							entities.Remove(entity);
+							PayerWindowActionHelperHeal();
+						}
+
+						if ((entity as Props).Type == PropType.ammo)
+						{
+							foreach (Item item in HUD.Inventory.Items)
+							{
+								if (item is FireArm)
+								{
+									(item as FireArm).Ammo += 30;
+									entities.Remove(entity);
+								}
+							}
+						}
+						if ((entity as Props).Type == PropType.key)
+						{
+							HUD.Inventory.AddItem(key);
+							entities.Remove(entity);
+						}
+						if ((entity as Props).Type == PropType.kredit)
+						{
+							player.Credit = +(entity as Props).Credit;
+							HUD.UpdateCredit(player.Credit);
+							entities.Remove(entity);
+						}
+					}
 				}
 
 				//visibleEntities.Add(entity);
@@ -392,7 +411,7 @@ namespace Raycasting_Engine
 			}
 			//sorting items in order of height: back to fron rendering of objects
 			renderingList = renderingList.OrderBy(x => x.Value.Min(z => { if (z is RenderEntity) return (z as RenderEntity).originalWallHeight; else return z.Height; })).ToDictionary(z => z.Key, y => y.Value);
-			RenderGame render = new RenderGame(canvas, HUD, renderingList,(bool ready)=> { IsReady = ready; });
+			RenderGame render = new RenderGame(canvas, HUD, renderingList, (bool ready) => { IsReady = ready; });
 		}
 		float sign(PointF p1, PointF p2, PointF p3)
 		{
@@ -413,12 +432,21 @@ namespace Raycasting_Engine
 
 			return !(has_neg && has_pos);
 		}
+
+		void PayerWindowActionHelperHurt()
+		{
+			RGeometry.DrawRectangle(canvas, 500, 720, 0, 0, new SolidColorBrush(Color.FromArgb((byte)175, (byte)136, (byte)8, (byte)8)));
+		}
+		void PayerWindowActionHelperHeal()
+		{
+			RGeometry.DrawRectangle(canvas, 500, 720, 0, 0, new SolidColorBrush(Color.FromArgb((byte)175, (byte)108, (byte)125, (byte)67)));
+		}
 		private double Distance(double ax, double ay, double bx, double by, double ang)
 		{
 			return Math.Sqrt(Math.Pow(bx - ax, 2) + Math.Pow(by - ay, 2));
 		}
-        #endregion
-    }
+		#endregion
+	}
 }
 
 

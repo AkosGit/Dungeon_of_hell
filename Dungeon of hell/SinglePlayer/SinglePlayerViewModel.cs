@@ -29,7 +29,7 @@ namespace Dungeon_of_hell.SinglePlayer
 		private Player player;
 		public string Mapname { get { return game.Mapname; } set { mapname = value; } }
 		//[JsonIgnore]
-		public List<Item> Items { get { return game.HUD.Inventory.items; } set { items = value; } }
+		public List<Item> Items { get { return items; } set { items = value; } }
 		List<Item> items;
 		[JsonIgnore]
 		protected SPMain game;
@@ -127,10 +127,10 @@ namespace Dungeon_of_hell.SinglePlayer
 				//load saved player
 				game.Player = (Player)player;
             }
-            if (items != null)
-            {
+			if (items != null)
+			{
 				game.HUD.Inventory.items = items;
-            }
+			}
 
 		}
 

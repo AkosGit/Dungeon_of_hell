@@ -11,7 +11,7 @@ namespace Utils
     public static class Audio_player {
         public enum EnitySound
         {
-            walking,hurting,speaking,other
+            walking,hurting,speaking,shooting,other
         }
         public enum WeaponSound
         {

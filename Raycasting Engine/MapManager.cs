@@ -50,28 +50,36 @@ namespace Raycasting_Engine
 
             List<EntityObject> entities = new List<EntityObject>();
             Enemy test = new Enemy(1, 1, main.MapS, "Józsi", 360, 240);
-            test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+            test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_stand.png");
+            test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_1.png");
+            test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_2.png");
+            test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_shoting.png");
+            test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Dead.png");
             test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(test);
             Enemy test2 = new Enemy(4, 4, main.MapS, "Béla", 360, 240);
-            test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+            test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_stand.png");
+            test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_1.png");
+            test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_2.png");
+            test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_shoting.png");
+            test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Dead.png");
             test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(test2);
 
-            Props health1 = new Props(2, 2, main.MapS, "Medkit", 360, 360, PropType.heal);
+            Props health1 = new Props(2, 2, main.MapS, "Medkit", 120, 230, PropType.heal);
             health1.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\medkit.png");
             entities.Add(health1);
 
-            Props key = new Props(4, 4, main.MapS, "BlueKey", 360, 360, PropType.key);
-            key.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\medkit.png");
+            Props key = new Props(4, 4, main.MapS, "BlueKey", 100, 150, PropType.key);
+            key.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\keyCard.png");
             entities.Add(key);
 
             main.EntityMap = entities.ToArray();
             main.SetDefaults();
             AddMap(main);
 
-
-            Map map1 = new Map()
+			#region map1
+			Map map1 = new Map()
             {
                 map = new MapObject[]
             {
@@ -102,48 +110,73 @@ namespace Raycasting_Engine
             entities = new List<EntityObject>();
 
             Enemy enemy1 = new Enemy(14, 1, map1.MapS, "Analízis", 360, 240);
-            enemy1.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+            enemy1.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_stand.png");
+            enemy1.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_1.png");
+            enemy1.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_2.png");
+            enemy1.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_shoting.png");
+            enemy1.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Dead.png");
             enemy1.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(enemy1);
 
             Enemy enemy2 = new Enemy(6, 5, map1.MapS, "Dimat", 360, 240);
-            enemy2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+            enemy2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_stand.png");
+            enemy2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_1.png");
+            enemy2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_2.png");
+            enemy2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_shoting.png");
+            enemy2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Dead.png");
             enemy2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(enemy2);
 
             Enemy enemy3 = new Enemy(1, 5, map1.MapS, "Bev Infó", 360, 240);
-            enemy3.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+            enemy3.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_stand.png");
+            enemy3.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_1.png");
+            enemy3.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_2.png");
+            enemy3.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_shoting.png");
+            enemy3.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Dead.png");
             enemy3.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(enemy3);
 
             Enemy enemy4 = new Enemy(7, 10, map1.MapS, "Villanytan", 360, 240);
-            enemy4.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+            enemy4.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_stand.png");
+            enemy4.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_1.png");
+            enemy4.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_2.png");
+            enemy4.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_shoting.png");
+            enemy4.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Dead.png");
             enemy4.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(enemy4);
 
             Enemy enemy5 = new Enemy(12, 5, map1.MapS, "Makró", 360, 240);
-            enemy5.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+            enemy5.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_stand.png");
+            enemy5.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_1.png");
+            enemy5.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_2.png");
+            enemy5.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_shoting.png");
+            enemy5.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Dead.png");
             enemy5.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(enemy5);
 
             Enemy enemy6 = new Enemy(14, 10, map1.MapS, "Szoftver fejlesztés", 360, 240);
-            enemy6.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
+            enemy6.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_stand.png");
+            enemy6.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_1.png");
+            enemy6.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_2.png");
+            enemy6.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_shoting.png");
+            enemy6.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Dead.png");
             enemy6.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(enemy6);
 
-            Props health2 = new Props(14, 9, main.MapS, "Medkit", 360, 360, PropType.heal);
+            Props health2 = new Props(7, 2, main.MapS, "Medkit", 120, 230, PropType.heal);
             health2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\medkit.png");
             entities.Add(health2);
 
-            Props redKey = new Props(9, 14, main.MapS, "RedKey", 360, 360, PropType.key);
-            redKey.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\medkit.png");
+            Props redKey = new Props(9, 14, main.MapS, "RedKey", 100, 150, PropType.key);
+            redKey.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\keyCard.png");
             entities.Add(redKey);
 
             map1.EntityMap = entities.ToArray();
             map1.SetDefaults();
             AddMap(map1);
-        }
-        public Map GetMap(string mapname)
+			#endregion
+		}
+		public Map GetMap(string mapname)
         {
             return Maps.Where(n => n.MapName == mapname).First();
         }
