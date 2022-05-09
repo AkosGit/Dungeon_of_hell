@@ -1,4 +1,5 @@
 ﻿using HUD;
+using Raycasting_Engine.GameObject_types;
 using Rendering;
 using System;
 using System.Collections.Generic;
@@ -141,12 +142,13 @@ namespace Raycasting_Engine
 				myPolygon.Points = points[i];
 				Point c = RUtils.CenterOfCanvas(canvas);
 				GameObject obj = objs[i];
-				if (HUD.Inventory.SelectedItem is FireArm && obj is EntityObject) 
+				if (HUD.Inventory.SelectedItem is FireArm && obj is Enemy) 
 				{
 					//if enemy has been hit
 					if (points[i][0].X <= c.X && points[i][0].Y <= c.Y && points[i][2].X >= c.X && points[i][2].Y >= c.Y && ((FireArm)HUD.Inventory.SelectedItem).IsShooting)
 					{
-						((EntityObject)obj).Health -= ((FireArm)HUD.Inventory.SelectedItem).Damage;
+						((Enemy)obj).Health -= ((FireArm)HUD.Inventory.SelectedItem).Damage;
+						((Enemy)obj).IsHurting = true;
 					}
 				}
 				canvas.Children.Add(myPolygon);
