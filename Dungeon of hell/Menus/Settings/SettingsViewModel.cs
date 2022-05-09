@@ -69,7 +69,7 @@ namespace Dungeon_of_hell
             }
             else
             {
-                if(currentBind!= -1 && !forbiddenKeys.Contains(e.Key) && !SingleplayerBindings.Any(z => z.key==e.Key))
+                if(currentBind!= -1 && !forbiddenKeys.Contains(e.Key))
                 {
                     Binding b = SingleplayerBindings[currentBind];
                     b.key = e.Key;

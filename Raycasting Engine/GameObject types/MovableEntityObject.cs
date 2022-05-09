@@ -22,9 +22,9 @@ namespace Raycasting_Engine
 		protected double dy;
 		protected double a;
 		//for playing walking sound
-		public bool IsMoving;
-		public bool IsHurting;
-		public bool IsSpeaking;
+		public bool IsMoving { get; set; }
+		public bool IsHurting { get; set; }
+		public bool IsSpeaking { get; set; }
 
 		public double A { get => a; set => a = value; }
 		[JsonIgnore]

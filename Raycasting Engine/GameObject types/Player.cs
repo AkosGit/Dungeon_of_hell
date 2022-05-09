@@ -11,7 +11,7 @@ namespace Raycasting_Engine
     {
         public int Credit { get; set; }
         Random r;
-        int armor;
+        public int armor { get; set; }
         public Player(int gridX, int gridY, int mapS, int armor = 14, bool isSolid = false, int a = 0) 
             : base(gridX, gridY, mapS, "Player", 0, 0, isSolid, a)
         {

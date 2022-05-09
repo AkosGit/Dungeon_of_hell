@@ -4,19 +4,22 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="722" Background="OrangeRed">
+             d:DesignHeight="500" d:DesignWidth="722">
+    <UserControl.Background>
+        <ImageBrush ImageSource="{Binding Background}"/>
+    </UserControl.Background>
     <Viewbox>
         <StackPanel MinHeight="350" Style="{StaticResource Stack}">
             <Image Source="{Binding Logo}" Width="300" Margin="35,0,0,0" VerticalAlignment="Center">
             </Image>
             <Button Width="100" Height="20" Content="New game" Style="{StaticResource MenuButton}" Command="{Binding Path=NewGameView}">
-        </Button>
+            </Button>
             <Button Width="100" Height="20" Content="Load game" Style="{StaticResource MenuButton}" Command="{Binding Path=LoadSaveView}">
             </Button>
             <Button Width="100" Height="20" Content="Multiplayer" Style="{StaticResource MenuButton}" Command="{Binding Path=MultiplayerView}" IsEnabled="False">
-        </Button>
+            </Button>
             <Button Width="100" Height="20" Content="Settings" Style="{StaticResource MenuButton}" Command="{Binding Path=SettingsView}">
-        </Button>
-    </StackPanel>
-        </Viewbox>
+            </Button>
+        </StackPanel>
+    </Viewbox>
 </UserControl>

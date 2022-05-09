@@ -10,7 +10,7 @@ namespace Utils
 {
     public enum EntityActions
     {
-        Forward, Backwards, Left, Right, Use
+        Forward, Backwards, Left, Right, Use, Shoot,Reload
     }
     public interface ISettings
     {
@@ -20,6 +20,6 @@ namespace Utils
     {
         public Key key { get; set; }
         public string Message { get; set; }
-        public Enum Usecase { get; set; }
+        public EntityActions Usecase { get; set; }
     }
 }

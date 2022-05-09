@@ -17,10 +17,6 @@ namespace Raycasting_Engine
         List<Map> Maps;
         public MapManager()
         {
-            if (!GlobalSettings.Settings.DisableSaving)
-            {
-                LoadMaps();
-            }
             Maps = new List<Map>();
             Map main = new Map()
             {
@@ -147,13 +143,6 @@ namespace Raycasting_Engine
             map1.SetDefaults();
             AddMap(map1);
         }
-        void LoadMaps()
-        {
-                foreach (string file in Directory.GetFiles(GlobalSettings.Settings.AssetsPath + "map"))
-                {
-                    Maps.Add((Map)ObjectManager.Read(file, typeof(Map)));
-                }
-        }
         public Map GetMap(string mapname)
         {
             return Maps.Where(n => n.MapName == mapname).First();
@@ -161,10 +150,6 @@ namespace Raycasting_Engine
         public void AddMap(Map map)
         {
             Maps.Add(map);
-            if (!GlobalSettings.Settings.DisableSaving)
-            {
-                ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "map\\" + map.MapName + ".json", map);
-            }
         }
 
     }

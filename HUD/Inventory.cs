@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using Rendering;
 using Utils;
+using Utils.Interfaces;
 
 namespace HUD
 {
@@ -18,7 +20,7 @@ namespace HUD
     {
         const int HEALTHBARSLOTS = 3;
         public Key[] InvKeys = { Key.D1, Key.D2, Key.D3, Key.D4, Key.D5 };
-        List<Item> items { get; set; }
+        public List<Item> items { get; set; }
         public List<Item> Items { get=> items; }
         public int Slots { get; set; }
         Canvas hud;
@@ -48,6 +50,7 @@ namespace HUD
         {
             return items.Contains(item);
         }
+
         public bool IsitemInInventory(int i)
         {
             if (items.Count>= i)
@@ -73,7 +76,7 @@ namespace HUD
             SelectedItem = item;
             render();
         }
-        void render()
+        public void render()
         {
             hud.Children.Clear();
             //rerender inventory slots
@@ -300,8 +303,8 @@ namespace HUD
         public int Ammo { get; set; }
         public int Damage { get; set; }
         public int Rounds { get; set; }
-        protected int maxrounds;
-        protected bool shotIsOngoing;
+        public int maxrounds { get; set; }
+        public bool shotIsOngoing { get; set; }
         public bool IsShooting { get; set; }
         public bool IsReloading { get; set; }
 
@@ -329,8 +332,11 @@ namespace HUD
     public class Item
     {
         public string Name { get; set; }
+        [JsonIgnore]
         public Brush Icon { get; set; }
+        [JsonIgnore]
         public Brush Holding { get; set; }
+        [JsonIgnore]
         public Brush InUse { get; set; }
         public Item(string name)
         {

@@ -60,6 +60,7 @@ namespace Dungeon_of_hell
 
             });
         }
+        public string Background { get { return GlobalSettings.Settings.AssetsPath + "img\\MainMenuBackground.png"; } }
         public string Logo { get { return GlobalSettings.Settings.AssetsPath + "img\\logo.png"; } }
         public ICommand NewGameView { get; set; }
         public ICommand LoadSaveView { get; set; }

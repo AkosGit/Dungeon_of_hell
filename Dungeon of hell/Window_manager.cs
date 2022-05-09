@@ -75,8 +75,8 @@ namespace Dungeon_of_hell
                 ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Left, key = Key.A, Message = "A" });
                 ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Right, key = Key.D, Message = "D" });
                 ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Use, key = Key.E, Message = "E" });
-                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = ItemActions.Shoot, key = Key.K, Message = "K" });
-                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = ItemActions.Reload, key = Key.R, Message = "R" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Shoot, key = Key.K, Message = "K" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Reload, key = Key.R, Message = "R" });
 
             }
             view.getview += (string viewname) => { return GetView(viewname); };

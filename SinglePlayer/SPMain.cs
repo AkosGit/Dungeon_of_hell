@@ -12,8 +12,8 @@ namespace SinglePlayer
 	{
 		string[] maps;
 		int mapcount;
-		public SPMain(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, Map map = null)
-			: base(canvas, hud, Inventoryslots, defitem, map)
+		public SPMain(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string mapname)
+			: base(canvas, hud, Inventoryslots, defitem, mapname)
 		{
 			maps = new string[] { "map1", "map2", "map3" };
 			mapcount = 0;

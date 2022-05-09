@@ -12,37 +12,26 @@ namespace Dungeon_of_hell
 {
     public class EntityActionToString : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-			if(value is EntityActions)
-            {
-				EntityActions action = (EntityActions)value;
-				switch (action)
-				{
-					case EntityActions.Forward:
-						return "Forward";
-					case EntityActions.Left:
-						return "Left";
-					case EntityActions.Backwards:
-						return "Backwards";
-					case EntityActions.Right:
-						return "Right";
-					default:
-						return "Use";
-				}
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			EntityActions action = (EntityActions)value;
+			switch (action)
+			{
+				case EntityActions.Forward:
+					return "Forward";
+				case EntityActions.Left:
+					return "Left";
+				case EntityActions.Backwards:
+					return "Backwards";
+				case EntityActions.Right:
+					return "Right";
+				case EntityActions.Shoot:
+					return "Shoot";
+				case EntityActions.Reload:
+					return "Reload";
+				default:
+					return "Use";
 			}
-			if(value is ItemActions)
-            {
-				ItemActions action = (ItemActions)value;
-				switch (action)
-				{
-					case ItemActions.Shoot:
-						return "Shoot";
-					case ItemActions.Reload:
-						return "Reload";
-				}
-			}
-			return "NON";
 		}
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -58,6 +47,10 @@ namespace Dungeon_of_hell
 					return EntityActions.Backwards;
 				case "Right":
 					return EntityActions.Right;
+				case "Shoot":
+					return EntityActions.Shoot;
+				case "Reload":
+					return EntityActions.Reload;
 				default:
 					return EntityActions.Use;
 			}

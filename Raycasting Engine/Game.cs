@@ -33,7 +33,7 @@ namespace Raycasting_Engine
 		const double P2 = PI / 2;
 		const double P3 = 3 * PI / 2;
 		const double DR = 0.0174533;
-
+		public string Mapname { get; set; }
 		const int MoveRight = 5;
 		protected Canvas canvas;
 		protected Player player;
@@ -51,16 +51,13 @@ namespace Raycasting_Engine
 		public event LoadNextMap LoadNextMapEvent;
 		protected Point finishzone;
 		protected Item key;
-		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, Map mainmap = null)
+		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string map)
 		{
 
 			MapManager = new MapManager();
 			HUD = new UI(hud, Inventoryslots, defitem);
 			this.canvas = canvas;
-			if (mainmap == null) mainmap = MapManager.GetMap("Main");
-
-			LoadMapToInGameMap(mainmap);
-
+			LoadMapToInGameMap(MapManager.GetMap(map));
 		}
 
 		protected void LoadMapToInGameMap(Map map)
@@ -70,6 +67,7 @@ namespace Raycasting_Engine
 			mapX = map.MapX;
 			mapY = map.MapY;
 			mapS = map.MapS;
+			Mapname = map.MapName;
 
 			this.player = map.Player;
 

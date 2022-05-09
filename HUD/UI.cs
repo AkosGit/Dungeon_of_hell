@@ -19,9 +19,6 @@ namespace HUD
             this.SLOTS = slots;
             this.hud = hud;
             hud.Height = 500;
-            UpdateCredit(0);
-            UpdateHealth(100);
-
             Inventory = new Inventory(hud,SLOTS,defitem);
         }
         public void Input(Key key)
