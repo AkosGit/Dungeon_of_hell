@@ -7,13 +7,13 @@ using Utils;
 
 namespace Raycasting_Engine
 {
-    public class Player : MovableEntityObject, IPlayer
+    public class Player : MovableEntityObject
     {
         public string Place { get; set; }
         public int Credit { get; set; }
         Random r;
         public int armor { get; set; }
-        public Player(int gridX, int gridY, int mapS, int armor = 14, bool isSolid = false, int a = 0) 
+        public Player(int gridX, int gridY, int mapS, int armor = 12, bool isSolid = false, int a = 0) 
             : base(gridX, gridY, mapS, "Player", 0, 0, isSolid, a)
         {
             x = gridX * mapS + mapS / 2;
@@ -39,12 +39,14 @@ namespace Raycasting_Engine
             this.armor = armor;
         }
         
-        public void Hit()
+        public bool Hit()
 		{
             if(r.Next(0,20) > armor)
 			{
                 health -= r.Next(5, 15);
+                return true;
 			}
+            return false;
 		}
         public void Heal()
 		{

@@ -25,7 +25,7 @@ namespace Dungeon_of_hell.SinglePlayer
 		const int InventorySLOST = 7;
 
 		//for saving
-		public bool LoadSave = false;
+		public bool LoadSave { get; set; }
 		public Player Player { get { return game.Player; }}
 		public List<Item> Items { get { return game.HUD.Inventory.items; }}
 		public List<Enemy> Enemys { get { return game.entities.Where(z=> !(z is Props)).Select(y=>((Enemy)y)).ToList(); } }
@@ -39,9 +39,10 @@ namespace Dungeon_of_hell.SinglePlayer
 		private Canvas hud;
 		public Canvas HUD { get { return hud; } set { SetProperty(ref hud, value); } }
 		public Canvas Canvas { get { return canvas; } set { SetProperty(ref canvas, value); } }
-		public SinglePlayerViewModel()
+		public SinglePlayerViewModel(bool load)
 		{
 			Name = "Singleplayer";
+			LoadSave = load;
 			SetDefaults();
 			StartGame();
 		}
@@ -109,9 +110,9 @@ namespace Dungeon_of_hell.SinglePlayer
 			hud.Width = 100;
 			hud.Height = 722;
 			hud.Background = Brushes.DarkRed;
-			string map = "map1";
+			string map = "Main";
 			Player p=null;
-			List<Enemy> entities = new List<Enemy>();
+			List<EntityObject> entities = new List<EntityObject>();
 			if (LoadSave)
             {
 				if (File.Exists(GlobalSettings.Settings.AssetsPath + "\\save\\" + "Player.json"))

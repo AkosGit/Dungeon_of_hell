@@ -8,7 +8,7 @@ using Utils;
 
 namespace Raycasting_Engine
 {
-	public class Enemy : GameObject
+	public class EntityObject : GameObject
 	{
 		public Dictionary<Audio_player.EnitySound, List<string>> Sounds;
 		protected int gridX;
@@ -40,7 +40,7 @@ namespace Raycasting_Engine
 		public double Height { get => height; set => height = value; }
 		public double Width { get => width; set => width = value; }
 
-		public Enemy(int gridX, int gridY, int mapS,string name, double he = 0, double wi = 0, bool isSolid = false, Dictionary<Audio_player.EnitySound, List<string>> Sounds =null)
+		public EntityObject(int gridX, int gridY, int mapS,string name, double he = 0, double wi = 0, bool isSolid = false, Dictionary<Audio_player.EnitySound, List<string>> Sounds =null)
 			: base(isSolid)
 		{
 			this.gridX = gridX;

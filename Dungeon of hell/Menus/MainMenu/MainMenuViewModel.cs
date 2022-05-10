@@ -21,16 +21,15 @@ namespace Dungeon_of_hell
             NewGameView = new RelayCommand(() =>
             {
                 Audio_player.Play("menuSelect");
-                AddView(new SinglePlayerViewModel(), typeof(SinglePlayerView));
+                AddView(new SinglePlayerViewModel(false), typeof(SinglePlayerView));
                 AddView(new SingleplayerInGameMenuViewModel(), typeof(SingleplayerInGameMenuView));
                 ChangePrimaryView("Singleplayer");
             });
             LoadSaveView = new RelayCommand(() =>
             {
                 Audio_player.Play("menuSelect");
-                AddView(new SinglePlayerViewModel(), typeof(SinglePlayerView));
+                AddView(new SinglePlayerViewModel(true), typeof(SinglePlayerView));
                 AddView(new SingleplayerInGameMenuViewModel(), typeof(SingleplayerInGameMenuView));
-                UpdateViewProperty("Singleplayer", "LoadSave", true);
                 ChangePrimaryView("Singleplayer");
             });
             MultiplayerView = new RelayCommand(() =>

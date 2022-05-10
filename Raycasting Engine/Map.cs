@@ -20,7 +20,7 @@ namespace Raycasting_Engine
 		int mapS;
 		string mapname;
 		MapObject[] lmap;
-		Enemy[] lEntityMap;
+		EntityObject[] lEntityMap;
 		Player player;
 		Point finishZone;
 		Item key;
@@ -31,7 +31,7 @@ namespace Raycasting_Engine
 		public int MapY { get => mapY; set => mapY = value; }
 		public int MapS { get => mapS; set => mapS = value; }
 		public MapObject[] map { get => lmap; set => lmap = value; }
-		public Enemy[] EntityMap { get => lEntityMap; set => lEntityMap = value; }
+		public EntityObject[] EntityMap { get => lEntityMap; set => lEntityMap = value; }
 		public Player Player { get => player; set => player = value; }
 		public Point FinishZone { get => finishZone; }
 		public Item Key { get => key; set => key = value; }

@@ -12,7 +12,7 @@ namespace SinglePlayer
 	{
 		string[] maps;
 		int mapcount;
-		public SPMain(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string mapname,Player p=null, List<Enemy> entities = null)
+		public SPMain(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string mapname,Player p=null, List<EntityObject> entities = null)
 			: base(canvas, hud, Inventoryslots, defitem, mapname,p,entities)
 		{
 			maps = new string[] { "map1", "map2", "map3" };
