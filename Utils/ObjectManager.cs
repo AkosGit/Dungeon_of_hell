@@ -34,7 +34,7 @@ namespace Utils
             path = path + ".json";
             if (!GlobalSettings.Settings.DisableSaving)
             {
-                string file = File.ReadAllText(path).Replace(".0", "");
+                string file = File.ReadAllText(path);
                 return Newtonsoft.Json.JsonConvert.DeserializeObject(file, type, new JsonSerializerSettings()
                 {
                     Culture = System.Globalization.CultureInfo.InvariantCulture

@@ -54,7 +54,7 @@ namespace Dungeon_of_hell
 
 			if (bool.Parse(ConfigurationManager.AppSettings.Get("IsTest")) == true)
 			{
-				manager.AddView(new SinglePlayerViewModel(), typeof(SinglePlayerView));
+				manager.AddView(new SinglePlayerViewModel(false), typeof(SinglePlayerView));
 				manager.ChangePrimaryView("Singleplayer");
 			}
 		}

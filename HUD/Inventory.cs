@@ -297,7 +297,7 @@ namespace HUD
             else { shotIsOngoing = false; }
         }
     }
-    public abstract class FireArm : Item
+    public class FireArm : Item
     {
         [JsonIgnore]
         protected Random r;
@@ -325,10 +325,10 @@ namespace HUD
             maxrounds = rounds;
             r = new Random();
         }
-        public abstract void Shoot();
-        public abstract void Walking();
-        public abstract void Reload();
-        public abstract void Tick();
+        public virtual void Shoot() { }
+        public virtual void Walking() { }
+        public virtual void Reload() { }
+        public virtual void Tick() { }
     }
     public class Item
     {

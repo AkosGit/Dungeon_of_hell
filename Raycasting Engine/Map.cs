@@ -36,7 +36,7 @@ namespace Raycasting_Engine
 		public Point FinishZone { get => finishZone; }
 		public Item Key { get => key; set => key = value; }
 
-		public Map(int maxL, int mapX, int mapY, int mapS, MapObject[] map,EntityObject[] entitymap, Player player,string mapname)
+		public Map(int maxL, int mapX, int mapY, int mapS, MapObject[] map, EntityObject[] entitymap, Player player,string mapname)
 		{
 			this.mapname = MapName;
 			MaxL = maxL;

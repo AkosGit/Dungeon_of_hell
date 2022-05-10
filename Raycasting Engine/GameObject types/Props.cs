@@ -10,7 +10,7 @@ namespace Raycasting_Engine
 	{
 		heal, ammo, key, kredit, prop
 	}
-	class Props : EntityObject
+	public class Props : EntityObject
 	{
 		PropType type;
 		int credit;

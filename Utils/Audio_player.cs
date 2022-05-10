@@ -48,6 +48,13 @@ namespace Utils
             tracks[name].StopPlayback();
             tracks.Remove(name);
         }
+        public static void StopAll()
+        {
+            foreach (string key in tracks.Keys)
+            {
+                tracks[key].StopPlayback();
+            }
+        }
         public static void RemoveAll()
         {
             //raised when exiting

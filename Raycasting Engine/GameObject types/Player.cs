@@ -7,8 +7,9 @@ using Utils;
 
 namespace Raycasting_Engine
 {
-    public class Player : MovableEntityObject, IPlayer
+    public class Player : MovableEntityObject
     {
+        public string Place { get; set; }
         public int Credit { get; set; }
         Random r;
         public int armor { get; set; }

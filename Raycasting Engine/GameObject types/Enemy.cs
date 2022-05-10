@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using Utils;
 
-namespace Raycasting_Engine.GameObject_types
+namespace Raycasting_Engine
 {
-    class Enemy : MovableEntityObject
+   public class Enemy : MovableEntityObject
     {
         Random r;
         bool isActive;

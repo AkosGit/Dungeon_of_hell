@@ -22,7 +22,6 @@ using Rendering;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
-using Raycasting_Engine.GameObject_types;
 
 namespace Raycasting_Engine
 {
@@ -51,13 +50,21 @@ namespace Raycasting_Engine
 		public event LoadNextMap LoadNextMapEvent;
 		protected Point finishzone;
 		protected Item key;
-		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string map)
+		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string map,Player p, List<EntityObject> entities)
 		{
 
 			MapManager = new MapManager();
 			HUD = new UI(hud, Inventoryslots, defitem);
 			this.canvas = canvas;
-			LoadMapToInGameMap(MapManager.GetMap(map));
+            if (p != null)
+            {
+				LoadMapToInGameMap(MapManager.GetMap(map),p,entities);
+			}
+            else
+            {
+				LoadMapToInGameMap(MapManager.GetMap(map));
+			}
+
 		}
 
 		protected void LoadMapToInGameMap(Map map)
@@ -68,12 +75,29 @@ namespace Raycasting_Engine
 			mapY = map.MapY;
 			mapS = map.MapS;
 			Mapname = map.MapName;
-
 			this.player = map.Player;
-
 			entities = map.EntityMap.ToList();
 			finishzone = map.FinishZone;
 			key = map.Key;
+			player.Place = map.MapName;
+		}
+		protected void LoadMapToInGameMap(Map map, Player p, List<EntityObject> entities)
+		{
+			this.map = map.map;
+			MaxL = map.MaxL;
+			mapX = map.MapX;
+			mapY = map.MapY;
+			mapS = map.MapS;
+			Mapname = map.MapName;
+			this.player = map.Player;
+			this.player.X = p.X;
+			this.player.Y = p.Y;
+			this.player.GridX = p.GridX;
+			this.player.GridY = p.GridY;
+			this.entities = entities;
+			finishzone = map.FinishZone;
+			key = map.Key;
+			player.Place = map.MapName;
 		}
 		void PlaySounds(EntityObject obj)
 		{
@@ -235,7 +259,6 @@ namespace Raycasting_Engine
 			typeV = false;
 			int me;
 			Dictionary<GameObject, List<RenderObject>> renderingList = new Dictionary<GameObject, List<RenderObject>>();
-			List<EntityObject> visibleEntities = new List<EntityObject>();
 			Rendering.Vector startVector = new Rendering.Vector();
 			Rendering.Vector endVector = new Rendering.Vector();
 

@@ -26,7 +26,7 @@ namespace Raycasting_Engine
 		public bool IsHurting { get; set; }
 		public bool IsSpeaking { get; set; }
 		public bool IsShooting { get; set; }
-
+		[JsonIgnore]
 		public double A { get => a; set => a = value; }
 		[JsonIgnore]
 		public Point Pxy { get => new Point(X, Y); }

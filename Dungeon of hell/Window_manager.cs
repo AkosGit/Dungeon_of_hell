@@ -162,7 +162,6 @@ namespace Dungeon_of_hell
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
             if (ViewExists("Singleplayer")){
-                ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer", (SinglePlayerViewModel)viewModels[GetindexByName("Singleplayer")]);
                 ((SinglePlayerViewModel)GetView("Singleplayer")).timer1.Stop();
             }
             Audio_player.RemoveAll();
