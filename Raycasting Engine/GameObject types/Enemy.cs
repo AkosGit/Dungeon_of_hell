@@ -56,6 +56,12 @@ namespace Raycasting_Engine
             Sounds[Audio_player.EnitySound.shooting].Add("pistol_shoot_3");
             Sounds[Audio_player.EnitySound.shooting].Add("pistol_shoot_4");
 
+            //Sounds[Audio_player.EnitySound.hurting] = new List<string>();
+            //Audio_player.AddTrack("enemy_hurting1", "sound\\hurt1.wav");
+            //Sounds[Audio_player.EnitySound.walking].Add("enemy_hurting1");
+            //Audio_player.AddTrack("enemy_hurting2", "sound\\hurt1.wav");
+            //Sounds[Audio_player.EnitySound.walking].Add("enemy_hurting2");
+
             isActive = false;
             this.minTimeToShoot = minTimeToShoot;
             shootTimeCounter = 0;
