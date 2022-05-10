@@ -381,7 +381,7 @@ namespace Raycasting_Engine
 					{
 						if ((entity as Enemy).IsAlive)
 						{
-							if ((entity as Enemy).IsEnemyDead) { (entity as Enemy).EnemyIsDead(); player.Credit = +(entity as Enemy).Credit; HUD.UpdateCredit(player.Credit); }
+							if ((entity as Enemy).IsEnemyDead) { (entity as Enemy).EnemyIsDead(); player.Credit += (entity as Enemy).Credit; HUD.UpdateCredit(player.Credit); }
 							if (!(entity as Enemy).IsActive) (entity as Enemy).Activate();
 							else (entity as Enemy).Move(new Rendering.Vector(new PointF((float)entity.X, (float)entity.Y), new PointF((float)player.X, (float)player.Y)), map, mapX, mapY);
 							if ((entity as Enemy).CanShoot) if(player.Hit()) PayerWindowActionHelperHurt();

@@ -31,13 +31,14 @@ namespace SinglePlayer
 
 		public void LoadNextMap()
 		{
-			if(mapcount == 3)
+			mapcount++;
+			if (mapcount == 3)
 			{
 				isWin = true;
 				return;
 			}
 			ChangeMap(MapManager.GetMap(maps[mapcount]));
-			mapcount++;
+			
 		}
 	}
 }
