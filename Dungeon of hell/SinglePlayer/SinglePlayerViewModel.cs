@@ -69,7 +69,7 @@ namespace Dungeon_of_hell.SinglePlayer
 				//handle multiple keydowns
 				game.HUD.UpdateAmmo();
 				game.HUD.UpdateHealth(game.Player.Health);
-				game.HUD.UpdateCredit(0);
+				game.HUD.UpdateCredit(game.Player.Credit);
 				var binds = GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings");
 				foreach (Binding k in binds)
 				{
@@ -156,14 +156,11 @@ namespace Dungeon_of_hell.SinglePlayer
 						game.HUD.Inventory.AddItem((Shotgun)ObjectManager.Read(path, typeof(Shotgun)));
 
 					}
-					if (item.Contains("RedKey"))
+					if (item.Contains("RedKey") || item.Contains("BlueKey"))
 					{
-						game.HUD.Inventory.AddItem((Item)ObjectManager.Read(path, typeof(Item)));
-
-					}
-					if (item.Contains("BlueKey"))
-					{
-						game.HUD.Inventory.AddItem((Item)ObjectManager.Read(path, typeof(Item)));
+						Item i = (Item)ObjectManager.Read(path, typeof(Item));
+						i.UpdateBrushes();
+						game.HUD.Inventory.AddItem(i);
 
 					}
 				}

@@ -53,6 +53,8 @@ namespace Raycasting_Engine
 			key = new Item(lEntityMap.FirstOrDefault(x => { if (x is Props && (x as Props).Type == PropType.key) return true; else return false; }).Name);
 			key.Icon = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\keyCard.png")));
 			key.Holding = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\keyCard.png")));
+			key.Icon_path = $"{GlobalSettings.Settings.AssetsPath}img\\keyCard.png";
+			key.Holding_path = $"{GlobalSettings.Settings.AssetsPath}img\\keyCard.png";
 		}
 		public Map()
         {

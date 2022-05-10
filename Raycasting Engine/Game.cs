@@ -92,6 +92,9 @@ namespace Raycasting_Engine
 			this.player = map.Player;
 			this.player.X = p.X;
 			this.player.Y = p.Y;
+			this.Player.Health = p.Health;
+			this.Player.armor = p.armor;
+			this.Player.Credit = p.Credit;
 			this.player.GridX = p.GridX;
 			this.player.GridY = p.GridY;
 			this.entities = entities;

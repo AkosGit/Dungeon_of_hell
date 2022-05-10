@@ -332,13 +332,36 @@ namespace HUD
     }
     public class Item
     {
+        public void UpdateBrushes()
+        {
+            if (Icon_path != null)
+            {
+                Icon = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap(Icon_path)));
+
+            }
+            if (Holding_path != null)
+            {
+                Holding = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap(Holding_path)));
+
+            }
+            if (InUse_path != null)
+            {
+                InUse = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap(InUse_path)));
+
+            }
+        }
         public string Name { get; set; }
+
+        public string Icon_path { get; set; }
         [JsonIgnore]
         public Brush Icon { get; set; }
+        public string Holding_path { get; set; }
         [JsonIgnore]
         public Brush Holding { get; set; }
         [JsonIgnore]
         public Brush InUse { get; set; }
+        public string InUse_path { get; set; }
+
         public Item(string name)
         {
             Name = name;
