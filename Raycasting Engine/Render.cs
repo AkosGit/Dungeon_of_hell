@@ -156,6 +156,9 @@ namespace Raycasting_Engine
 			}
 			RenderItem();
 			Isready?.Invoke(true);
+			tasks.Clear();
+			points.Clear();
+			objs.Clear();
 		}
 		System.Drawing.Bitmap MakeImage(string texture, double percentVisible, PointCollection myPointCollection, List<RenderObject> render, bool IsWall)
 		{
@@ -251,7 +254,9 @@ namespace Raycasting_Engine
 			myPointCollection.Add(Point2);
 			myPointCollection.Add(Point3);
 			myPointCollection.Add(Point4);
-			Task<System.Drawing.Bitmap> task = Task.Run(() => { return MakeImage((string)RUtils.DeepCopy(texture), percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), render.Select(x => (RenderObject)x.Clone()).ToList(),(obj is MapObject)); });
+			var copy=render.Select(x => (RenderObject)x.Clone()).ToList();
+			render.Clear();
+			Task<System.Drawing.Bitmap> task = Task.Run(() => { return MakeImage((string)RUtils.DeepCopy(texture), percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), copy, (obj is MapObject)); });
 			return new RenderResult() { p = myPointCollection, task = task };
 		}
     }

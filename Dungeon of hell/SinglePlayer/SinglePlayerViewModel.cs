@@ -79,6 +79,15 @@ namespace Dungeon_of_hell.SinglePlayer
 					RemoveView("Singleplayer");
 					RemoveView("SingleplayerInGameMenu");
                 }
+				if (game.IsWin)
+				{
+					AddView(new WinViewModel(), typeof(WinView));
+					ChangePrimaryView("Win");
+					timer1.Stop();
+					Audio_player.StopAll();
+					RemoveView("Singleplayer");
+					RemoveView("SingleplayerInGameMenu");
+				}
 				var binds = GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings");
 				foreach (Binding k in binds)
 				{
