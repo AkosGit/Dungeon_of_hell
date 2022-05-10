@@ -43,9 +43,9 @@ namespace Dungeon_of_hell
             AddTracks();
             GlobalSettings.Settings = new globalSettings();
             viewModels = new List<IViewModel>();
-            if(File.Exists(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json") && !GlobalSettings.Settings.DisableSaving)
+            if(File.Exists(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings") && !GlobalSettings.Settings.DisableSaving)
             {
-                GlobalSettings.Settings = (globalSettings)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json", typeof(globalSettings));
+                GlobalSettings.Settings = (globalSettings)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.xml", typeof(globalSettings));
             }
 
         }
@@ -63,9 +63,9 @@ namespace Dungeon_of_hell
         public void AddView(IViewModel view, Type viewType)
         {
             Type viewModelType = view.GetType();
-            if (File.Exists(GlobalSettings.Settings.AssetsPath + "save\\Settings.json") && view is ISettings && !GlobalSettings.Settings.DisableSaving)
+            if (File.Exists(GlobalSettings.Settings.AssetsPath + "save\\Settings") && view is ISettings && !GlobalSettings.Settings.DisableSaving)
             {
-                view = (IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Settings.json", typeof(SettingsViewModel));
+                view = (IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Settings", typeof(SettingsViewModel));
             }
             else if(view.Name=="Settings")
             {
@@ -75,8 +75,8 @@ namespace Dungeon_of_hell
                 ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Left, key = Key.A, Message = "A" });
                 ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Right, key = Key.D, Message = "D" });
                 ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Use, key = Key.E, Message = "E" });
-                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = ItemActions.Shoot, key = Key.K, Message = "K" });
-                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = ItemActions.Reload, key = Key.R, Message = "R" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Shoot, key = Key.K, Message = "K" });
+                ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Reload, key = Key.R, Message = "R" });
 
             }
             view.getview += (string viewname) => { return GetView(viewname); };
@@ -162,12 +162,11 @@ namespace Dungeon_of_hell
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
             if (ViewExists("Singleplayer")){
-                ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\Singleplayer.json", (ISingleplayer)viewModels[GetindexByName("Singleplayer")]);
                 ((SinglePlayerViewModel)GetView("Singleplayer")).timer1.Stop();
             }
             Audio_player.RemoveAll();
-            ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json", (IGlobalSettings)GlobalSettings.Settings);
-            ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\Settings.json", (ISettings)GetView("Settings"));
+            ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings", GlobalSettings.Settings);
+            ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\Settings", (SettingsViewModel)GetView("Settings"));
         }
 
         public bool ViewExists(string name)

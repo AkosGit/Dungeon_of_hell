@@ -40,16 +40,15 @@ namespace Raycasting_Engine
 			Brush Selected = HUD.Inventory.SelectedItem.Holding;
 			if (HUD.Inventory.SelectedItem is FireArm)
 			{
-				//updates ammo display;
 				if (((FireArm)HUD.Inventory.SelectedItem).IsShooting)
 				{
 					Selected = HUD.Inventory.SelectedItem.InUse;
 					((FireArm)HUD.Inventory.SelectedItem).IsShooting = false;
 				}
 				((FireArm)HUD.Inventory.SelectedItem).Tick();
-				double pos = canvas.Width / 10 * 5;
-				double itemh = 64;
-				double itemw = 64;
+				double pos = canvas.Width / 10 * 5 - 25;
+				double itemh = 128;
+				double itemw = 128;
 				if (((FireArm)HUD.Inventory.SelectedItem).IsReloading)
 				{
 					//when reloading put part of the gun out of frame
@@ -87,7 +86,7 @@ namespace Raycasting_Engine
 					if (item.Key is MapObject)
 					{
 						string texture = ((MapObject)item.Key).image;
-						RenderResult r = RenderSide(SideA, Side.horizontal, texture);
+						RenderResult r = RenderSide(item.Key, SideA, Side.horizontal, texture);
 						tasks.Add(r.task);
 						points.Add(r.p);
 						shadows.Add(Brushes.Transparent);
@@ -95,7 +94,7 @@ namespace Raycasting_Engine
 					}
 					else if (item.Key is EntityObject)
 					{
-						RenderResult r = RenderSide(SideA, Side.horizontal, ((EntityObject)item.Key).textures[((EntityObject)item.Key).actualTexture]);
+						RenderResult r = RenderSide(item.Key, SideA, Side.horizontal, ((EntityObject)item.Key).textures[((EntityObject)item.Key).actualTexture]);
 						tasks.Add(r.task);
 						points.Add(r.p);
 						shadows.Add(Brushes.Transparent);
@@ -107,7 +106,7 @@ namespace Raycasting_Engine
 					if (item.Key is MapObject)
 					{
 						string texture = ((MapObject)item.Key).image;
-						RenderResult r = (RenderSide(SideB, Side.vertical, texture));
+						RenderResult r = (RenderSide(item.Key, SideB, Side.vertical, texture));
 						tasks.Add(r.task);
 						points.Add(r.p);
 						shadows.Add(new SolidColorBrush(shadow));
@@ -117,7 +116,7 @@ namespace Raycasting_Engine
 			}
 			await Task.WhenAll(tasks.ToArray());
 			canvas.Children.Clear();
-			RGeometry.DrawRectangle(canvas, 0, 250, 722, 250, 722, 500, 0, 500, new SolidColorBrush(Color.FromArgb(0, (byte)79, (byte)65, (byte)52)), Brushes.Transparent);
+			RGeometry.DrawRectangle(canvas, 0, 250, 722, 250, 722, 500, 0, 500, new SolidColorBrush(Color.FromArgb(255, (byte)79, (byte)65, (byte)52)), Brushes.Transparent);
 			for (int i = 0; i < tasks.Count; i++)
 			{
 				//apply image to brush
@@ -142,23 +141,32 @@ namespace Raycasting_Engine
 				myPolygon.Points = points[i];
 				Point c = RUtils.CenterOfCanvas(canvas);
 				GameObject obj = objs[i];
-				if (HUD.Inventory.SelectedItem is FireArm && obj is EntityObject) 
+				if (HUD.Inventory.SelectedItem is FireArm && obj is Enemy) 
 				{
 					//if enemy has been hit
 					if (points[i][0].X <= c.X && points[i][0].Y <= c.Y && points[i][2].X >= c.X && points[i][2].Y >= c.Y && ((FireArm)HUD.Inventory.SelectedItem).IsShooting)
 					{
-						((EntityObject)obj).Health -= ((FireArm)HUD.Inventory.SelectedItem).Damage;
+						((Enemy)obj).Health -= ((FireArm)HUD.Inventory.SelectedItem).Damage;
+						((Enemy)obj).IsHurting = true;
 					}
 				}
 				canvas.Children.Add(myPolygon);
 				canvas.Children.Add(myPolygon2);
+				tasks[i].Result.Dispose();
 			}
 			RenderItem();
 			Isready?.Invoke(true);
+			tasks.Clear();
+			points.Clear();
+			objs.Clear();
 		}
-		System.Drawing.Bitmap MakeImage(string texture, double percentVisible, PointCollection myPointCollection, List<RenderObject> render)
+		System.Drawing.Bitmap MakeImage(string texture, double percentVisible, PointCollection myPointCollection, List<RenderObject> render, bool IsWall)
 		{
 			Bitmap s = new Bitmap(texture);
+            if (!IsWall)
+            {
+				return s;
+            }
 			int with = (int)(s.Width * percentVisible);
 			System.Drawing.Rectangle cropRect = new System.Drawing.Rectangle();
 			cropRect.Width = with;
@@ -202,13 +210,15 @@ namespace Raycasting_Engine
 				}
 
 			}
+			bit.Dispose();
 			//Transform by 4 corners
 			Rendering.FreeTransform transform = new Rendering.FreeTransform();
 			transform.Bitmap = bit2;
+			bit2.Dispose();
 			transform.FourCorners = RUtils.PointsToPointF(myPointCollection);
 			return transform.Bitmap;
 		}
-		RenderResult RenderSide(List<RenderObject> render, Side side, string texture)
+		RenderResult RenderSide(GameObject obj,List<RenderObject> render, Side side, string texture)
 		{
 			Color shadow = Color.FromArgb(50, 0, 0, 0);
 			double percentVisible;
@@ -244,7 +254,9 @@ namespace Raycasting_Engine
 			myPointCollection.Add(Point2);
 			myPointCollection.Add(Point3);
 			myPointCollection.Add(Point4);
-			Task<System.Drawing.Bitmap> task = Task.Run(() => { return MakeImage((string)RUtils.DeepCopy(texture), percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), render.Select(x => (RenderObject)x.Clone()).ToList()); });
+			var copy=render.Select(x => (RenderObject)x.Clone()).ToList();
+			render.Clear();
+			Task<System.Drawing.Bitmap> task = Task.Run(() => { return MakeImage((string)RUtils.DeepCopy(texture), percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), copy, (obj is MapObject)); });
 			return new RenderResult() { p = myPointCollection, task = task };
 		}
     }

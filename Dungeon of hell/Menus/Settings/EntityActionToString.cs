@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HUD;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -11,9 +12,9 @@ namespace Dungeon_of_hell
 {
     public class EntityActionToString : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            EntityActions action = (EntityActions)value;
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			EntityActions action = (EntityActions)value;
 			switch (action)
 			{
 				case EntityActions.Forward:
@@ -24,6 +25,10 @@ namespace Dungeon_of_hell
 					return "Backwards";
 				case EntityActions.Right:
 					return "Right";
+				case EntityActions.Shoot:
+					return "Shoot";
+				case EntityActions.Reload:
+					return "Reload";
 				default:
 					return "Use";
 			}
@@ -42,6 +47,10 @@ namespace Dungeon_of_hell
 					return EntityActions.Backwards;
 				case "Right":
 					return EntityActions.Right;
+				case "Shoot":
+					return EntityActions.Shoot;
+				case "Reload":
+					return EntityActions.Reload;
 				default:
 					return EntityActions.Use;
 			}

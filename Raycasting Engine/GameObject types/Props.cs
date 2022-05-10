@@ -8,18 +8,22 @@ namespace Raycasting_Engine
 {
 	public enum PropType
 	{
-		heal, ammo, key, prop
+		heal, ammo, key, kredit, prop
 	}
-	class Props : EntityObject
+	public class Props : EntityObject
 	{
 		PropType type;
+		int credit;
+
+		public int Credit { get => credit; }
 
 		public PropType Type { get => type; }
-		public Props(int gridX, int gridY, int mapS, string name, double he = 0, double wi = 0, bool isSolid = false, PropType type = PropType.prop, bool visible = true) 
-			: base(gridX, gridY, mapS,name, he, wi, isSolid)
+		public Props(int gridX, int gridY, int mapS, string name, double he = 0, double wi = 0, PropType type = PropType.prop, int credit = 0, bool isSolid = false, bool visible = true) 
+			: base(gridX, gridY, mapS, name, he, wi, isSolid)
 		{
 			this.visible = visible;
 			this.type = type;
+			this.credit = credit;
 		}
 	}
 }

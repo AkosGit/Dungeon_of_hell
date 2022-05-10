@@ -22,17 +22,17 @@ using Rendering;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
-using Raycasting_Engine.GameObject_types;
 
 namespace Raycasting_Engine
 {
+	public delegate void LoadNextMap();
 	public class Game
 	{
 		const double PI = 3.1415926535;
 		const double P2 = PI / 2;
 		const double P3 = 3 * PI / 2;
 		const double DR = 0.0174533;
-
+		public string Mapname { get; set; }
 		const int MoveRight = 5;
 		protected Canvas canvas;
 		protected Player player;
@@ -47,15 +47,23 @@ namespace Raycasting_Engine
 		public Player Player { get => player; set => player = value; }
 		public List<EntityObject> entities;
 		public bool IsReady;
-		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, Map mainmap = null)
+		public event LoadNextMap LoadNextMapEvent;
+		protected Point finishzone;
+		protected Item key;
+		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string map,Player p, List<EntityObject> entities)
 		{
 
 			MapManager = new MapManager();
 			HUD = new UI(hud, Inventoryslots, defitem);
 			this.canvas = canvas;
-			if (mainmap == null) mainmap = MapManager.GetMap("Main");
-
-			LoadMapToInGameMap(mainmap);
+            if (p != null)
+            {
+				LoadMapToInGameMap(MapManager.GetMap(map),p,entities);
+			}
+            else
+            {
+				LoadMapToInGameMap(MapManager.GetMap(map));
+			}
 
 		}
 
@@ -66,18 +74,33 @@ namespace Raycasting_Engine
 			mapX = map.MapX;
 			mapY = map.MapY;
 			mapS = map.MapS;
-
+			Mapname = map.MapName;
 			this.player = map.Player;
-
-			entities = new List<EntityObject>();
-			Enemy test = new Enemy(2, 2, mapS, "Józsi", 360, 240);
-			test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
-			test.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
-			entities.Add(test);
-			Enemy test2 = new Enemy(1, 1, mapS, "Béla", 360, 240);
-			test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\entity.png");
-			test2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
-			entities.Add(test2);
+			entities = map.EntityMap.ToList();
+			finishzone = map.FinishZone;
+			key = map.Key;
+			player.Place = map.MapName;
+		}
+		protected void LoadMapToInGameMap(Map map, Player p, List<EntityObject> entities)
+		{
+			this.map = map.map;
+			MaxL = map.MaxL;
+			mapX = map.MapX;
+			mapY = map.MapY;
+			mapS = map.MapS;
+			Mapname = map.MapName;
+			this.player = map.Player;
+			this.player.X = p.X;
+			this.player.Y = p.Y;
+			this.Player.Health = p.Health;
+			this.Player.armor = p.armor;
+			this.Player.Credit = p.Credit;
+			this.player.GridX = p.GridX;
+			this.player.GridY = p.GridY;
+			this.entities = entities;
+			finishzone = map.FinishZone;
+			key = map.Key;
+			player.Place = map.MapName;
 		}
 		void PlaySounds(EntityObject obj)
 		{
@@ -145,6 +168,15 @@ namespace Raycasting_Engine
 						}
 						PlayandUpdate(obj, key, playSound);
 					}
+					if (key == Audio_player.EnitySound.shooting)
+					{
+						if (((MovableEntityObject)obj).IsShooting)
+						{
+							playSound = true;
+							((MovableEntityObject)obj).IsShooting = false;
+						}
+						PlayandUpdate(obj, key, playSound);
+					}
 				}
 			}
 		}
@@ -157,6 +189,11 @@ namespace Raycasting_Engine
 			//Canvas.Height = 500;
 			//canvas.Children.Clear();
 			//RGeometry.DrawRectangle(canvas, 0, 250, 722, 250, 722, 500, 0, 500, Brushes.Aqua, Brushes.Transparent);
+			if (player.GridX == finishzone.X && player.GridY == finishzone.Y && HUD.Inventory.Items.Contains(key))
+			{
+				HUD.Inventory.RemoveItem(key);
+				LoadNextMapEvent?.Invoke();
+			}
 			drawRays3D();
 			PlaySounds(Player);
 			foreach (EntityObject ent in entities)
@@ -176,7 +213,7 @@ namespace Raycasting_Engine
 					Brush color;
 					if (map[y * mapY + x].IsSolid) color = Brushes.White; else color = Brushes.Black;
 					xo = x * mapS; yo = y * mapS;
-					RGeometry.DrawRectangle(canvas,xo + 1, yo + 1, xo + 1, yo + mapS - 1, xo + mapS - 1, yo + mapS - 1, xo + mapS - 1, yo + 1, color, new SolidColorBrush(Colors.Transparent), 0);
+					RGeometry.DrawRectangle(canvas, xo + 1, yo + 1, xo + 1, yo + mapS - 1, xo + mapS - 1, yo + mapS - 1, xo + mapS - 1, yo + 1, color, new SolidColorBrush(Colors.Transparent), 0);
 				}
 			}
 		}
@@ -225,7 +262,6 @@ namespace Raycasting_Engine
 			typeV = false;
 			int me;
 			Dictionary<GameObject, List<RenderObject>> renderingList = new Dictionary<GameObject, List<RenderObject>>();
-			List<EntityObject> visibleEntities = new List<EntityObject>();
 			Rendering.Vector startVector = new Rendering.Vector();
 			Rendering.Vector endVector = new Rendering.Vector();
 
@@ -335,21 +371,59 @@ namespace Raycasting_Engine
 				double entityH = mapS * 500 / disE; if (entityH > 500) { entityH = 500; }
 				double entityO = 250 - entityH / 2;
 
-				if (PointInTriangle(new PointF((float)entity.X, (float)entity.Y), new PointF((float)player.X, (float)player.Y), new PointF((float)(player.X + startVector.X * 20), (float)(player.Y + startVector.Y * 20)), new PointF((float)(player.X + endVector.X * 20), (float)(player.Y + endVector.Y*20))))
+				if (PointInTriangle(new PointF((float)entity.X, (float)entity.Y), new PointF((float)player.X, (float)player.Y), new PointF((float)(player.X + startVector.X * 20), (float)(player.Y + startVector.Y * 20)), new PointF((float)(player.X + endVector.X * 20), (float)(player.Y + endVector.Y * 20))))
 				{
 					if (!renderingList.Keys.Contains(entity))
 					{
 						renderingList.Add(entity, new List<RenderObject>());
 					}
-					if(entity is Enemy)
+					if (entity is Enemy)
 					{
-						if ((entity as Enemy).IsEnemyDead) (entity as Enemy).EnemyIsDead();
-						if (!(entity as Enemy).IsActive) (entity as Enemy).Activate();
-						if ((entity as Enemy).CanShoot) { player.Hit(); }
-						
+						if ((entity as Enemy).IsAlive)
+						{
+							if ((entity as Enemy).IsEnemyDead) { (entity as Enemy).EnemyIsDead(); player.Credit = +(entity as Enemy).Credit; HUD.UpdateCredit(player.Credit); }
+							if (!(entity as Enemy).IsActive) (entity as Enemy).Activate();
+							else (entity as Enemy).Move(new Rendering.Vector(new PointF((float)entity.X, (float)entity.Y), new PointF((float)player.X, (float)player.Y)), map, mapX, mapY);
+							if ((entity as Enemy).CanShoot) if(player.Hit()) PayerWindowActionHelperHurt();
+						}
 					}
 					renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(PlaceOnScreenX - (entity.Width / 2) / (500 / entityH), (entityH + entityO) - entity.Height / (500 / entityH)), new Point(PlaceOnScreenX + (entity.Width / 2) / (500 / entityH), (entityH + entityO) - entity.Height / (500 / entityH)), new Point(PlaceOnScreenX + (entity.Width / 2) / (500 / entityH), entityH + entityO), new Point(PlaceOnScreenX - (entity.Width / 2) / (500 / entityH), entityH + entityO), Brushes.Green, entityH));
-					
+
+				}
+				if (entity is Props)
+				{
+					if (entity.IsHere(player.GridX, player.GridY))
+					{
+						if ((entity as Props).Type == PropType.heal)
+						{
+							Player.Heal();
+							entities.Remove(entity);
+							PayerWindowActionHelperHeal();
+						}
+
+						if ((entity as Props).Type == PropType.ammo)
+						{
+							foreach (Item item in HUD.Inventory.Items)
+							{
+								if (item is FireArm)
+								{
+									(item as FireArm).Ammo += 30;
+									entities.Remove(entity);
+								}
+							}
+						}
+						if ((entity as Props).Type == PropType.key)
+						{
+							HUD.Inventory.AddItem(key);
+							entities.Remove(entity);
+						}
+						if ((entity as Props).Type == PropType.kredit)
+						{
+							player.Credit = +(entity as Props).Credit;
+							HUD.UpdateCredit(player.Credit);
+							entities.Remove(entity);
+						}
+					}
 				}
 
 				//visibleEntities.Add(entity);
@@ -363,8 +437,7 @@ namespace Raycasting_Engine
 			}
 			//sorting items in order of height: back to fron rendering of objects
 			renderingList = renderingList.OrderBy(x => x.Value.Min(z => { if (z is RenderEntity) return (z as RenderEntity).originalWallHeight; else return z.Height; })).ToDictionary(z => z.Key, y => y.Value);
-			RenderGame render = new RenderGame(canvas, HUD, renderingList,(bool ready)=> { IsReady = ready; });
-			//IsReady = true;
+			RenderGame render = new RenderGame(canvas, HUD, renderingList, (bool ready) => { IsReady = ready; });
 		}
 		float sign(PointF p1, PointF p2, PointF p3)
 		{
@@ -385,12 +458,21 @@ namespace Raycasting_Engine
 
 			return !(has_neg && has_pos);
 		}
+
+		void PayerWindowActionHelperHurt()
+		{
+			RGeometry.DrawRectangle(canvas, 500, 720, 0, 0, new SolidColorBrush(Color.FromArgb((byte)175, (byte)136, (byte)8, (byte)8)));
+		}
+		void PayerWindowActionHelperHeal()
+		{
+			RGeometry.DrawRectangle(canvas, 500, 720, 0, 0, new SolidColorBrush(Color.FromArgb((byte)175, (byte)108, (byte)125, (byte)67)));
+		}
 		private double Distance(double ax, double ay, double bx, double by, double ang)
 		{
 			return Math.Sqrt(Math.Pow(bx - ax, 2) + Math.Pow(by - ay, 2));
 		}
-        #endregion
-    }
+		#endregion
+	}
 }
 
 

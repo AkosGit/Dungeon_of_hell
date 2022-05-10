@@ -10,10 +10,19 @@ namespace SinglePlayer
 {
 	public class SPMain : Game
 	{
-		public SPMain(Canvas canvas,Canvas hud,int Inventoryslots, Item defitem, Map map = null)
-			:base(canvas,hud, Inventoryslots,defitem,map)
+		string[] maps;
+		int mapcount;
+		bool isWin;
+		public SPMain(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string mapname,Player p=null, List<EntityObject> entities = null)
+			: base(canvas, hud, Inventoryslots, defitem, mapname,p,entities)
 		{
+			maps = new string[] { "map1", "map2", "map3" };
+			mapcount = 0;
+			LoadNextMapEvent += LoadNextMap;
+			isWin = false;
 		}
+
+		public bool IsWin { get => isWin; set => isWin = value; }
 
 		public void ChangeMap(Map map)
 		{
@@ -22,12 +31,13 @@ namespace SinglePlayer
 
 		public void LoadNextMap()
 		{
-			TestMapLoad();
-
-		}
-		private void TestMapLoad()
-		{
-			ChangeMap(MapManager.GetMap("Test"));
+			if(mapcount == 3)
+			{
+				isWin = true;
+				return;
+			}
+			ChangeMap(MapManager.GetMap(maps[mapcount]));
+			mapcount++;
 		}
 	}
 }

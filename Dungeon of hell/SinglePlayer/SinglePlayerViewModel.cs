@@ -14,41 +14,50 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Utils;
 using Rendering;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
+using System.IO;
+
 namespace Dungeon_of_hell.SinglePlayer
 {
-	public class SinglePlayerViewModel : ViewModel, ISingleplayer
+	public class SinglePlayerViewModel : ViewModel
 	{
 		const int InventorySLOST = 7;
-		
-		public bool InGame { get; set; }
+
+		//for saving
+		public bool LoadSave { get; set; }
+		public Player Player { get { return game.Player; }}
+		public List<Item> Items { get { return game.HUD.Inventory.items; }}
+		public List<Enemy> Enemys { get { return game.entities.Where(z=> !(z is Props)).Select(y=>((Enemy)y)).ToList(); } }
+		public List<Props> Props { get { return game.entities.Where(z => z is Props).Select(y => ((Props)y)).ToList(); } }
+
+		protected SPMain game;
 		public DispatcherTimer timer1;
 		TimeSpan time;
 		Boolean StopTimer;
-		SPMain game;
 		private Canvas canvas;
 		private Canvas hud;
 		public Canvas HUD { get { return hud; } set { SetProperty(ref hud, value); } }
 		public Canvas Canvas { get { return canvas; } set { SetProperty(ref canvas, value); } }
-		public SinglePlayerViewModel()
+		public SinglePlayerViewModel(bool load)
 		{
 			Name = "Singleplayer";
+			LoadSave = load;
 			SetDefaults();
 			StartGame();
-			//TODO SA: Párhuzamositani a bemeneteket
-			//KeydownCommand = new RelayCommand<KeyEventArgs>(Keydown);
 		}
 		public override void KeyDown(object sender, KeyEventArgs e)
 		{
 			ObservableCollection<Binding> sb = GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings");
-			if (e.Key == Key.Escape){ChangeSecondaryView("SingleplayerInGameMenu");}
-			else if (e.Key == Key.E) { game.LoadNextMap(); }
-            else if (game.HUD.Inventory.InvKeys.Contains(e.Key)) { 
-				game.HUD.Input(e.Key); }	
+			if (e.Key == Key.Escape) { ChangeSecondaryView("SingleplayerInGameMenu"); }
+			else if (game.HUD.Inventory.InvKeys.Contains(e.Key))
+			{
+				game.HUD.Input(e.Key);
+			}
 		}
 		private void StartGame()
 		{
 			StopTimer = false;
-			InGame = true;
 			time = TimeSpan.FromDays(0);
 			timer1 = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 90), DispatcherPriority.Normal, delegate
 			{
@@ -60,36 +69,51 @@ namespace Dungeon_of_hell.SinglePlayer
 				//handle multiple keydowns
 				game.HUD.UpdateAmmo();
 				game.HUD.UpdateHealth(game.Player.Health);
+				game.HUD.UpdateCredit(game.Player.Credit);
+                if (game.Player.Health <= 0)
+                {
+					AddView(new DeathViewModel(), typeof(DeathView));
+					ChangePrimaryView("Death");
+					timer1.Stop();
+					Audio_player.StopAll();
+					RemoveView("Singleplayer");
+					RemoveView("SingleplayerInGameMenu");
+                }
+				if (game.IsWin)
+				{
+					AddView(new WinViewModel(), typeof(WinView));
+					ChangePrimaryView("Win");
+					timer1.Stop();
+					Audio_player.StopAll();
+					RemoveView("Singleplayer");
+					RemoveView("SingleplayerInGameMenu");
+				}
 				var binds = GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings");
 				foreach (Binding k in binds)
 				{
 					if (Keyboard.IsKeyDown(k.key) && game.IsReady)
 					{
-						if(k.Usecase is EntityActions)
-                        {
+						if (k.Usecase is EntityActions)
+						{
 							game.Player.Move(k.key, game.map, game.mapX, game.mapY, (EntityActions)binds.FirstOrDefault(x => x.key == k.key).Usecase);
-							if(game.HUD.Inventory.SelectedItem is FireArm)
-                            {
+							if (game.HUD.Inventory.SelectedItem is FireArm)
+							{
 								((FireArm)game.HUD.Inventory.SelectedItem).Walking();
 							}
-						}
-						if (k.Usecase is ItemActions)
-						{
-							if ((ItemActions)k.Usecase == ItemActions.Shoot)
-                            {
-								if(game.HUD.Inventory.SelectedItem is FireArm) 
+							if ((EntityActions)k.Usecase == EntityActions.Shoot)
+							{
+								if (game.HUD.Inventory.SelectedItem is FireArm)
 								{
 									((FireArm)game.HUD.Inventory.SelectedItem).Shoot();
 								}
-                            }
-							if ((ItemActions)k.Usecase == ItemActions.Reload)
+							}
+							if ((EntityActions)k.Usecase == EntityActions.Reload)
 							{
 								if (game.HUD.Inventory.SelectedItem is FireArm)
 								{
 									((FireArm)game.HUD.Inventory.SelectedItem).Reload();
 								}
 							}
-
 						}
 					}
 				}
@@ -104,13 +128,63 @@ namespace Dungeon_of_hell.SinglePlayer
 			hud.Width = 100;
 			hud.Height = 722;
 			hud.Background = Brushes.DarkRed;
-
-			game = new SPMain(canvas,hud,InventorySLOST,new Pistol("pistol", 100, 13, 15));
+			string map = "map1";
+			Player p=null;
+			List<EntityObject> entities = new List<EntityObject>();
+			if (LoadSave)
+            {
+				if (File.Exists(GlobalSettings.Settings.AssetsPath + "\\save\\" + "Player.json"))
+				{
+					p = (Player)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "\\save\\" + "Player", typeof(Player));
+					map = p.Place;
+				}
+				string[] files = Directory.GetFiles(GlobalSettings.Settings.AssetsPath + "\\save\\Props");
+				foreach (string item in files)
+				{
+					string path = item.Replace(".json", "");
+					entities.Add((Props)ObjectManager.Read(path, typeof(Props)));
+				}
+				files = Directory.GetFiles(GlobalSettings.Settings.AssetsPath + "\\save\\Enemys");
+				foreach (string item in files)
+				{
+					string path = item.Replace(".json", "");
+					entities.Add((Enemy)ObjectManager.Read(path, typeof(Enemy)));
+				}
+			}
+			game = new SPMain(canvas, hud, InventorySLOST, new Pistol("pistol", 100, 13, 15), map, p,entities);
 			game.HUD.Inventory.AddItem(new Shotgun("shotgun", 80, 8, 40));
 			Canvas.Width = 722;
 			Canvas.Height = 500;
 			Canvas.Background = Brushes.Gray;
+            if (LoadSave)
+            {
+				game.HUD.Inventory.items.Clear();
+				string[] files = Directory.GetFiles(GlobalSettings.Settings.AssetsPath + "\\save\\Items");
+				foreach (string item in files)
+				{
+					string path = item.Replace(".json", "");
+					if (item.Contains("pistol"))
+					{
+						Pistol pistol = (Pistol)ObjectManager.Read(path, typeof(Pistol));
+						game.HUD.Inventory.AddItem(pistol);
 
+					}
+					if (item.Contains("shotgun"))
+					{
+						game.HUD.Inventory.AddItem((Shotgun)ObjectManager.Read(path, typeof(Shotgun)));
+
+					}
+					if (item.Contains("RedKey") || item.Contains("BlueKey"))
+					{
+						Item i = (Item)ObjectManager.Read(path, typeof(Item));
+						i.UpdateBrushes();
+						game.HUD.Inventory.AddItem(i);
+
+					}
+				}
+				game.HUD.Inventory.SelectItem(game.HUD.Inventory.GetItemByIndex(0));
+			}
+			game.HUD.UpdateAmmo();
 		}
 
 	}

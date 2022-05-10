@@ -8,48 +8,52 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Newtonsoft.Json;
 using Rendering;
 using Utils;
+using Utils.Interfaces;
 
 namespace HUD
 {
     
     public class Inventory
     {
-        const int HEALTHBARSLOTS = 2;
+        const int HEALTHBARSLOTS = 3;
         public Key[] InvKeys = { Key.D1, Key.D2, Key.D3, Key.D4, Key.D5 };
-        List<Item> Items { get; set; }
+        public List<Item> items { get; set; }
+        public List<Item> Items { get=> items; }
         public int Slots { get; set; }
         Canvas hud;
         public Item SelectedItem { get; private set; }
         public Inventory(Canvas hud,int slots, Item defitem)
         {
-            Items = new List<Item>();
-            Items.Add(defitem);
+            items = new List<Item>();
+            items.Add(defitem);
             SelectedItem = defitem;
             this.hud = hud;
-            Slots = slots - 2; //minus health bar space
+            Slots = slots - HEALTHBARSLOTS; //minus health bar space
             render();
         }
         public void AddItem(Item item)
         {
-            if (Items.Count <= Slots)
+            if (items.Count <= Slots)
             {
-                Items.Add(item);
+                items.Add(item);
                 render();
             }
         }
         public Item GetItemByIndex(int i)
         {
-            return Items[i];
+            return items[i];
         }
         public bool IsitemInInventory(Item item)
         {
-            return Items.Contains(item);
+            return items.Contains(item);
         }
+
         public bool IsitemInInventory(int i)
         {
-            if (Items.Count>= i)
+            if (items.Count>= i)
             {
                 return true;
             }
@@ -59,20 +63,20 @@ namespace HUD
         {
             if (IsitemInInventory(item))
             {
-                Items.Remove(item);
+                items.Remove(item);
                 render();
             }
         }
         public List<Item> GetItems()
         {
-            return Items;
+            return items;
         }
         public void SelectItem(Item item)
         {
             SelectedItem = item;
             render();
         }
-        void render()
+        public void render()
         {
             hud.Children.Clear();
             //rerender inventory slots
@@ -83,7 +87,7 @@ namespace HUD
             Brush Texture;
             for (int i = 0; i < Slots; i++)
             {
-                if (IsitemInInventory(i+1) && Items[i] == SelectedItem)
+                if (IsitemInInventory(i+1) && items[i] == SelectedItem)
                 {
                     outline = Brushes.Black;
                 }
@@ -93,10 +97,15 @@ namespace HUD
                 }
                 if (IsitemInInventory(i+1))
                 {
-                    Texture = Items[i].Icon;
+                    Texture = items[i].Icon;
                 }
                 else { Texture = Brushes.Transparent; }
-                RGeometry.DrawRectangleNoShadow(hud,0, height - slotHeight, 0,height, hud.Width, height, hud.Width, height-slotHeight, Texture, outline, 4);
+                double margin = 4;
+                if (i == Slots-1)
+                {
+                    margin = 0;
+                }
+                RGeometry.DrawRectangleNoShadow(hud, 0, height - slotHeight +margin, 0, height, hud.Width, height, hud.Width, height - slotHeight+margin, Texture, outline, 5);
                 height = height - slotHeight;
             }
         }
@@ -151,7 +160,7 @@ namespace HUD
         }
         public override void Reload()
         {
-            if (Ammo != 0)
+            if (Ammo - (maxrounds - Rounds)>=0 && Rounds!=maxrounds)
             {
                 //wait for reload to complete
                 if (!IsReloading)
@@ -259,7 +268,7 @@ namespace HUD
         }
         public override void Reload()
         {
-            if (Ammo != 0)
+            if (Ammo - (maxrounds - Rounds) >= 0 && Rounds != maxrounds)
             {
                 //wait for reload to complete
                 if (!IsReloading)
@@ -288,17 +297,18 @@ namespace HUD
             else { shotIsOngoing = false; }
         }
     }
-    public abstract class FireArm : Item
+    public class FireArm : Item
     {
+        [JsonIgnore]
         protected Random r;
         public int Ammo { get; set; }
         public int Damage { get; set; }
         public int Rounds { get; set; }
-        protected int maxrounds;
-        protected bool shotIsOngoing;
+        public int maxrounds { get; set; }
+        public bool shotIsOngoing { get; set; }
         public bool IsShooting { get; set; }
         public bool IsReloading { get; set; }
-
+        [JsonIgnore]
         public Dictionary<Audio_player.WeaponSound, List<string>> Sounds { get; set; }
 
         public FireArm(string name, int ammo, int rounds, int damage) : base(name)
@@ -315,17 +325,43 @@ namespace HUD
             maxrounds = rounds;
             r = new Random();
         }
-        public abstract void Shoot();
-        public abstract void Walking();
-        public abstract void Reload();
-        public abstract void Tick();
+        public virtual void Shoot() { }
+        public virtual void Walking() { }
+        public virtual void Reload() { }
+        public virtual void Tick() { }
     }
     public class Item
     {
+        public void UpdateBrushes()
+        {
+            if (Icon_path != null)
+            {
+                Icon = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap(Icon_path)));
+
+            }
+            if (Holding_path != null)
+            {
+                Holding = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap(Holding_path)));
+
+            }
+            if (InUse_path != null)
+            {
+                InUse = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap(InUse_path)));
+
+            }
+        }
         public string Name { get; set; }
+
+        public string Icon_path { get; set; }
+        [JsonIgnore]
         public Brush Icon { get; set; }
+        public string Holding_path { get; set; }
+        [JsonIgnore]
         public Brush Holding { get; set; }
+        [JsonIgnore]
         public Brush InUse { get; set; }
+        public string InUse_path { get; set; }
+
         public Item(string name)
         {
             Name = name;

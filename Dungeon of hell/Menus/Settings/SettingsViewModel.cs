@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Mvvm.Input;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,15 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using System.Xml.Serialization;
 using Utils;
 namespace Dungeon_of_hell
 {
     public class SettingsViewModel : ViewModel,ISettings
     {
-
+        [JsonIgnore]
         List<Key> forbiddenKeys = new List<Key>() { Key.Space,Key.Enter };
+        [JsonIgnore]
         public int volume { get { return GlobalSettings.Settings.Volume; } set { GlobalSettings.Settings.Volume = value; } }
         public ObservableCollection<Binding> SingleplayerBindings { get; set; }
+        [JsonIgnore]
         int currentBind;
         public SettingsViewModel()
         {
@@ -58,7 +62,9 @@ namespace Dungeon_of_hell
             }
 
         }
+        [JsonIgnore]
         public ICommand InGameMenuView { get; set; }
+        [JsonIgnore]
         public ICommand ChangeBind { get; set; }
 
         public override void KeyDown(object sender, KeyEventArgs e)
@@ -69,7 +75,7 @@ namespace Dungeon_of_hell
             }
             else
             {
-                if(currentBind!= -1 && !forbiddenKeys.Contains(e.Key) && !SingleplayerBindings.Any(z => z.key==e.Key))
+                if(currentBind!= -1 && !forbiddenKeys.Contains(e.Key))
                 {
                     Binding b = SingleplayerBindings[currentBind];
                     b.key = e.Key;

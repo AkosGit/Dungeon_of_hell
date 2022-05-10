@@ -4,18 +4,23 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="722" Background="OrangeRed">
+             d:DesignHeight="500" d:DesignWidth="722" >
+    <UserControl.Background>
+        <ImageBrush ImageSource="{Binding Background}"/>
+    </UserControl.Background>
     <Viewbox>
         <StackPanel MinHeight="350" Style="{StaticResource Stack}">
-            <TextBlock Text="Dungeon of Hell" VerticalAlignment="Center" HorizontalAlignment="Center" 
-                   FontWeight="Bold" FontSize="18" Style="{StaticResource Text}"
-                   />
-        <Button Width="100" Height="20" Content="SinglePlayer" Style="{StaticResource MenuButton}" Command="{Binding Path=SinglePlayerView}">
-        </Button>
-        <Button Width="100" Height="20" Content="Multiplayer" Style="{StaticResource MenuButton}" Command="{Binding Path=MultiplayerView}" IsEnabled="False">
-        </Button>
+            <Image Source="{Binding Logo}" Width="300" Margin="35,0,0,0" VerticalAlignment="Center">
+            </Image>
+            <Button Width="100" Height="20" Content="New game" Style="{StaticResource MenuButton}" Command="{Binding Path=NewGameView}">
+            </Button>
+            <Button Width="100" Height="20" Content="Load game" Style="{StaticResource MenuButton}" Command="{Binding Path=LoadSaveView}">
+            </Button>
             <Button Width="100" Height="20" Content="Settings" Style="{StaticResource MenuButton}" Command="{Binding Path=SettingsView}">
-        </Button>
-    </StackPanel>
-        </Viewbox>
+            </Button>
+            <Button Width="100" Height="20" Content="Quit" Style="{StaticResource MenuButton}" Command="{Binding Path=Quit}">
+            </Button>
+            
+        </StackPanel>
+    </Viewbox>
 </UserControl>

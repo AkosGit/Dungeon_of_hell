@@ -17,7 +17,7 @@ namespace Utils
     public class globalSettings: IGlobalSettings
     {
         public int Volume { get; set; }
-        public bool DisableSaving = true;
+        public bool DisableSaving = false;
         public string AssetsPath { get; set; }
         public globalSettings()
         {

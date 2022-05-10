@@ -11,7 +11,7 @@ namespace Utils
     public static class Audio_player {
         public enum EnitySound
         {
-            walking,hurting,speaking,other
+            walking,hurting,speaking,shooting,other
         }
         public enum WeaponSound
         {
@@ -48,6 +48,13 @@ namespace Utils
             tracks[name].StopPlayback();
             tracks.Remove(name);
         }
+        public static void StopAll()
+        {
+            foreach (string key in tracks.Keys)
+            {
+                tracks[key].StopPlayback();
+            }
+        }
         public static void RemoveAll()
         {
             //raised when exiting
@@ -59,7 +66,15 @@ namespace Utils
         }
         public static bool IsPlaying(string name)
         {
-            return tracks[name].isplaying;
+			try
+			{
+                return tracks[name].isplaying;
+            }
+			catch (KeyNotFoundException)
+			{
+                return false;
+            }
+            
         }
 
         public static void StopPlayback(string name)
