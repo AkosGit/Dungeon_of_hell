@@ -206,22 +206,22 @@ namespace Raycasting_Engine
             {
                 map = new MapObject[]
             {
-                new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(),
-                new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Rock(),
-                new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Rock(),
-                new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Air(), new Air(),  new Rock(), new Air(), new Air(), new Rock(), new Rock(), new Rock(), new Air(), new Air(), new Rock(),
-                new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Air(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Rock(),
-                new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Air(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Rock(),
-                new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Rock(),  new Rock(), new Door(), new Rock(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Rock(),
-                new Rock(), new Rock(), new Rock(), new Rock(), new Air(), new Air(), new Rock(),  new Air(), new Air(), new Rock(), new Air(), new Air(), new Rock(), new Rock(), new Rock(), new Rock(),
-                new Rock(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Rock(),  new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Rock(),
-                new Rock(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Rock(),  new Rock(), new Rock(), new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Rock(),
-                new Rock(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Rock(),
-                new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Air(), new Rock(), new Air(), new Air(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(),
-                new Rock(), new Air(), new Air(), new Rock(), new Rock(), new Rock(), new Rock(),  new Rock(), new Rock(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(), new Rock(),
-                new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Air(), new Rock(), new Air(), new Air(), new Rock(), new Air(), new Air(), new Air(), new Rock(),
-                new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Air(), new Rock(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Rock(),
-                new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(), new Rock(),
+                new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(),
+                new BrickBetween2(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new BrickBetween(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new BrickBetween(),
+                new BrickBetween2(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new BrickBetween(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new BrickBetween(),
+                new BrickBetween(), new BrickBetween(), new BrickBetween2(), new BrickBetween(), new BrickBetween(), new Air(), new Air(),  new BrickBetween2(), new Air(), new Air(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new Air(), new Air(), new BrickBetween(),
+                new BrickBetween(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Air(), new Air(), new Air(), new BrickBetween(), new Air(), new Air(), new BrickBetween(),
+                new BrickBetween2(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Air(), new Air(), new Air(), new BrickBetween(), new Air(), new Air(), new BrickBetween(),
+                new BrickBetween(), new Air(), new Air(), new Air(), new Air(), new Air(), new BrickBetween(),  new BrickBetween(), new Door(), new BrickBetween(), new Air(), new Air(), new BrickBetween(), new Air(), new Air(), new BrickBetween(),
+                new BrickBetween2(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new Air(), new Air(), new BrickBetween(),  new Air(), new Air(), new BrickBetween(), new Air(), new Air(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(),
+                new BrickBetween(), new Air(), new Air(), new BrickBetween(), new Air(), new Air(), new BrickBetween(),  new Air(), new Air(), new BrickBetween(), new Air(), new Air(), new Air(), new Air(), new Air(), new BrickBetween(),
+                new BrickBetween(), new Air(), new Air(), new BrickBetween(), new Air(), new Air(), new BrickBetween(),  new BrickBetween(), new BrickBetween(), new BrickBetween(), new Air(), new Air(), new Air(), new Air(), new Air(), new BrickBetween(),
+                new BrickBetween2(), new Air(), new Air(), new BrickBetween(), new Air(), new Air(), new Air(),  new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new BrickBetween(),
+                new BrickBetween(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Air(), new BrickBetween(), new Air(), new Air(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(),
+                new BrickBetween(), new Air(), new Air(), new BrickBetween(), new BrickBetween2(), new BrickBetween(), new BrickBetween2(),  new BrickBetween(), new BrickBetween(), new Air(), new Air(), new BrickBetween(), new Air(), new Air(), new Air(), new BrickBetween(),
+                new BrickBetween2(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Air(), new BrickBetween(), new Air(), new Air(), new BrickBetween(), new Air(), new Air(), new Air(), new BrickBetween(),
+                new BrickBetween(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Air(), new BrickBetween(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new BrickBetween(),
+                new BrickBetween2(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(), new BrickBetween(),
             },
                 MapName = "map2",
                 MapX = 16,
@@ -314,7 +314,7 @@ namespace Raycasting_Engine
             {
                 map = new MapObject[]
             {
-                new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(),
+                new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(),
                 new Brick(), new Air(), new Air(), new Brick(), new Air(), new Air(), new Air(),  new Brick(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Brick(),
                 new Brick(), new Air(), new Air(), new Brick(), new Air(), new Air(), new Air(),  new Door(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Brick(),
                 new Brick(), new Air(), new Air(), new Door(), new Air(), new Air(), new Air(),  new Brick(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(), new Brick(),
@@ -329,7 +329,7 @@ namespace Raycasting_Engine
                 new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Door(), new Brick(),  new Brick(), new Brick(), new Door(), new Brick(), new Brick(), new Brick(), new Brick(), new Air(), new Brick(),
                 new Brick(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Brick(), new Air(), new Air(), new Brick(), new Air(), new Air(), new Air(), new Air(), new Brick(),
                 new Brick(), new Air(), new Air(), new Air(), new Air(), new Air(), new Air(),  new Brick(), new Air(), new Air(), new Brick(), new Air(), new Air(), new Air(), new Air(), new Brick(),
-                new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(),
+                new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(), new Wood(),
             },
                 MapName = "map3",
                 MapX = 16,
@@ -492,7 +492,15 @@ namespace Raycasting_Engine
 
         public BrickBetween() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
         {
-            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall 8.jpg";
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Brick-lava wall 8.jpg";
+        }
+    }
+    public class BrickBetween2 : MapObject
+    {
+
+        public BrickBetween2() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
+        {
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Brick-lava wall 2.jpg";
         }
     }
     public class WoodBetween : MapObject
@@ -500,7 +508,15 @@ namespace Raycasting_Engine
 
         public WoodBetween() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
         {
-            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall 8.jpg";
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wood-lava Wall 1.jpg";
+        }
+    }
+    public class WoodBetween2 : MapObject
+    {
+
+        public WoodBetween2() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
+        {
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wood-lava Wall 2.jpg";
         }
     }
     //uni walls

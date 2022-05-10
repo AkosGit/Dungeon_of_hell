@@ -70,6 +70,15 @@ namespace Dungeon_of_hell.SinglePlayer
 				game.HUD.UpdateAmmo();
 				game.HUD.UpdateHealth(game.Player.Health);
 				game.HUD.UpdateCredit(game.Player.Credit);
+                if (game.Player.Health <= 0)
+                {
+					AddView(new DeathViewModel(), typeof(DeathView));
+					ChangePrimaryView("Death");
+					timer1.Stop();
+					Audio_player.StopAll();
+					RemoveView("Singleplayer");
+					RemoveView("SingleplayerInGameMenu");
+                }
 				var binds = GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings");
 				foreach (Binding k in binds)
 				{
@@ -110,7 +119,7 @@ namespace Dungeon_of_hell.SinglePlayer
 			hud.Width = 100;
 			hud.Height = 722;
 			hud.Background = Brushes.DarkRed;
-			string map = "Main";
+			string map = "map1";
 			Player p=null;
 			List<EntityObject> entities = new List<EntityObject>();
 			if (LoadSave)

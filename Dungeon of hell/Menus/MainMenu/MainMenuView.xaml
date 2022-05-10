@@ -16,8 +16,6 @@
             </Button>
             <Button Width="100" Height="20" Content="Load game" Style="{StaticResource MenuButton}" Command="{Binding Path=LoadSaveView}">
             </Button>
-            <Button Width="100" Height="20" Content="Multiplayer" Style="{StaticResource MenuButton}" Command="{Binding Path=MultiplayerView}" IsEnabled="False">
-            </Button>
             <Button Width="100" Height="20" Content="Settings" Style="{StaticResource MenuButton}" Command="{Binding Path=SettingsView}">
             </Button>
             <Button Width="100" Height="20" Content="Quit" Style="{StaticResource MenuButton}" Command="{Binding Path=Quit}">

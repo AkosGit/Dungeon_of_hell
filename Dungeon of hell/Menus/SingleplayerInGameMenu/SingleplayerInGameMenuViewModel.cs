@@ -56,8 +56,8 @@ namespace Dungeon_of_hell
                 RemoveView("Singleplayer");
                 ChangePrimaryView("MainMenu");
                 ClearSecondView();
-                RemoveView("SingleplayerInGameMenu");
                 Audio_player.StopAll();
+                RemoveView("SingleplayerInGameMenu");
             });
         }
         public string Background { get { return GlobalSettings.Settings.AssetsPath + "img\\MenuBackground.png"; } }
