@@ -174,7 +174,7 @@ namespace Dungeon_of_hell.SinglePlayer
 						game.HUD.Inventory.AddItem((Shotgun)ObjectManager.Read(path, typeof(Shotgun)));
 
 					}
-					if (item.Contains("RedKey") || item.Contains("BlueKey"))
+					if (item.Contains("RedKey") || item.Contains("BlueKey") || item.Contains("YellowKey"))
 					{
 						Item i = (Item)ObjectManager.Read(path, typeof(Item));
 						i.UpdateBrushes();
