@@ -435,9 +435,10 @@ namespace Raycasting_Engine
 				//renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO), new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO), Brushes.Green, entityH));
 
 			}
-			//sorting items in order of height: back to fron rendering of objects
-			renderingList = renderingList.OrderBy(x => x.Value.Min(z => { if (z is RenderEntity) return (z as RenderEntity).originalWallHeight; else return z.Height; })).ToDictionary(z => z.Key, y => y.Value);
-			RenderGame render = new RenderGame(canvas, HUD, renderingList, (bool ready) => { IsReady = ready; });
+            //sorting items in order of height: back to fron rendering of objects
+            //if (renderingList.Count == 1) { MessageBox.Show("dsdsds"); }
+			RenderGame render = new RenderGame(canvas, HUD, renderingList.OrderBy(x => x.Value.Min(z => { if (z is RenderEntity) return (z as RenderEntity).originalWallHeight; else return z.Height; })).ToDictionary(z => z.Key, y => y.Value), (bool ready) => { IsReady = ready; });
+			renderingList.Clear();
 		}
 		float sign(PointF p1, PointF p2, PointF p3)
 		{

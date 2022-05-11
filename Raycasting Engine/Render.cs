@@ -153,12 +153,15 @@ namespace Raycasting_Engine
 				canvas.Children.Add(myPolygon);
 				canvas.Children.Add(myPolygon2);
 				tasks[i].Result.Dispose();
+				
+				
 			}
 			RenderItem();
 			Isready?.Invoke(true);
 			tasks.Clear();
 			points.Clear();
 			objs.Clear();
+			
 		}
 		System.Drawing.Bitmap MakeImage(string texture, double percentVisible, PointCollection myPointCollection, List<RenderObject> render, bool IsWall)
 		{
@@ -210,11 +213,11 @@ namespace Raycasting_Engine
 				}
 
 			}
-			bit.Dispose();
 			//Transform by 4 corners
 			Rendering.FreeTransform transform = new Rendering.FreeTransform();
 			transform.Bitmap = bit2;
 			bit2.Dispose();
+			bit.Dispose();
 			transform.FourCorners = RUtils.PointsToPointF(myPointCollection);
 			return transform.Bitmap;
 		}
@@ -254,9 +257,10 @@ namespace Raycasting_Engine
 			myPointCollection.Add(Point2);
 			myPointCollection.Add(Point3);
 			myPointCollection.Add(Point4);
-			var copy=render.Select(x => (RenderObject)x.Clone()).ToList();
+			//var PcolCopy = (PointCollection)RUtils.DeepCopy(myPointCollection);
+			var RenderCopy=render.Select(x => (RenderObject)x.Clone()).ToList();
 			render.Clear();
-			Task<System.Drawing.Bitmap> task = Task.Run(() => { return MakeImage((string)RUtils.DeepCopy(texture), percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), copy, (obj is MapObject)); });
+			Task<System.Drawing.Bitmap> task = Task.Run(() => { return MakeImage((string)RUtils.DeepCopy(texture), percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), RenderCopy, (obj is MapObject)); });
 			return new RenderResult() { p = myPointCollection, task = task };
 		}
     }
