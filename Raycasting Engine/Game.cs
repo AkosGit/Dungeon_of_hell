@@ -37,6 +37,7 @@ namespace Raycasting_Engine
 		protected Canvas canvas;
 		protected Player player;
 		public MapObject[] map;
+		public RenderGame renderer;
 		public int mapX;
 		public int mapY;
 		public int mapS;
@@ -52,9 +53,9 @@ namespace Raycasting_Engine
 		protected Item key;
 		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string map,Player p, List<EntityObject> entities)
 		{
-
 			MapManager = new MapManager();
 			HUD = new UI(hud, Inventoryslots, defitem);
+			renderer = new RenderGame(canvas, HUD, (bool isready) => { IsReady = isready; });
 			this.canvas = canvas;
             if (p != null)
             {
@@ -437,7 +438,8 @@ namespace Raycasting_Engine
 			}
             //sorting items in order of height: back to fron rendering of objects
             //if (renderingList.Count == 1) { MessageBox.Show("dsdsds"); }
-			RenderGame render = new RenderGame(canvas, HUD, renderingList.OrderBy(x => x.Value.Min(z => { if (z is RenderEntity) return (z as RenderEntity).originalWallHeight; else return z.Height; })).ToDictionary(z => z.Key, y => y.Value), (bool ready) => { IsReady = ready; });
+			renderer.DoRender(
+				renderingList.OrderBy(x => x.Value.Min(z => { if (z is RenderEntity) return (z as RenderEntity).originalWallHeight; else return z.Height; })).ToDictionary(z => z.Key, y => y.Value));
 			renderingList.Clear();
 		}
 		float sign(PointF p1, PointF p2, PointF p3)

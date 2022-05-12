@@ -28,12 +28,13 @@ namespace Raycasting_Engine
 		Canvas canvas;
 		UI HUD;
 		Action<bool> Isready;
-		public RenderGame(Canvas canvas, UI HUD, Dictionary<GameObject, List<RenderObject>> renderlist, Action<bool> Isready)
+		Dictionary<string, Bitmap> images;
+		public RenderGame(Canvas canvas, UI HUD, Action<bool> Isready)
         {
 			this.canvas = canvas;
 			this.HUD = HUD;
 			this.Isready = Isready;
-			DoRender(renderlist);
+			images = new Dictionary<string, Bitmap>();
         }
 		public void RenderItem()
 		{
@@ -69,13 +70,24 @@ namespace Raycasting_Engine
 				RGeometry.DrawRectangle(canvas, pos, canvas.ActualHeight, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height, Selected, Brushes.Transparent);
 			}
 		}
-		async void DoRender(Dictionary<GameObject, List<RenderObject>> renderingList)
+		public async void DoRender(Dictionary<GameObject, List<RenderObject>> renderingList)
 		{
 			Color shadow = Color.FromArgb(50, 0, 0, 0);
 			List<Task<System.Drawing.Bitmap>> tasks = new List<Task<System.Drawing.Bitmap>>();
 			List<PointCollection> points = new List<PointCollection>();
 			List<Brush> shadows = new List<Brush>();
 			List<GameObject> objs = new List<GameObject>();
+			//if not presenet in images dict add it
+			var mapPaths = renderingList.Where(z => (z.Key is MapObject) && !images.ContainsKey(((MapObject)z.Key).image)).Select(z => ((MapObject)z.Key).image).Distinct();
+			var enitityPaths = renderingList.Where(z => (z.Key is EntityObject) && !images.ContainsKey(((EntityObject)z.Key).textures[((EntityObject)z.Key).actualTexture])).Select(z => ((EntityObject)z.Key).textures[((EntityObject)z.Key).actualTexture]).Distinct();
+			foreach (var item in mapPaths)
+			{
+				images.Add(item, new Bitmap(item));
+			}
+			foreach (var item in enitityPaths)
+			{
+				images.Add(item, new Bitmap(item));
+			}
 			foreach (var item in renderingList)
 			{
 				//Seperate each visible side of obj
@@ -86,7 +98,7 @@ namespace Raycasting_Engine
 					if (item.Key is MapObject)
 					{
 						string texture = ((MapObject)item.Key).image;
-						RenderResult r = RenderSide(item.Key, SideA, Side.horizontal, texture);
+						RenderResult r = RenderSide(item.Key, SideA, Side.horizontal, images[texture].Clone(new System.Drawing.Rectangle(0, 0, images[texture].Width, images[texture].Height), images[texture].PixelFormat));
 						tasks.Add(r.task);
 						points.Add(r.p);
 						shadows.Add(Brushes.Transparent);
@@ -94,7 +106,8 @@ namespace Raycasting_Engine
 					}
 					else if (item.Key is EntityObject)
 					{
-						RenderResult r = RenderSide(item.Key, SideA, Side.horizontal, ((EntityObject)item.Key).textures[((EntityObject)item.Key).actualTexture]);
+						var texture = ((EntityObject)item.Key).textures[((EntityObject)item.Key).actualTexture];
+						RenderResult r = RenderSide(item.Key, SideA, Side.horizontal, images[texture].Clone(new System.Drawing.Rectangle(0, 0, images[texture].Width, images[texture].Height), images[texture].PixelFormat));
 						tasks.Add(r.task);
 						points.Add(r.p);
 						shadows.Add(Brushes.Transparent);
@@ -106,7 +119,7 @@ namespace Raycasting_Engine
 					if (item.Key is MapObject)
 					{
 						string texture = ((MapObject)item.Key).image;
-						RenderResult r = (RenderSide(item.Key, SideB, Side.vertical, texture));
+						RenderResult r = (RenderSide(item.Key, SideB, Side.vertical, images[texture].Clone(new System.Drawing.Rectangle(0, 0, images[texture].Width, images[texture].Height), images[texture].PixelFormat)));
 						tasks.Add(r.task);
 						points.Add(r.p);
 						shadows.Add(new SolidColorBrush(shadow));
@@ -161,11 +174,11 @@ namespace Raycasting_Engine
 			tasks.Clear();
 			points.Clear();
 			objs.Clear();
-			
+			images.Clear();
+			shadows.Clear();
 		}
-		System.Drawing.Bitmap MakeImage(string texture, double percentVisible, PointCollection myPointCollection, List<RenderObject> render, bool IsWall)
+		System.Drawing.Bitmap MakeImage(Bitmap s, double percentVisible, PointCollection myPointCollection, List<RenderObject> render, bool IsWall)
 		{
-			Bitmap s = new Bitmap(texture);
             if (!IsWall)
             {
 				return s;
@@ -175,6 +188,7 @@ namespace Raycasting_Engine
 			cropRect.Width = with;
 			cropRect.Height = s.Height;
 			Bitmap bit = new Bitmap(with, s.Height);
+			//if left side is not visible so texturing dosent start from the left side
 			using (Graphics gdi = Graphics.FromImage(bit))
 			{
 				//if left side is not visible so texturing dosent start from the left side
@@ -194,34 +208,18 @@ namespace Raycasting_Engine
 					gdi.DrawImage(s, -cropRect.X, -cropRect.Y);
 				}
 			}
-			//a new bitmap is required to flip the image back
-			Bitmap bit2 = new Bitmap(bit.Width, bit.Height);
-			using (Graphics gdi = Graphics.FromImage(bit2))
-			{
-				if (render.First().ScreenP1.X == 0 && percentVisible < 0.8)
-				{
-					float centerX = bit.Width / 2F;
-					float centerY = bit.Height / 2F;
-					gdi.TranslateTransform(centerX, centerY);
-					gdi.RotateTransform(180.0F);
-					gdi.TranslateTransform(-centerX, -centerY);
-					gdi.DrawImage(bit, 0, 0);
-				}
-				else
-				{
-					gdi.DrawImage(bit, 0, 0);
-				}
-
-			}
 			//Transform by 4 corners
+			if (render.First().ScreenP1.X == 0 && percentVisible < 0.8)
+			{
+				bit.RotateFlip(RotateFlipType.Rotate180FlipNone);
+			}
 			Rendering.FreeTransform transform = new Rendering.FreeTransform();
-			transform.Bitmap = bit2;
-			bit2.Dispose();
+			transform.Bitmap = bit;
 			bit.Dispose();
 			transform.FourCorners = RUtils.PointsToPointF(myPointCollection);
 			return transform.Bitmap;
 		}
-		RenderResult RenderSide(GameObject obj,List<RenderObject> render, Side side, string texture)
+		RenderResult RenderSide(GameObject obj,List<RenderObject> render, Side side, Bitmap texture)
 		{
 			Color shadow = Color.FromArgb(50, 0, 0, 0);
 			double percentVisible;
@@ -257,10 +255,10 @@ namespace Raycasting_Engine
 			myPointCollection.Add(Point2);
 			myPointCollection.Add(Point3);
 			myPointCollection.Add(Point4);
-			//var PcolCopy = (PointCollection)RUtils.DeepCopy(myPointCollection);
 			var RenderCopy=render.Select(x => (RenderObject)x.Clone()).ToList();
 			render.Clear();
-			Task<System.Drawing.Bitmap> task = Task.Run(() => { return MakeImage((string)RUtils.DeepCopy(texture), percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), RenderCopy, (obj is MapObject)); });
+			Task<System.Drawing.Bitmap> task = Task.Run(() => { return MakeImage(texture, percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), RenderCopy, (obj is MapObject)); });
+			
 			return new RenderResult() { p = myPointCollection, task = task };
 		}
     }
