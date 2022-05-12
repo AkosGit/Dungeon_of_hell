@@ -31,6 +31,7 @@ namespace Dungeon_of_hell
             MainMenuView = new RelayCommand(() =>
             {
                 Audio_player.Play("menuSelect");
+                Audio_player.StopAll();
                 if (Directory.Exists(GlobalSettings.Settings.AssetsPath + "save\\" + "Props"))
                 {
                     Directory.Delete(GlobalSettings.Settings.AssetsPath + "save\\" + "Props", true);
@@ -65,7 +66,6 @@ namespace Dungeon_of_hell
                 RemoveView("Singleplayer");
                 ChangePrimaryView("MainMenu");
                 ClearSecondView();
-                Audio_player.StopAll();
                 RemoveView("SingleplayerInGameMenu");
             });
         }

@@ -23,19 +23,76 @@ namespace Raycasting_Engine
 		public PointCollection p;
 
 	}
+	//overlay can be added to two queues with duration
+	public class Overlay
+    {
+		public int Duration;
+		public UIElement Element;
+		//left up
+		public Point Pos;
+		public bool IsFront;
+    }
 	public class RenderGame
     {
 		Canvas canvas;
 		UI HUD;
 		Action<bool> Isready;
 		Dictionary<string, Bitmap> images;
+		Overlay currentOverlayFront;
+		Overlay currentOverlayBack;
+		Queue<Overlay> frontOverlay;
+		Queue<Overlay> backOverlay;
+
 		public RenderGame(Canvas canvas, UI HUD, Action<bool> Isready)
         {
 			this.canvas = canvas;
 			this.HUD = HUD;
 			this.Isready = Isready;
 			images = new Dictionary<string, Bitmap>();
-        }
+			frontOverlay = new Queue<Overlay>();
+			backOverlay = new Queue<Overlay>();
+			currentOverlayBack = new Overlay { Duration = 0 };
+			currentOverlayFront = new Overlay { Duration = 0 };
+		}
+		public void AddOverlay(Overlay overlay)
+		{
+            if (overlay.IsFront)
+            {
+				frontOverlay.Enqueue(overlay);
+            }
+            else
+            {
+				backOverlay.Enqueue(overlay);
+            }
+		}
+		void displayOverlays()
+        {
+            if (currentOverlayBack.Duration == 0 && backOverlay.Count!=0)
+            {
+				currentOverlayBack = backOverlay.Dequeue();
+
+			}
+			if (currentOverlayFront.Duration == 0 && frontOverlay.Count != 0)
+			{
+				currentOverlayFront = frontOverlay.Dequeue();
+
+			}
+			//inprogress
+			if (currentOverlayBack.Duration != 0) {
+				currentOverlayBack.Duration--;
+				canvas.Children.Add(currentOverlayBack.Element);
+				Canvas.SetLeft(currentOverlayBack.Element, currentOverlayBack.Pos.X);
+				Canvas.SetTop(currentOverlayBack.Element, currentOverlayBack.Pos.Y);
+			}
+			//inprogress
+			if (currentOverlayFront.Duration != 0)
+			{
+				currentOverlayFront.Duration--;
+				canvas.Children.Add(currentOverlayFront.Element);
+				Canvas.SetLeft(currentOverlayFront.Element, currentOverlayFront.Pos.X);
+				Canvas.SetTop(currentOverlayFront.Element, currentOverlayFront.Pos.Y);
+			}
+		}
 		public void RenderItem()
 		{
 			Brush Selected = HUD.Inventory.SelectedItem.Holding;
@@ -165,10 +222,10 @@ namespace Raycasting_Engine
 				}
 				canvas.Children.Add(myPolygon);
 				canvas.Children.Add(myPolygon2);
-				tasks[i].Result.Dispose();
-				
-				
+
+				tasks[i].Result.Dispose();				
 			}
+			displayOverlays();
 			RenderItem();
 			Isready?.Invoke(true);
 			tasks.Clear();
@@ -249,7 +306,19 @@ namespace Raycasting_Engine
 			Point Point2 = new Point(render.Last().ScreenP2.X, render.Last().ScreenP2.Y);
 			Point Point3 = new Point(render.Last().ScreenP3.X, render.Last().ScreenP3.Y);
 			Point Point4 = new Point(render.First().ScreenP4.X, render.First().ScreenP4.Y);
-
+			//StackPanel stack = new StackPanel();
+			//stack.Width = 100;
+			//stack.Height = 20;
+			//TextBlock textBlock2 = new TextBlock();
+			//textBlock2.Text = "dfdffffffffffff";
+			//textBlock2.FontSize = 25;
+			//textBlock2.HorizontalAlignment = HorizontalAlignment.Center;
+			//textBlock2.VerticalAlignment = VerticalAlignment.Center;
+			//textBlock2.Foreground = new SolidColorBrush(Colors.Black);
+			//stack.Children.Add(textBlock2);
+			//canvas.Children.Add(stack);
+			//Canvas.SetLeft(stack, Point2.X);
+			//Canvas.SetTop(stack, Point2.Y);
 			PointCollection myPointCollection = new PointCollection();
 			myPointCollection.Add(Point1);
 			myPointCollection.Add(Point2);

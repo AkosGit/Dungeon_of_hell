@@ -56,6 +56,9 @@ namespace Raycasting_Engine
 			MapManager = new MapManager();
 			HUD = new UI(hud, Inventoryslots, defitem);
 			renderer = new RenderGame(canvas, HUD, (bool isready) => { IsReady = isready; });
+			TextBlock t = new TextBlock();
+			t.Text = "Overlay test";
+			renderer.AddOverlay(new Overlay { Duration = 100, Pos = new Point(0, 0), Element = t, IsFront = false });
 			this.canvas = canvas;
             if (p != null)
             {
