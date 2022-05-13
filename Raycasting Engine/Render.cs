@@ -42,7 +42,8 @@ namespace Raycasting_Engine
 		Overlay currentOverlayBack;
 		Queue<Overlay> frontOverlay;
 		Queue<Overlay> backOverlay;
-
+		const int WIDTH = 722;
+		const int HEIGHT = 500;
 		public RenderGame(Canvas canvas, UI HUD, Action<bool> Isready)
         {
 			this.canvas = canvas;
@@ -64,6 +65,29 @@ namespace Raycasting_Engine
             {
 				backOverlay.Enqueue(overlay);
             }
+		}
+		public void AddSubtitles(string text)
+        {
+			StackPanel stackOuter = new StackPanel();
+			StackPanel stackInner = new StackPanel();
+			stackOuter.Width = WIDTH;
+			//stackInner.Background= new SolidColorBrush(Color.FromArgb((byte)0.47, 94, 0, 12));
+			stackInner.Background = new SolidColorBrush(Colors.Blue);
+			TextBlock textBlock2 = new TextBlock();
+			textBlock2.Margin = new Thickness(5);
+			textBlock2.Text = text;
+			textBlock2.FontSize = 25;
+			textBlock2.HorizontalAlignment = HorizontalAlignment.Center;
+			textBlock2.VerticalAlignment = VerticalAlignment.Center;
+			stackInner.VerticalAlignment = VerticalAlignment.Center;
+			stackInner.HorizontalAlignment = HorizontalAlignment.Center;
+			textBlock2.Foreground = new SolidColorBrush(Colors.Black);
+			stackInner.Children.Add(textBlock2);
+			stackOuter.Children.Add(stackInner);
+			Point p = new Point();
+			p.X = 0;
+			p.Y = HEIGHT - 100;
+			AddOverlay(new Overlay {IsFront=false, Duration=200, Element=stackOuter, Pos=p });
 		}
 		void displayOverlays()
         {
@@ -225,8 +249,8 @@ namespace Raycasting_Engine
 
 				tasks[i].Result.Dispose();				
 			}
-			displayOverlays();
 			RenderItem();
+			displayOverlays();
 			Isready?.Invoke(true);
 			tasks.Clear();
 			points.Clear();

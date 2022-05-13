@@ -57,10 +57,11 @@ namespace Raycasting_Engine
 			HUD = new UI(hud, Inventoryslots, defitem);
 			renderer = new RenderGame(canvas, HUD, (bool isready) => { IsReady = isready; });
 			TextBlock t = new TextBlock();
-			t.Text = "Overlay test";
-			renderer.AddOverlay(new Overlay { Duration = 100, Pos = new Point(0, 0), Element = t, IsFront = false });
 			this.canvas = canvas;
-            if (p != null)
+			renderer.AddSubtitles("Hello there");
+			//t.Text = "Overlay test";
+			//renderer.AddOverlay(new Overlay { Duration = 100, Pos = new Point(0, 0), Element = t, IsFront = false });
+			if (p != null)
             {
 				LoadMapToInGameMap(MapManager.GetMap(map),p,entities);
 			}
@@ -189,8 +190,7 @@ namespace Raycasting_Engine
 			IsReady = false;
 			//drawMap2D();
 			//DrawPayer();
-			//Canvas.Width = 722;
-			//Canvas.Height = 500;
+
 			//canvas.Children.Clear();
 			//RGeometry.DrawRectangle(canvas, 0, 250, 722, 250, 722, 500, 0, 500, Brushes.Aqua, Brushes.Transparent);
 			if (player.GridX == finishzone.X && player.GridY == finishzone.Y && HUD.Inventory.Items.Contains(key))
