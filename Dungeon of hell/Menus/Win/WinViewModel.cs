@@ -16,10 +16,10 @@ namespace Dungeon_of_hell
 {
     public class WinViewModel : ViewModel
     {
+        const int CredittoWin = 20;
         public WinViewModel()
         {
             Name = "Win";
-            const int CredittoWin = 20;
             if (Credits < CredittoWin)
             {
                 AddView(new SinglePlayerViewModel(false), typeof(SinglePlayerView));

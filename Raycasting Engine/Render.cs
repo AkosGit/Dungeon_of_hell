@@ -159,8 +159,8 @@ namespace Raycasting_Engine
 			List<Brush> shadows = new List<Brush>();
 			List<GameObject> objs = new List<GameObject>();
 			//if not presenet in images dict add it
-			var mapPaths = renderingList.Where(z => (z.Key is MapObject) && !images.ContainsKey(((MapObject)z.Key).image)).Select(z => ((MapObject)z.Key).image).Distinct();
-			var enitityPaths = renderingList.Where(z => (z.Key is EntityObject) && !images.ContainsKey(((EntityObject)z.Key).textures[((EntityObject)z.Key).actualTexture])).Select(z => ((EntityObject)z.Key).textures[((EntityObject)z.Key).actualTexture]).Distinct();
+			var mapPaths = renderingList.Where(z => (z.Key is MapObject) && !images.ContainsKey(((MapObject)z.Key).image)).Select(z => ((MapObject)z.Key).image).Distinct().ToList();
+			var enitityPaths = renderingList.Where(z => (z.Key is EntityObject) && !images.ContainsKey(((EntityObject)z.Key).textures[((EntityObject)z.Key).actualTexture])).Select(z => ((EntityObject)z.Key).textures[((EntityObject)z.Key).actualTexture]).Distinct().ToList();
 			foreach (var item in mapPaths)
 			{
 				images.Add(item, new Bitmap(item));
@@ -215,7 +215,7 @@ namespace Raycasting_Engine
 			{
 				//apply image to brush
 				ImageBrush imgbrush = new ImageBrush();
-				((ImageBrush)imgbrush).Stretch = Stretch.Fill;
+				//((ImageBrush)imgbrush).Stretch = Stretch.None;
 				((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(tasks[i].Result);
 				//draw polygon
 				Polygon myPolygon = new Polygon();
@@ -257,6 +257,8 @@ namespace Raycasting_Engine
 			objs.Clear();
 			images.Clear();
 			shadows.Clear();
+			enitityPaths.Clear();
+			mapPaths.Clear();
 		}
 		System.Drawing.Bitmap MakeImage(Bitmap s, double percentVisible, PointCollection myPointCollection, List<RenderObject> render, bool IsWall)
 		{
@@ -298,8 +300,8 @@ namespace Raycasting_Engine
 			transform.Bitmap = bit;
 			bit.Dispose();
 			transform.FourCorners = RUtils.PointsToPointF(myPointCollection);
-			return transform.Bitmap;
-		}
+			return transform.Bitmap;		
+			}
 		RenderResult RenderSide(GameObject obj,List<RenderObject> render, Side side, Bitmap texture)
 		{
 			Color shadow = Color.FromArgb(50, 0, 0, 0);
