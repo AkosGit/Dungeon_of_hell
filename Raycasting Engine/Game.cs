@@ -198,7 +198,8 @@ namespace Raycasting_Engine
 				HUD.Inventory.RemoveItem(key);
 				LoadNextMapEvent?.Invoke();
 			}
-			drawRays3D();
+			Dictionary<GameObject, List<RenderObject>> renderingList = Task.Run(() => drawRays3D()).Result;
+			renderer.DoRender(renderingList);
 			PlaySounds(Player);
 			foreach (EntityObject ent in entities)
 			{
@@ -250,9 +251,18 @@ namespace Raycasting_Engine
 		#endregion
 
 		#region 3D
-		void drawRays3D()
-		{
-			int r, mx, my, mp, dof, mpH, mpV; double rx, ry, ra, xo, yo, disT;
+		public class RaycastResult
+        {
+            public Rendering.Vector Vector { get; set; }
+			public List<EntityObject> tmpEntities { get; set; }
+			public GameObject Obj { get; set; }
+			public RenderObject Result { get; set; }
+		}
+		RaycastResult Raycast(double r,double ra)
+        {
+			List<EntityObject> tmpEntities = new List<EntityObject>();
+			Rendering.Vector Vector = new Rendering.Vector();
+			int mx, my, mp, dof, mpH, mpV; double rx, ry, xo, yo, disT;
 			bool typeH, typeV;
 			yo = 0;
 			xo = 0;
@@ -265,100 +275,110 @@ namespace Raycasting_Engine
 			typeH = false;
 			typeV = false;
 			int me;
-			Dictionary<GameObject, List<RenderObject>> renderingList = new Dictionary<GameObject, List<RenderObject>>();
-			Rendering.Vector startVector = new Rendering.Vector();
-			Rendering.Vector endVector = new Rendering.Vector();
+			GameObject toBeRendered = null;
+			//Check Horizontals
+			dof = 0;
+			double disH = 1000000000;
+			double hx = player.X;
+			double hy = player.Y;
 
+			double aTan = -1 / Math.Tan(ra);
+			if (ra > PI) { ry = (((int)player.Y >> 6) << 6) - 0.0001; rx = (player.Y - ry) * aTan + player.X; yo = -64; xo = -yo * aTan; } //looking up
+			if (ra < PI) { ry = (((int)player.Y >> 6) << 6) + 64; rx = (player.Y - ry) * aTan + player.X; yo = 64; xo = -yo * aTan; } //looking down
+			if (ra == 0 || ra == PI) { rx = player.X; ry = player.Y; dof = MaxL; }
+			Vector = new Rendering.Vector(new PointF((float)player.X, (float)player.Y), new PointF((float)rx, (float)ry));
+			while (dof < MaxL)
+			{
+				mx = (int)(rx) >> 6; my = (int)(ry) >> 6; mp = my * mapX + mx;
+				if (mp > 0 && mp < mapX * mapY && entities.Where(x => x.IsHere(mx, my)).Count() > 0)
+				{
+					foreach (EntityObject entity in entities.Where(x => x.IsHere(mx, my)))
+					{
+						if (!tmpEntities.Contains(entity)) tmpEntities.Add(entity);
+					}
+				}
+				if (mp > 0 && mp < mapX * mapY && map[mp].IsSolid)
+				{
+					if (map[mp].IsSolid) { hx = rx; hy = ry; disH = Distance(player.X, player.Y, hx, hy, ra); typeH = map[mp].IsSolid; mpH = mp; dof = MaxL; }
+					else { me = mp; }
+				}
+				else { rx += xo; ry += yo; dof += 1; }
+			}
+			//DrawLineFromPlayer(rx, ry, Colors.Green, 6); //on 2D map
+
+			//Check Verticals
+			dof = 0;
+			double disV = 1000000000;
+			double vx = player.X;
+			double vy = player.Y;
+
+			double nTan = -Math.Tan(ra);
+			if (ra > P2 && ra < P3) { rx = (((int)player.X >> 6) << 6) - 0.0001; ry = (player.X - rx) * nTan + player.Y; xo = -64; yo = -xo * nTan; } //looking left
+			if (ra < P2 || ra > P3) { rx = (((int)player.X >> 6) << 6) + 64; ry = (player.X - rx) * nTan + player.Y; xo = 64; yo = -xo * nTan; } //looking right
+			if (ra == 0 || ra == PI) { rx = player.X; ry = player.Y; dof = MaxL; }
+			while (dof < MaxL)
+			{
+				mx = (int)(rx) >> 6; my = (int)(ry) >> 6; mp = my * mapX + mx;
+				if (mp > 0 && mp < mapX * mapY && entities.Where(x => x.IsHere(mx, my)).Count() > 0)
+				{
+					foreach (EntityObject entity in entities.Where(x => x.IsHere(mx, my)))
+					{
+						if (!tmpEntities.Contains(entity)) tmpEntities.Add(entity);
+					}
+				}
+				if (mp > 0 && mp < mapX * mapY && map[mp].IsSolid) { vx = rx; vy = ry; disV = Distance(player.X, player.Y, vx, vy, ra); typeV = map[mp].IsSolid; mpV = mp; dof = MaxL; }
+				else { rx += xo; ry += yo; dof += 1; }
+			}
+			Color color = Colors.Transparent;
+			Brush brush = Brushes.Transparent;
+			Brush addedShadow = Brushes.Transparent;
+			if (disV < disH) { rx = vx; ry = vy; disT = disV; color = Colors.Blue; brush = map[mpV].TextureA; addedShadow = new SolidColorBrush(shadow); toBeRendered = map[mpV]; }
+			if (disV > disH) { rx = hx; ry = hy; disT = disH; color = Colors.CornflowerBlue; brush = map[mpH].TextureA; toBeRendered = map[mpH]; }
+			//DrawLineFromPlayer(rx, ry, color, 2); //on 2D map
+			ra += DR; if (ra < 0) { ra += 2 * PI; }
+			if (ra > 2 * PI) { ra -= 2 * PI; }
+
+			//---Draw 3D Walls---
+			double ca = player.A - ra; if (ca < 0) { ca += 2 * PI; }
+			if (ca > 2 * PI) { ca -= 2 * PI; }
+			disT = disT * Math.Cos(ca);
+			double lineH = mapS * 500 / disT;
+			double lineO = 250 - lineH / 2;
+			//DrawLine(r * 8 + MoveRight, lineO, r * 8 + MoveRight, lineH + lineO, color, 8);
+			//DrawRectangle(r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
+			//RGeometry.DrawRectangle(canvas,r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
+
+			Side side;
+			if (addedShadow != Brushes.Transparent) side = Side.vertical;
+			else side = Side.horizontal;
+			RenderObject res = new RenderObject(rx, ry, side, new Point(r * 9 + MoveRight - 5, lineO), new Point(r * 9 + MoveRight + 5, lineO), new Point(r * 9 + MoveRight + 5, lineH + lineO), new Point(r * 9 + MoveRight - 5, lineH + lineO), brush);
+			return new RaycastResult { Obj = toBeRendered, tmpEntities = tmpEntities, Vector = Vector, Result=res };
+		}
+		async Task<Dictionary<GameObject, List<RenderObject>>> drawRays3D()
+		{
+			Dictionary<GameObject, List<RenderObject>> renderingList = new Dictionary<GameObject, List<RenderObject>>();
 			List<EntityObject> tmpEntities = new List<EntityObject>();
+			List<Task<RaycastResult>> results = new List<Task<RaycastResult>>();
+			double ra,r;
 			ra = player.A - DR * 40; if (ra < 0) { ra += 2 * PI; }
 			if (ra > 2 * PI) { ra -= 2 * PI; }
 			for (r = 0; r < 80; r++)
 			{
-				GameObject toBeRendered = null;
-				//Check Horizontals
-				dof = 0;
-				double disH = 1000000000;
-				double hx = player.X;
-				double hy = player.Y;
-
-				double aTan = -1 / Math.Tan(ra);
-				if (ra > PI) { ry = (((int)player.Y >> 6) << 6) - 0.0001; rx = (player.Y - ry) * aTan + player.X; yo = -64; xo = -yo * aTan; } //looking up
-				if (ra < PI) { ry = (((int)player.Y >> 6) << 6) + 64; rx = (player.Y - ry) * aTan + player.X; yo = 64; xo = -yo * aTan; } //looking down
-				if (ra == 0 || ra == PI) { rx = player.X; ry = player.Y; dof = MaxL; }
-				if (r == 0) startVector = new Rendering.Vector(new PointF((float)player.X, (float)player.Y), new PointF((float)rx, (float)ry));
-				if (r == 79) endVector = new Rendering.Vector(new PointF((float)player.X, (float)player.Y), new PointF((float)rx, (float)ry));
-
-				while (dof < MaxL)
-				{
-					mx = (int)(rx) >> 6; my = (int)(ry) >> 6; mp = my * mapX + mx;
-					if (mp > 0 && mp < mapX * mapY && entities.Where(x => x.IsHere(mx, my)).Count() > 0)
-					{
-						foreach (EntityObject entity in entities.Where(x => x.IsHere(mx, my)))
-						{
-							if (!tmpEntities.Contains(entity)) tmpEntities.Add(entity);
-						}
-					}
-					if (mp > 0 && mp < mapX * mapY && map[mp].IsSolid)
-					{
-						if (map[mp].IsSolid) { hx = rx; hy = ry; disH = Distance(player.X, player.Y, hx, hy, ra); typeH = map[mp].IsSolid; mpH = mp; dof = MaxL; }
-						else { me = mp; }
-					}
-					else { rx += xo; ry += yo; dof += 1; }
-				}
-				//DrawLineFromPlayer(rx, ry, Colors.Green, 6); //on 2D map
-
-				//Check Verticals
-				dof = 0;
-				double disV = 1000000000;
-				double vx = player.X;
-				double vy = player.Y;
-
-				double nTan = -Math.Tan(ra);
-				if (ra > P2 && ra < P3) { rx = (((int)player.X >> 6) << 6) - 0.0001; ry = (player.X - rx) * nTan + player.Y; xo = -64; yo = -xo * nTan; } //looking left
-				if (ra < P2 || ra > P3) { rx = (((int)player.X >> 6) << 6) + 64; ry = (player.X - rx) * nTan + player.Y; xo = 64; yo = -xo * nTan; } //looking right
-				if (ra == 0 || ra == PI) { rx = player.X; ry = player.Y; dof = MaxL; }
-				while (dof < MaxL)
-				{
-					mx = (int)(rx) >> 6; my = (int)(ry) >> 6; mp = my * mapX + mx;
-					if (mp > 0 && mp < mapX * mapY && entities.Where(x => x.IsHere(mx, my)).Count() > 0)
-					{
-						foreach (EntityObject entity in entities.Where(x => x.IsHere(mx, my)))
-						{
-							if (!tmpEntities.Contains(entity)) tmpEntities.Add(entity);
-						}
-					}
-					if (mp > 0 && mp < mapX * mapY && map[mp].IsSolid) { vx = rx; vy = ry; disV = Distance(player.X, player.Y, vx, vy, ra); typeV = map[mp].IsSolid; mpV = mp; dof = MaxL; }
-					else { rx += xo; ry += yo; dof += 1; }
-				}
-				Color color = Colors.Transparent;
-				Brush brush = Brushes.Transparent;
-				Brush addedShadow = Brushes.Transparent;
-				if (disV < disH) { rx = vx; ry = vy; disT = disV; color = Colors.Blue; brush = map[mpV].TextureA; addedShadow = new SolidColorBrush(shadow); toBeRendered = map[mpV]; }
-				if (disV > disH) { rx = hx; ry = hy; disT = disH; color = Colors.CornflowerBlue; brush = map[mpH].TextureA; toBeRendered = map[mpH]; }
-				//DrawLineFromPlayer(rx, ry, color, 2); //on 2D map
-				ra += DR; if (ra < 0) { ra += 2 * PI; }
-				if (ra > 2 * PI) { ra -= 2 * PI; }
-
-				//---Draw 3D Walls---
-				double ca = player.A - ra; if (ca < 0) { ca += 2 * PI; }
-				if (ca > 2 * PI) { ca -= 2 * PI; }
-				disT = disT * Math.Cos(ca);
-				double lineH = mapS * 500 / disT;
-				double lineO = 250 - lineH / 2;
-				//DrawLine(r * 8 + MoveRight, lineO, r * 8 + MoveRight, lineH + lineO, color, 8);
-				//DrawRectangle(r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
-				//RGeometry.DrawRectangle(canvas,r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
-
-				Side side;
-				if (addedShadow != Brushes.Transparent) side = Side.vertical;
-				else side = Side.horizontal;
-				if (!renderingList.Keys.Contains(toBeRendered))
-				{
-					renderingList.Add(toBeRendered, new List<RenderObject>());
-				}
-				renderingList[toBeRendered].Add(new RenderObject(rx, ry, side, new Point(r * 9 + MoveRight - 5, lineO), new Point(r * 9 + MoveRight + 5, lineO), new Point(r * 9 + MoveRight + 5, lineH + lineO), new Point(r * 9 + MoveRight - 5, lineH + lineO), brush));
-
+				results.Add(Task.Run(() => { return Raycast(r, ra); }));
 			}
+			await Task.WhenAll(results);
+            foreach (var res in results)
+            {
+				tmpEntities = tmpEntities.Union(res.Result.tmpEntities).ToList();
+				if (!renderingList.Keys.Contains(res.Result.Obj))
+				{
+					renderingList[res.Result.Obj] = new List<RenderObject>();
+
+				}
+				renderingList[res.Result.Obj].Add(res.Result.Result);
+			}
+			Rendering.Vector startVector = results[0].Result.Vector;
+			Rendering.Vector endVector = results[79].Result.Vector;
 			foreach (EntityObject entity in tmpEntities)
 			{
 
@@ -439,11 +459,7 @@ namespace Raycasting_Engine
 				//renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO), new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO), Brushes.Green, entityH));
 
 			}
-            //sorting items in order of height: back to fron rendering of objects
-            //if (renderingList.Count == 1) { MessageBox.Show("dsdsds"); }
-			renderer.DoRender(
-				renderingList.OrderBy(x => x.Value.Min(z => { if (z is RenderEntity) return (z as RenderEntity).originalWallHeight; else return z.Height; })).ToDictionary(z => z.Key, y => y.Value));
-			renderingList.Clear();
+			return renderingList.OrderBy(x => x.Value.Min(z => { if (z is RenderEntity) return (z as RenderEntity).originalWallHeight; else return z.Height; })).ToDictionary(z => z.Key, y => y.Value);
 		}
 		float sign(PointF p1, PointF p2, PointF p3)
 		{
