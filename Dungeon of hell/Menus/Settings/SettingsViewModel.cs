@@ -87,6 +87,9 @@ namespace Dungeon_of_hell
                 
             }
         }
+        public override void WhenSwitchedTo()
+        {
+        }
     }
 
 }

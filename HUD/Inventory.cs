@@ -11,7 +11,6 @@ using System.Windows.Shapes;
 using Newtonsoft.Json;
 using Rendering;
 using Utils;
-using Utils.Interfaces;
 
 namespace HUD
 {

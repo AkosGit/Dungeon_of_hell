@@ -49,7 +49,10 @@ namespace Dungeon_of_hell.SinglePlayer
 		public override void KeyDown(object sender, KeyEventArgs e)
 		{
 			ObservableCollection<Binding> sb = GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings");
-			if (e.Key == Key.Escape) { ChangeSecondaryView("SingleplayerInGameMenu"); }
+			if (e.Key == Key.Escape) {
+				timer1.Stop();
+				ChangeSecondaryView("SingleplayerInGameMenu"); 
+			}
 			else if (game.HUD.Inventory.InvKeys.Contains(e.Key))
 			{
 				game.HUD.Input(e.Key);
@@ -70,24 +73,6 @@ namespace Dungeon_of_hell.SinglePlayer
 				game.HUD.UpdateAmmo();
 				game.HUD.UpdateHealth(game.Player.Health);
 				game.HUD.UpdateCredit(game.Player.Credit);
-                if (game.Player.Health <= 0)
-                {
-					AddView(new DeathViewModel(), typeof(DeathView));
-					ChangePrimaryView("Death");
-					timer1.Stop();
-					Audio_player.StopAll();
-					RemoveView("Singleplayer");
-					RemoveView("SingleplayerInGameMenu");
-                }
-				if (game.IsWin)
-				{
-					AddView(new WinViewModel(), typeof(WinView));
-					ChangePrimaryView("Win");
-					timer1.Stop();
-					Audio_player.StopAll();
-					RemoveView("Singleplayer");
-					RemoveView("SingleplayerInGameMenu");
-				}
 				var binds = GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings");
 				foreach (Binding k in binds)
 				{
@@ -96,6 +81,7 @@ namespace Dungeon_of_hell.SinglePlayer
 						if (k.Usecase is EntityActions)
 						{
 							game.Player.Move(k.key, game.map, game.mapX, game.mapY, (EntityActions)binds.FirstOrDefault(x => x.key == k.key).Usecase);
+							
 							if (game.HUD.Inventory.SelectedItem is FireArm)
 							{
 								((FireArm)game.HUD.Inventory.SelectedItem).Walking();
@@ -118,6 +104,33 @@ namespace Dungeon_of_hell.SinglePlayer
 					}
 				}
 				game.DrawTurn();
+				if (game.Player.Health <= 0)
+				{
+					game.Player.Health = 10000;
+					timer1.Stop();
+					Audio_player.StopAll();
+					AddView(new DeathViewModel(), typeof(DeathView));
+					ChangePrimaryView("Death");
+					RemoveView("Singleplayer");
+					RemoveView("SingleplayerInGameMenu");
+				}
+				if (game.IsWin)
+				{
+					game.IsWin = false;
+					timer1.Stop();
+					Audio_player.StopAll();
+					if (game.Player.Credit < 62)
+					{
+						MessageBox.Show($"You have only {game.Player.Credit}, you need {62} credits to complete the university!");
+						ResetView("Singleplayer");
+						ChangePrimaryView("Singleplayer");
+					}
+                    else
+                    {
+						AddView(new WinViewModel(game.Player.Credit), typeof(WinView));
+						ChangePrimaryView("Win"); ;
+					}
+				}
 			}, Application.Current.Dispatcher);
 			timer1.Start();
 		}
@@ -185,6 +198,10 @@ namespace Dungeon_of_hell.SinglePlayer
 				game.HUD.Inventory.SelectItem(game.HUD.Inventory.GetItemByIndex(0));
 			}
 			game.HUD.UpdateAmmo();
+		}
+		public override void WhenSwitchedTo()
+		{
+			timer1.Start();
 		}
 
 	}

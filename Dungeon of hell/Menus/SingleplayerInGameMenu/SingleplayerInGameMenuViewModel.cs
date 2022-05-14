@@ -82,5 +82,8 @@ namespace Dungeon_of_hell
                 ClearSecondView();
             }
         }
+        public override void WhenSwitchedTo()
+        {
+        }
     }
 }

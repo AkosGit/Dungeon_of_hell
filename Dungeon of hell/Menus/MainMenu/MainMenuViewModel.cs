@@ -7,7 +7,6 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using Dungeon_of_hell.SinglePlayer;
-using Dungeon_of_hell.MultiPlayer;
 using Utils;
 using System.Threading;
 
@@ -32,20 +31,6 @@ namespace Dungeon_of_hell
                 AddView(new SingleplayerInGameMenuViewModel(), typeof(SingleplayerInGameMenuView));
                 ChangePrimaryView("Singleplayer");
             });
-            MultiplayerView = new RelayCommand(() =>
-            {
-                Audio_player.Play("menuSelect");
-                if (!GlobalSettings.Settings.DisableSaving && File.Exists(GlobalSettings.Settings.AssetsPath + "Save\\Multiplayer"))
-                {
-                    AddView((IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Multiplayer", typeof(MultiPlayerViewModel)), typeof(MultiPlayerView));
-                }
-                else
-                {
-                    AddView(new MultiPlayerViewModel(), typeof(MultiPlayerView));
-                }
-                AddView(new MultiplayerInGameMenuViewModel(), typeof(MultiplayerInGameMenuView));
-                ChangePrimaryView("Multiplayer");
-            });
             SettingsView = new RelayCommand(() =>
             {
                 Audio_player.Play("menuSelect");
@@ -55,7 +40,7 @@ namespace Dungeon_of_hell
             Quit = new RelayCommand(() =>
             {
                 Audio_player.Play("menuSelect");
-                Environment.Exit(0);
+                CloseApp();
 
             });
         }
@@ -70,6 +55,9 @@ namespace Dungeon_of_hell
         public override void KeyDown(object sender, KeyEventArgs e)
         {
 
+        }
+        public override void WhenSwitchedTo()
+        {
         }
     }
 }
