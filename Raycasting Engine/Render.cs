@@ -71,12 +71,11 @@ namespace Raycasting_Engine
 			StackPanel stackOuter = new StackPanel();
 			StackPanel stackInner = new StackPanel();
 			stackOuter.Width = WIDTH;
-			//stackInner.Background= new SolidColorBrush(Color.FromArgb((byte)0.47, 94, 0, 12));
-			stackInner.Background = new SolidColorBrush(Colors.Blue);
+			stackInner.Background= new SolidColorBrush(Color.FromArgb(150, 94, 0, 12));
 			TextBlock textBlock2 = new TextBlock();
 			textBlock2.Margin = new Thickness(5);
 			textBlock2.Text = text;
-			textBlock2.FontSize = 25;
+			textBlock2.FontSize = 18;
 			textBlock2.HorizontalAlignment = HorizontalAlignment.Center;
 			textBlock2.VerticalAlignment = VerticalAlignment.Center;
 			stackInner.VerticalAlignment = VerticalAlignment.Center;
@@ -86,8 +85,8 @@ namespace Raycasting_Engine
 			stackOuter.Children.Add(stackInner);
 			Point p = new Point();
 			p.X = 0;
-			p.Y = HEIGHT - 100;
-			AddOverlay(new Overlay {IsFront=false, Duration=200, Element=stackOuter, Pos=p });
+			p.Y = HEIGHT - 120;
+			AddOverlay(new Overlay {IsFront=false, Duration=40, Element=stackOuter, Pos=p });
 		}
 		void displayOverlays()
         {

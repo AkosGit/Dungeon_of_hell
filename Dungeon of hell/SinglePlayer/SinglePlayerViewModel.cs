@@ -37,8 +37,9 @@ namespace Dungeon_of_hell.SinglePlayer
 		Boolean StopTimer;
 		private Canvas canvas;
 		private Canvas hud;
+		public ObservableCollection<Binding> binds;
 		public Canvas HUD { get { return hud; } set { SetProperty(ref hud, value); } }
-		public Canvas Canvas { get { return canvas; } set { SetProperty(ref canvas, value); } }
+		public Canvas Canvas { get { return canvas; } set { SetProperty(ref canvas, value); } } 
 		public SinglePlayerViewModel(bool load)
 		{
 			Name = "Singleplayer";
@@ -73,7 +74,7 @@ namespace Dungeon_of_hell.SinglePlayer
 				game.HUD.UpdateAmmo();
 				game.HUD.UpdateHealth(game.Player.Health);
 				game.HUD.UpdateCredit(game.Player.Credit);
-				var binds = GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings");
+				binds = GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings");
 				foreach (Binding k in binds)
 				{
 					if (Keyboard.IsKeyDown(k.key) && game.IsReady)
@@ -121,7 +122,7 @@ namespace Dungeon_of_hell.SinglePlayer
 					Audio_player.StopAll();
 					if (game.Player.Credit < 62)
 					{
-						MessageBox.Show($"You have only {game.Player.Credit}, you need {62} credits to complete the university!");
+						MessageBox.Show($"You have only {game.Player.Credit}, you need 62 credits to complete this semester!");
 						ResetView("Singleplayer");
 						ChangePrimaryView("Singleplayer");
 					}
@@ -164,7 +165,8 @@ namespace Dungeon_of_hell.SinglePlayer
 					entities.Add((Enemy)ObjectManager.Read(path, typeof(Enemy)));
 				}
 			}
-			game = new SPMain(canvas, hud, InventorySLOST, new Pistol("pistol", 100, 13, 15), map, p,entities);
+			List<Binding> bindings = ((SettingsViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Settings", typeof(SettingsViewModel))).SingleplayerBindings.ToList();
+			game = new SPMain(canvas, hud, InventorySLOST, new Pistol("pistol", 100, 13, 15), map, bindings, p, entities);
 			game.HUD.Inventory.AddItem(new Shotgun("shotgun", 80, 8, 40));
 			Canvas.Width = 722;
 			Canvas.Height = 500;

@@ -43,7 +43,8 @@ namespace Dungeon_of_hell.Story
                 "My life is in pieces!",
                 "The worse thing is that  I'm dreaming about it every night.",
                 "I go back every night to that place where the subjects\nare chasing me and where I have to defeat them.",
-                "The place is called DUNGEON OF HELL!"};
+                "The place is called DUNGEON OF HELL!"
+            };
         }
         public void StartGame()
         {
@@ -55,6 +56,11 @@ namespace Dungeon_of_hell.Story
         }
         public override void KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Key == Key.Escape)
+            {
+                timer.Stop();
+                StartGame();
+            }
         }
 
         public override void WhenSwitchedTo()
@@ -62,7 +68,7 @@ namespace Dungeon_of_hell.Story
             TimeSpan time = TimeSpan.FromDays(0);
             timer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 150), DispatcherPriority.Normal, delegate
             {
-                if (sentencecount == source.Length-1)
+                if (sentencecount == source.Length)
                 {
                     StartGame();
                 }

@@ -22,6 +22,7 @@ using Rendering;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace Raycasting_Engine
 {
@@ -51,17 +52,27 @@ namespace Raycasting_Engine
 		public event LoadNextMap LoadNextMapEvent;
 		protected Point finishzone;
 		protected Item key;
-		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string map,Player p, List<EntityObject> entities)
+		List<Utils.Binding> binds;
+		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string map,Player p, List<EntityObject> entities, List<Utils.Binding> binds)
 		{
+			this.binds = binds;
 			MapManager = new MapManager();
 			HUD = new UI(hud, Inventoryslots, defitem);
 			renderer = new RenderGame(canvas, HUD, (bool isready) => { IsReady = isready; });
 			TextBlock t = new TextBlock();
 			this.canvas = canvas;
-			renderer.AddSubtitles("Hello there");
-			//t.Text = "Overlay test";
-			//renderer.AddOverlay(new Overlay { Duration = 100, Pos = new Point(0, 0), Element = t, IsFront = false });
-			if (p != null)
+            string forward = binds.Where(x => x.Usecase == EntityActions.Forward).First().Message;
+            string back = binds.Where(x => x.Usecase == EntityActions.Backwards).First().Message;
+            string left = binds.Where(x => x.Usecase == EntityActions.Left).First().Message;
+            string right = binds.Where(x => x.Usecase == EntityActions.Right).First().Message;
+            string shoot = binds.Where(x => x.Usecase == EntityActions.Shoot).First().Message;
+            string reload = binds.Where(x => x.Usecase == EntityActions.Reload).First().Message;
+            renderer.AddSubtitles($"You can go forward with {forward} and backwards with {back}");
+			renderer.AddSubtitles($"Left is {left} and right is {right}.");
+            renderer.AddSubtitles($"You can shoot with {shoot} and reload with {reload}.");
+            //t.Text = "Overlay test";
+            //renderer.AddOverlay(new Overlay { Duration = 100, Pos = new Point(0, 0), Element = t, IsFront = false });
+            if (p != null)
             {
 				LoadMapToInGameMap(MapManager.GetMap(map),p,entities);
 			}
@@ -252,7 +263,7 @@ namespace Raycasting_Engine
 		#region 3D
 		void drawRays3D()
 		{
-			int r, mx, my, mp, dof, mpH, mpV; double rx, ry, ra, xo, yo, disT;
+			int mx, r,my, mp, dof, mpH, mpV; double rx, ry, xo, yo, ra,disT;
 			bool typeH, typeV;
 			yo = 0;
 			xo = 0;
@@ -274,6 +285,7 @@ namespace Raycasting_Engine
 			if (ra > 2 * PI) { ra -= 2 * PI; }
 			for (r = 0; r < 80; r++)
 			{
+
 				GameObject toBeRendered = null;
 				//Check Horizontals
 				dof = 0;

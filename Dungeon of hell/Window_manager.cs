@@ -87,7 +87,7 @@ namespace Dungeon_of_hell
                 ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Use, key = Key.E, Message = "E" });
                 ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Shoot, key = Key.K, Message = "K" });
                 ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Reload, key = Key.R, Message = "R" });
-
+                ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\Settings", (SettingsViewModel)GetView("Settings"));
             }
             view.closeapp += () => { OnWindowClosing(this, null); Environment.Exit(0); };
             view.resetview += (string viewname) => { ResetView(viewname); };

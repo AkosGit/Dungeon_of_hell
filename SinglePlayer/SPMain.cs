@@ -2,7 +2,9 @@ using HUD;
 using Raycasting_Engine;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -13,8 +15,8 @@ namespace SinglePlayer
 		string[] maps;
 		int mapcount;
 		bool isWin;
-		public SPMain(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string mapname,Player p=null, List<EntityObject> entities = null)
-			: base(canvas, hud, Inventoryslots, defitem, mapname,p,entities)
+		public SPMain(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string mapname, List<Utils.Binding> binds,Player p=null, List<EntityObject> entities = null)
+			: base(canvas, hud, Inventoryslots, defitem, mapname,p,entities, binds)
 		{
 			maps = new string[] { "map1", "map2", "map3" };
 			mapcount = 0;
