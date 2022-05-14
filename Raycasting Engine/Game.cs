@@ -67,12 +67,12 @@ namespace Raycasting_Engine
             string right = binds.Where(x => x.Usecase == EntityActions.Right).First().Message;
             string shoot = binds.Where(x => x.Usecase == EntityActions.Shoot).First().Message;
             string reload = binds.Where(x => x.Usecase == EntityActions.Reload).First().Message;
-            renderer.AddSubtitles($"You can go forward with {forward} and backwards with {back}");
+			renderer.AddSubtitles($"You can go forward with {forward} and backwards with {back}");
 			renderer.AddSubtitles($"Left is {left} and right is {right}.");
-            renderer.AddSubtitles($"You can shoot with {shoot} and reload with {reload}.");
-            //t.Text = "Overlay test";
-            //renderer.AddOverlay(new Overlay { Duration = 100, Pos = new Point(0, 0), Element = t, IsFront = false });
-            if (p != null)
+			renderer.AddSubtitles($"You can shoot with {shoot} and reload with {reload}.");
+			renderer.AddSubtitles($"Your objective is to get credits by eliminating your subjects");
+			renderer.AddSubtitles($"You need to collect a key and bring it back to the spawn\n on each level inorder to get to the next one.");
+			if (p != null)
             {
 				LoadMapToInGameMap(MapManager.GetMap(map),p,entities);
 			}
@@ -201,11 +201,6 @@ namespace Raycasting_Engine
 		public void DrawTurn()
 		{
 			IsReady = false;
-			//drawMap2D();
-			//DrawPayer();
-
-			//canvas.Children.Clear();
-			//RGeometry.DrawRectangle(canvas, 0, 250, 722, 250, 722, 500, 0, 500, Brushes.Aqua, Brushes.Transparent);
 			if (player.GridX == finishzone.X && player.GridY == finishzone.Y && HUD.Inventory.Items.Contains(key))
 			{
 				HUD.Inventory.RemoveItem(key);
@@ -359,10 +354,6 @@ namespace Raycasting_Engine
 				disT = disT * Math.Cos(ca);
 				double lineH = mapS * 500 / disT;
 				double lineO = 250 - lineH / 2;
-				//DrawLine(r * 8 + MoveRight, lineO, r * 8 + MoveRight, lineH + lineO, color, 8);
-				//DrawRectangle(r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
-				//RGeometry.DrawRectangle(canvas,r * 9 + MoveRight - 5, lineO, r * 9 + MoveRight + 5, lineO, r * 9 + MoveRight + 5, lineH + lineO, r * 9 + MoveRight - 5, lineH + lineO, brush, addedShadow, 0);
-
 				Side side;
 				if (addedShadow != Brushes.Transparent) side = Side.vertical;
 				else side = Side.horizontal;
@@ -459,18 +450,8 @@ namespace Raycasting_Engine
 						}
 					}
 				}
-
-				//visibleEntities.Add(entity);
-				//double disE = Distance(player.X, player.Y, entity.X, entity.Y, ca);
-				//disE = disE * Math.Cos(ca);
-				//double entityH = mapS * 500 / disE; if (entityH > 500) { entityH = 500; }
-				//double entityO = 250 - entityH / 2;
-				//renderingList.Add(entity, new List<RenderObject>());
-				//renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO), new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO), Brushes.Green, entityH));
-
 			}
             //sorting items in order of height: back to fron rendering of objects
-            //if (renderingList.Count == 1) { MessageBox.Show("dsdsds"); }
 			renderer.DoRender(
 				renderingList.OrderBy(x => x.Value.Min(z => { if (z is RenderEntity) return (z as RenderEntity).originalWallHeight; else return z.Height; })).ToDictionary(z => z.Key, y => y.Value));
 			renderingList.Clear();
@@ -493,15 +474,6 @@ namespace Raycasting_Engine
 			has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
 
 			return !(has_neg && has_pos);
-		}
-
-		void PayerWindowActionHelperHurt()
-		{
-			RGeometry.DrawRectangle(canvas, 500, 720, 0, 0, new SolidColorBrush(Color.FromArgb((byte)175, (byte)136, (byte)8, (byte)8)));
-		}
-		void PayerWindowActionHelperHeal()
-		{
-			RGeometry.DrawRectangle(canvas, 500, 720, 0, 0, new SolidColorBrush(Color.FromArgb((byte)175, (byte)108, (byte)125, (byte)67)));
 		}
 		private double Distance(double ax, double ay, double bx, double by, double ang)
 		{
