@@ -423,7 +423,7 @@ namespace Raycasting_Engine
 						}
 						if ((entity as Props).Type == PropType.kredit)
 						{
-							player.Credit = +(entity as Props).Credit;
+							player.Credit += (entity as Props).Credit;
 							HUD.UpdateCredit(player.Credit);
 							entities.Remove(entity);
 						}
