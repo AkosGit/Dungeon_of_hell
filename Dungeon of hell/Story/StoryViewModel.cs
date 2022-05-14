@@ -30,12 +30,13 @@ namespace Dungeon_of_hell.Story
         bool extra;
         Random r;
         DispatcherTimer timer;
+        MediaPlayer media;
         public string StoryText { get { return stoytext; } set { SetProperty(ref stoytext, value); } }
         string stoytext;
         public StoryViewModel()
         {
             r = new Random();
-
+            media = new MediaPlayer();
             Name = "Story";
             extra = true;
             lettercount = 0;
@@ -69,17 +70,21 @@ namespace Dungeon_of_hell.Story
 
         public override void WhenSwitchedTo()
         {
-            string[] names = new string[] { $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_1.mp3", $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_2.mp3", $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_3.mp3", $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_4.mp3"};
+            //string[] names = new string[] { $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_1.mp3", $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_2.mp3", $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_3.mp3", $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_4.mp3"};
             //Audio_player.AddTrack("write_1", $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_1.mp3");
             //Audio_player.AddTrack("write_2", $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_2.mp3");
             //Audio_player.AddTrack("write_3", $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_3.mp3");
             //Audio_player.AddTrack("write_4", $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_4.mp3");
             //Audio_player.AddTrack("test", $"{GlobalSettings.Settings.AssetsPath}sound\\Dead.waw");
             TimeSpan time = TimeSpan.FromDays(0);
+            media.Open(new Uri($"{GlobalSettings.Settings.AssetsPath}sound\\story\\write.mp3"));
+            media.Volume = GlobalSettings.Settings.Volume * 0.3;
+            media.Play();
             timer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 150), DispatcherPriority.Normal, delegate
             {
                 if (sentencecount == source.Length)
                 {
+                    media.Stop();
                     StartGame();
                 }
                 else
@@ -102,11 +107,6 @@ namespace Dungeon_of_hell.Story
                         lettercount = 0;
                     }
                     //Audio_player.Play($"write_{r.Next(1, 5)}");
-                    MediaPlayer mediaplayer = new MediaPlayer();
-                    mediaplayer.Open(new Uri(names[r.Next(0,4)]));
-                    mediaplayer.Volume = GlobalSettings.Settings.Volume*0.6;
-                    mediaplayer.Play();
-
                 }
                 time = time.Add(TimeSpan.FromMilliseconds(1));
             }, Application.Current.Dispatcher);
