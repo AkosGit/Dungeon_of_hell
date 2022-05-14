@@ -17,6 +17,7 @@ using Rendering;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using System.IO;
+using System.Media;
 using Dungeon_of_hell.SinglePlayer;
 
 namespace Dungeon_of_hell.Story
@@ -27,11 +28,14 @@ namespace Dungeon_of_hell.Story
         int sentencecount;
         string[] source;
         bool extra;
+        Random r;
         DispatcherTimer timer;
         public string StoryText { get { return stoytext; } set { SetProperty(ref stoytext, value); } }
         string stoytext;
         public StoryViewModel()
         {
+            r = new Random();
+
             Name = "Story";
             extra = true;
             lettercount = 0;
@@ -41,9 +45,9 @@ namespace Dungeon_of_hell.Story
                 "It's been a week since I dropped out of college.",
                 "After 10 semesters of suffering\nI failed near to the end.",
                 "My life is in pieces!",
-                "The worse thing is that  I'm dreaming about it every night.",
+                "The worse thing is that  I'm keep dreaming about it every night.",
                 "I go back every night to that place where the subjects\nare chasing me and where I have to defeat them.",
-                "The place is called DUNGEON OF HELL!"
+                "The place is called the DUNGEON OF HELL!"
             };
         }
         public void StartGame()
@@ -65,6 +69,12 @@ namespace Dungeon_of_hell.Story
 
         public override void WhenSwitchedTo()
         {
+            string[] names = new string[] { $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_1.mp3", $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_2.mp3", $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_3.mp3", $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_4.mp3"};
+            //Audio_player.AddTrack("write_1", $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_1.mp3");
+            //Audio_player.AddTrack("write_2", $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_2.mp3");
+            //Audio_player.AddTrack("write_3", $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_3.mp3");
+            //Audio_player.AddTrack("write_4", $"{GlobalSettings.Settings.AssetsPath}sound\\story\\write_4.mp3");
+            //Audio_player.AddTrack("test", $"{GlobalSettings.Settings.AssetsPath}sound\\Dead.waw");
             TimeSpan time = TimeSpan.FromDays(0);
             timer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 150), DispatcherPriority.Normal, delegate
             {
@@ -79,7 +89,7 @@ namespace Dungeon_of_hell.Story
                     {
                         s = s + source[sentencecount][i];
                     }
-                    if (extra) { s = s + " |";extra = false; }
+                    if (extra) { s = s + "  |";extra = false; }
                     else
                     {
                         extra = true;
@@ -91,6 +101,12 @@ namespace Dungeon_of_hell.Story
                         sentencecount++;
                         lettercount = 0;
                     }
+                    //Audio_player.Play($"write_{r.Next(1, 5)}");
+                    MediaPlayer mediaplayer = new MediaPlayer();
+                    mediaplayer.Open(new Uri(names[r.Next(0,4)]));
+                    mediaplayer.Volume = GlobalSettings.Settings.Volume*0.6;
+                    mediaplayer.Play();
+
                 }
                 time = time.Add(TimeSpan.FromMilliseconds(1));
             }, Application.Current.Dispatcher);

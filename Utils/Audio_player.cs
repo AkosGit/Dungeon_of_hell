@@ -114,6 +114,7 @@ namespace Utils
         }
         public void Play()
         {
+
             mediaplayer.Open(new Uri(GlobalSettings.Settings.AssetsPath + path));
             mediaplayer.Volume = CalculateVolume(distance);
             mediaplayer.Play();
