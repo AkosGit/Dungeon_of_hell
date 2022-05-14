@@ -179,21 +179,23 @@ namespace Raycasting_Engine
             enemy6.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(enemy6);
 
-            Props health2 = new Props(7, 2, map1.MapS, "Medkit", 120, 230, PropType.heal);
-            health2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\medkit_1.png");
-            entities.Add(health2);
+            entities.Add(Props.MakeMedkit(7,2));
 
-            Props ammoBox = new Props(11, 13, map1.MapS, "AmmoBox", 120, 230, PropType.ammo);
-            ammoBox.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\AmmoBox.png");
-            entities.Add(ammoBox);
+            entities.Add(Props.MakeMedkit(12, 14));
+
+            entities.Add(Props.MakeAmmoBox(11,13));
 
             Props redKey = new Props(9, 14, map1.MapS, "RedKey", 100, 150, PropType.key);
             redKey.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\KeyCard_1.png");
             entities.Add(redKey);
 
-            Props kredit = new Props(13, 13, map1.MapS, "PlusKredit", 100, 150, PropType.kredit);
-            kredit.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Coin.png");
-            entities.Add(kredit);
+            entities.Add(Props.MakeKredit(13,13));
+
+            entities.Add(Props.MakeProp(2,2, "bottle_3"));
+            entities.Add(Props.MakeProp(4,5, "bottle_1"));
+            entities.Add(Props.MakeProp(5,7, "bottle_2"));
+            entities.Add(Props.MakeProp(10,6, "bottle_4"));
+            entities.Add(Props.MakeProp(2,9, "Paper", 50, 50));
 
             map1.EntityMap = entities.ToArray();
             map1.SetDefaults();
@@ -300,8 +302,15 @@ namespace Raycasting_Engine
             entities.Add(health2);
 
             Props redKey = new Props(14, 12, map1.MapS, "YellowKey", 100, 150, PropType.key);
-            redKey.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\keyCard.png");
+            redKey.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\KeyCard_2.png");
             entities.Add(redKey);
+
+            entities.Add(Props.MakeKredit(2, 13));
+            entities.Add(Props.MakeProp(2, 2, "bottle_3"));
+            entities.Add(Props.MakeProp(4, 5, "bottle_1"));
+            entities.Add(Props.MakeProp(10, 7, "bottle_2"));
+            entities.Add(Props.MakeProp(10, 12, "bottle_4"));
+            entities.Add(Props.MakeProp(2, 9, "Paper", 50, 50));
 
             map1.EntityMap = entities.ToArray();
             map1.SetDefaults();
@@ -422,8 +431,15 @@ namespace Raycasting_Engine
 
 
             Props redKey = new Props(1, 3, map1.MapS, "YellowKey", 100, 150, PropType.key);
-            redKey.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\keyCard.png");
+            redKey.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\KeyCard_3.png");
             entities.Add(redKey);
+
+            entities.Add(Props.MakeKredit(2, 13));
+            entities.Add(Props.MakeProp(2, 2, "bottle_3"));
+            entities.Add(Props.MakeProp(6, 5, "bottle_1"));
+            entities.Add(Props.MakeProp(10, 7, "bottle_2"));
+            entities.Add(Props.MakeProp(10, 10, "bottle_4"));
+            entities.Add(Props.MakeProp(2, 9, "Paper", 50, 50));
 
             map1.EntityMap = entities.ToArray();
             map1.SetDefaults();

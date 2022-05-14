@@ -51,10 +51,11 @@ namespace Raycasting_Engine
 		{
 			finishZone = new Point(player.GridX, player.GridY);
 			key = new Item(lEntityMap.FirstOrDefault(x => { if (x is Props && (x as Props).Type == PropType.key) return true; else return false; }).Name);
-			key.Icon = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\keyCard.png")));
-			key.Holding = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap($"{GlobalSettings.Settings.AssetsPath}img\\keyCard.png")));
-			key.Icon_path = $"{GlobalSettings.Settings.AssetsPath}img\\keyCard.png";
-			key.Holding_path = $"{GlobalSettings.Settings.AssetsPath}img\\keyCard.png";
+			string keyCardTexture = lEntityMap.FirstOrDefault(x => { if (x is Props && (x as Props).Type == PropType.key) return true; else return false; }).textures[0];
+			key.Icon = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap(keyCardTexture)));
+			key.Holding = new ImageBrush(RUtils.ImageSourceFromBitmap(new System.Drawing.Bitmap(keyCardTexture)));
+			key.Icon_path = keyCardTexture;
+			key.Holding_path = keyCardTexture;
 		}
 		public Map()
         {
