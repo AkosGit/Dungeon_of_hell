@@ -81,6 +81,8 @@ namespace Raycasting_Engine
 				LoadMapToInGameMap(MapManager.GetMap(map));
 			}
 
+			Audio_player.AddTrack("pickup", $"{GlobalSettings.Settings.AssetsPath}sound\\opening_door.mp3", -1);
+
 		}
 
 		protected void LoadMapToInGameMap(Map map)
@@ -419,6 +421,7 @@ namespace Raycasting_Engine
 						if ((entity as Props).Type == PropType.heal)
 						{
 							Player.Heal();
+							Audio_player.Play("pickup");
 							entities.Remove(entity);
 							renderer.AddOverlay(new Overlay() 
 							{ 
@@ -431,6 +434,7 @@ namespace Raycasting_Engine
 
 						if ((entity as Props).Type == PropType.ammo)
 						{
+							Audio_player.Play("pickup");
 							foreach (Item item in HUD.Inventory.Items)
 							{
 								if (item is FireArm)
@@ -442,11 +446,13 @@ namespace Raycasting_Engine
 						}
 						if ((entity as Props).Type == PropType.key)
 						{
+							Audio_player.Play("pickup");
 							HUD.Inventory.AddItem(key);
 							entities.Remove(entity);
 						}
 						if ((entity as Props).Type == PropType.kredit)
 						{
+							Audio_player.Play("pickup");
 							player.Credit += (entity as Props).Credit;
 							HUD.UpdateCredit(player.Credit);
 							entities.Remove(entity);
