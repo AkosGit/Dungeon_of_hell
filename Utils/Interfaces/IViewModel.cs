@@ -9,6 +9,7 @@ namespace Utils
 {
     public interface IViewModel
     {
+        public Type viewType { get; set; }
         public string Name { get; set; }
         public object ViewId { get; set; }
         public event Func<string, IViewModel> getview;
@@ -16,10 +17,13 @@ namespace Utils
         public event Action<string> removeview;
         public event Func<string, bool> viewexists;
         public event Action<string> changeprimaryviewEvent;
+        public event Action<string> resetview;
         public event Action<string> changesecondaryviewEvent;
         public event Action clearsecondviewEvent;
         public event Func<string, string, object> getviewpropertyEvent;
         public event Action<string, string,object> updateviewpropertyEvent;
+        public void ResetView(string viewname);
+        public abstract void WhenSwitchedTo();
         public abstract void KeyDown(object sender, KeyEventArgs e);
         /// <summary>
         /// Call event.

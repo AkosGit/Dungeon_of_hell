@@ -17,17 +17,10 @@ namespace Dungeon_of_hell
     public class WinViewModel : ViewModel
     {
         const int CredittoWin = 20;
-        public WinViewModel()
+        public WinViewModel(int Credits)
         {
             Name = "Win";
-            if (Credits < CredittoWin)
-            {
-                AddView(new SinglePlayerViewModel(false), typeof(SinglePlayerView));
-                AddView(new SingleplayerInGameMenuViewModel(), typeof(SingleplayerInGameMenuView));
-                ChangePrimaryView("Singleplayer");
-                MessageBox.Show($"You have only {Credits}, you need {CredittoWin} to complete university!");
-                RemoveView("Win");
-            }
+            this.Credits = Credits;
             Respawn = new RelayCommand(() =>
             {
                 Audio_player.Play("menuSelect");
@@ -39,6 +32,7 @@ namespace Dungeon_of_hell
             });
             Quit = new RelayCommand(() =>
             {
+
                 Audio_player.Play("menuSelect");
                 ChangePrimaryView("MainMenu");
                 RemoveView("Win");
@@ -47,10 +41,15 @@ namespace Dungeon_of_hell
         }
         public ICommand Quit { get; set; }
         public ICommand Respawn { get; set; }
-        public int Credits { get { return GetViewProperty<Player>("Singleplayer", "Player").Credit; } }
+        public int Credits { get; set; }
         public override void KeyDown(object sender, KeyEventArgs e)
         {
 
+        }
+        public override void WhenSwitchedTo()
+        {
+            RemoveView("Singleplayer");
+            RemoveView("SingleplayerInGameMenu");
         }
     }
 }

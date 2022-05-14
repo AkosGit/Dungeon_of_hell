@@ -21,7 +21,7 @@ using Dungeon_of_hell.SinglePlayer;
 
 namespace Dungeon_of_hell
 {
-    public class Window_manager : ObservableObject, IWindowManager
+    public class Window_manager : ObservableRecipient, IWindowManager
     {
         public void KeyDown(object sender, KeyEventArgs e)
         {
@@ -57,12 +57,21 @@ namespace Dungeon_of_hell
         public void RemoveView(string viewname)
         {
             IViewModel view = viewModels[GetindexByName(viewname)];
-            Application.Current.Resources.Remove(view.ViewId);
-            viewModels.Remove(view);
+            if (PrimaryViewModel!= view && SecondaryViewModel != view)
+            {
+                Application.Current.Resources.Remove(view.ViewId);
+                viewModels.Remove(view);
+            }
+            else
+            {
+                throw new Exception("The current view cannot be removed!");
+            }
+
         }
         public void AddView(IViewModel view, Type viewType)
         {
             Type viewModelType = view.GetType();
+            view.viewType = viewType;
             if (File.Exists(GlobalSettings.Settings.AssetsPath + "save\\Settings") && view is ISettings && !GlobalSettings.Settings.DisableSaving)
             {
                 view = (IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Settings", typeof(SettingsViewModel));
@@ -79,6 +88,7 @@ namespace Dungeon_of_hell
                 ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Reload, key = Key.R, Message = "R" });
 
             }
+            view.resetview += (string viewname) => { ResetView(viewname); };
             view.getview += (string viewname) => { return GetView(viewname); };
             view.addview += (IViewModel model, Type typeofview) => { AddView(model, typeofview); };
             view.removeview += (string viewname) => { RemoveView(viewname); };
@@ -108,6 +118,13 @@ namespace Dungeon_of_hell
             view.ViewId = key;
             viewModels.Add(view);
         }
+        public void ResetView(string viewname)
+        {
+            IViewModel v = viewModels[GetindexByName(viewname)];
+            viewModels.Remove(v);
+            Application.Current.Resources.Remove(v.ViewId);
+            AddView(v, v.viewType);
+        }
         public IViewModel GetView(string viewname)
         {
             return viewModels[GetindexByName(viewname)];
@@ -126,23 +143,28 @@ namespace Dungeon_of_hell
         {
 
             PrimaryViewModel = viewModels[GetindexByName(name)];
+            PrimaryViewModel.WhenSwitchedTo();
         }
         public void ChangePrimaryView(int index)
         {
             PrimaryViewModel = viewModels[index];
+            PrimaryViewModel.WhenSwitchedTo();
         }
         public void ChangeSecondaryView(int index)
         {
             SecondaryViewModel = viewModels[index];
+            SecondaryViewModel.WhenSwitchedTo();
         }
 
         public void ChangeSecondaryView(string name)
         {
             SecondaryViewModel = viewModels[GetindexByName(name)];
+            SecondaryViewModel.WhenSwitchedTo();
         }
         public void ClearSecondaryView()
         {
             SecondaryViewModel = null;
+            PrimaryViewModel.WhenSwitchedTo();
 
         }
         public T GetViewProperty<T>(string viewname, string propertyname)

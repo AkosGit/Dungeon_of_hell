@@ -63,5 +63,8 @@ namespace Dungeon_of_hell.MultiPlayer
 			Canvas.Height = 500;
 			Canvas.Background = Brushes.Gray;
 		}
+		public override void WhenSwitchedTo()
+		{
+		}
 	}
 }

@@ -61,8 +61,9 @@ namespace Dungeon_of_hell.Engine
 			Canvas.Background = Brushes.Gray;
 		}
 
-
-
-
-	}
+        public override void WhenSwitchedTo()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
