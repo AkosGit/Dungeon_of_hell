@@ -7,6 +7,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using Dungeon_of_hell.SinglePlayer;
+using Dungeon_of_hell.Story;
 using Utils;
 using System.Threading;
 
@@ -20,9 +21,8 @@ namespace Dungeon_of_hell
             NewGameView = new RelayCommand(() =>
             {
                 Audio_player.Play("menuSelect");
-                AddView(new SinglePlayerViewModel(false), typeof(SinglePlayerView));
-                AddView(new SingleplayerInGameMenuViewModel(), typeof(SingleplayerInGameMenuView));
-                ChangePrimaryView("Singleplayer");
+                AddView(new StoryViewModel(), typeof(StoryView));
+                ChangePrimaryView("Story");
             });
             LoadSaveView = new RelayCommand(() =>
             {
