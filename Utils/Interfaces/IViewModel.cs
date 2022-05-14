@@ -12,6 +12,7 @@ namespace Utils
         public Type viewType { get; set; }
         public string Name { get; set; }
         public object ViewId { get; set; }
+        public event Action closeapp;
         public event Func<string, IViewModel> getview;
         public event Action<IViewModel,Type> addview;
         public event Action<string> removeview;
@@ -31,6 +32,7 @@ namespace Utils
         /// <param name="viewname">View model's name.</param>
         public IViewModel GetView(string viewname);
         public void AddView(IViewModel model, Type typeofview);
+        public void CloseApp();
         public void RemoveView(string viewname);
         public bool ViewExists(string viewname);
         public void ChangePrimaryView(string viewname);

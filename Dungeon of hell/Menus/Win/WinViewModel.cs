@@ -7,7 +7,6 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using Dungeon_of_hell.SinglePlayer;
-using Dungeon_of_hell.MultiPlayer;
 using Utils;
 using System.Threading;
 using Raycasting_Engine;

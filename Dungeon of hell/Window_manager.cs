@@ -43,9 +43,9 @@ namespace Dungeon_of_hell
             AddTracks();
             GlobalSettings.Settings = new globalSettings();
             viewModels = new List<IViewModel>();
-            if(File.Exists(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings") && !GlobalSettings.Settings.DisableSaving)
+            if(File.Exists(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.json") && !GlobalSettings.Settings.DisableSaving)
             {
-                GlobalSettings.Settings = (globalSettings)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings.xml", typeof(globalSettings));
+                GlobalSettings.Settings = (globalSettings)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings", typeof(globalSettings));
             }
 
         }
@@ -72,9 +72,10 @@ namespace Dungeon_of_hell
         {
             Type viewModelType = view.GetType();
             view.viewType = viewType;
-            if (File.Exists(GlobalSettings.Settings.AssetsPath + "save\\Settings") && view is ISettings && !GlobalSettings.Settings.DisableSaving)
+            if (File.Exists(GlobalSettings.Settings.AssetsPath + "save\\Settings.json") && view is ISettings && !GlobalSettings.Settings.DisableSaving)
             {
-                view = (IViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Settings", typeof(SettingsViewModel));
+                SettingsViewModel v = (SettingsViewModel)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "save\\Settings", typeof(SettingsViewModel));
+                view = (IViewModel)v;
             }
             else if(view.Name=="Settings")
             {
@@ -88,6 +89,7 @@ namespace Dungeon_of_hell
                 ((ISettings)view).SingleplayerBindings.Add(new Binding() { Usecase = EntityActions.Reload, key = Key.R, Message = "R" });
 
             }
+            view.closeapp += () => { OnWindowClosing(this, null); Environment.Exit(0); };
             view.resetview += (string viewname) => { ResetView(viewname); };
             view.getview += (string viewname) => { return GetView(viewname); };
             view.addview += (IViewModel model, Type typeofview) => { AddView(model, typeofview); };
@@ -183,9 +185,6 @@ namespace Dungeon_of_hell
         }
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            if (ViewExists("Singleplayer")){
-                ((SinglePlayerViewModel)GetView("Singleplayer")).timer1.Stop();
-            }
             Audio_player.RemoveAll();
             ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\GlobalSettings", GlobalSettings.Settings);
             ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\Settings", (SettingsViewModel)GetView("Settings"));

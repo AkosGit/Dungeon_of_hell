@@ -16,8 +16,11 @@ namespace Dungeon_of_hell
         public Type viewType { get; set; }
         [JsonIgnore]
         public string Name { get; set; }
+
+
         [JsonIgnore]
         public object ViewId { get; set; }
+        public event Action closeapp;
         public event Action<string> changeprimaryviewEvent;
         public event Action<string> changesecondaryviewEvent;
         public event Action clearsecondviewEvent;
@@ -29,6 +32,10 @@ namespace Dungeon_of_hell
         public event Func<string, IViewModel> getview;
         public event Action<string> resetview;
 
+        public void CloseApp()
+        {
+            closeapp?.Invoke();
+        }
         public IViewModel GetView(string viewname)
         {
             return getview?.Invoke(viewname);
