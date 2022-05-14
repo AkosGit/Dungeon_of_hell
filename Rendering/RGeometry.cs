@@ -62,6 +62,20 @@ namespace Rendering
 			canvas.Children.Add(rect);
 
 		}
+		public static Rectangle GiveRectangle(int height, int width, int x, int y, System.Windows.Media.Brush brush)
+		{
+
+			Rectangle rect = new Rectangle
+			{
+				Stroke = brush,
+				StrokeThickness = 2,
+				Fill = brush,
+				Height = height,
+				Width = width
+			};
+			return rect;
+
+		}
 		//koordináták sorrendje: bal lent,bal fent,jobb fent,jobb lent
 		public static void DrawRectangle(Canvas canvas,double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, Brush color, Brush shadow, double thickness = 0)
 		{

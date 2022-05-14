@@ -62,10 +62,6 @@ namespace Dungeon_of_hell
                 Application.Current.Resources.Remove(view.ViewId);
                 viewModels.Remove(view);
             }
-            else
-            {
-                throw new Exception("The current view cannot be removed!");
-            }
 
         }
         public void AddView(IViewModel view, Type viewType)
