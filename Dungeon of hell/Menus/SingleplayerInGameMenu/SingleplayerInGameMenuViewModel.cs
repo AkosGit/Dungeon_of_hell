@@ -31,11 +31,21 @@ namespace Dungeon_of_hell
             MainMenuView = new RelayCommand(() =>
             {
                 Audio_player.Play("menuSelect");
-                Directory.Delete(GlobalSettings.Settings.AssetsPath + "save\\"+"Props",true);
+                Audio_player.StopAll();
+                if (Directory.Exists(GlobalSettings.Settings.AssetsPath + "save\\" + "Props"))
+                {
+                    Directory.Delete(GlobalSettings.Settings.AssetsPath + "save\\" + "Props", true);
+                }
+                if (Directory.Exists(GlobalSettings.Settings.AssetsPath + "save\\" + "Items"))
+                {
+                    Directory.Delete(GlobalSettings.Settings.AssetsPath + "save\\" + "Items", true);
+                }
+                if (Directory.Exists(GlobalSettings.Settings.AssetsPath + "save\\" + "Enemys"))
+                {
+                    Directory.Delete(GlobalSettings.Settings.AssetsPath + "save\\" + "Enemys", true);
+                }
                 Directory.CreateDirectory(GlobalSettings.Settings.AssetsPath + "save\\" + "Props");
-                Directory.Delete(GlobalSettings.Settings.AssetsPath + "save\\" + "Items", true);
                 Directory.CreateDirectory(GlobalSettings.Settings.AssetsPath + "save\\" + "Items");
-                Directory.Delete(GlobalSettings.Settings.AssetsPath + "save\\" + "Enemys", true);
                 Directory.CreateDirectory(GlobalSettings.Settings.AssetsPath + "save\\" + "Enemys");
                 foreach (Item item in GetViewProperty<List<Item>>("Singleplayer", "Items"))
                 {
@@ -56,7 +66,6 @@ namespace Dungeon_of_hell
                 RemoveView("Singleplayer");
                 ChangePrimaryView("MainMenu");
                 ClearSecondView();
-                Audio_player.StopAll();
                 RemoveView("SingleplayerInGameMenu");
             });
         }

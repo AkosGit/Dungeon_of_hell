@@ -59,7 +59,7 @@ namespace Dungeon_of_hell.SinglePlayer
 		{
 			StopTimer = false;
 			time = TimeSpan.FromDays(0);
-			timer1 = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 90), DispatcherPriority.Normal, delegate
+			timer1 = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 80), DispatcherPriority.Normal, delegate
 			{
 				if (StopTimer)
 				{
@@ -174,7 +174,7 @@ namespace Dungeon_of_hell.SinglePlayer
 						game.HUD.Inventory.AddItem((Shotgun)ObjectManager.Read(path, typeof(Shotgun)));
 
 					}
-					if (item.Contains("RedKey") || item.Contains("BlueKey"))
+					if (item.Contains("RedKey") || item.Contains("BlueKey") || item.Contains("YellowKey"))
 					{
 						Item i = (Item)ObjectManager.Read(path, typeof(Item));
 						i.UpdateBrushes();

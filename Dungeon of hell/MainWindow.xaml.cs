@@ -41,7 +41,7 @@ namespace Dungeon_of_hell
 			string imgDestinationFile = $"{GlobalSettings.Settings.AssetsPath}img\\";
 			string soundSourceFile = $"{System.IO.Path.GetFullPath(System.IO.Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\"))}Rendering\\Assets\\sound\\";
 			string soundDestinationFile = $"{GlobalSettings.Settings.AssetsPath}sound\\";
-
+			string saveDestination = $"{GlobalSettings.Settings.AssetsPath}save\\";
 			if (System.IO.Directory.Exists(imgSourceFile) && System.IO.Directory.Exists(soundSourceFile))
 			{
 				if (System.IO.Directory.Exists(imgDestinationFile)) System.IO.Directory.Delete(imgDestinationFile, true);
@@ -50,7 +50,10 @@ namespace Dungeon_of_hell
 				CopyDirectory(imgSourceFile, imgDestinationFile, true);
 				CopyDirectory(soundSourceFile, soundDestinationFile, true);
 			}
-
+			if (!Directory.Exists(saveDestination))
+			{
+				Directory.CreateDirectory(saveDestination);
+			}
 
 			if (bool.Parse(ConfigurationManager.AppSettings.Get("IsTest")) == true)
 			{

@@ -8,9 +8,10 @@
     <Viewbox>
         <StackPanel MinHeight="350" Style="{StaticResource Stack}">
             <TextBlock Text="You win!" VerticalAlignment="Center" FontSize="40">
-                
             </TextBlock>
-            <Button Width="100" Height="20" Content="PlayAgain" Style="{StaticResource MenuButton}" Command="{Binding Respawn}">
+            <TextBlock Text="{Binding Credits ,StringFormat='Credits: {0}'}" VerticalAlignment="Center" FontSize="40">
+            </TextBlock>
+            <Button Width="100" Height="20" Content="Play Again" Style="{StaticResource MenuButton}" Command="{Binding Respawn}">
             </Button>
             <Button Width="100" Height="20" Content="Quit" Style="{StaticResource MenuButton}" Command="{Binding Quit}">
              </Button>

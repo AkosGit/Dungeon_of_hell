@@ -37,6 +37,7 @@ namespace Raycasting_Engine
 		protected Canvas canvas;
 		protected Player player;
 		public MapObject[] map;
+		public RenderGame renderer;
 		public int mapX;
 		public int mapY;
 		public int mapS;
@@ -52,11 +53,15 @@ namespace Raycasting_Engine
 		protected Item key;
 		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string map,Player p, List<EntityObject> entities)
 		{
-
 			MapManager = new MapManager();
 			HUD = new UI(hud, Inventoryslots, defitem);
+			renderer = new RenderGame(canvas, HUD, (bool isready) => { IsReady = isready; });
+			TextBlock t = new TextBlock();
 			this.canvas = canvas;
-            if (p != null)
+			renderer.AddSubtitles("Hello there");
+			//t.Text = "Overlay test";
+			//renderer.AddOverlay(new Overlay { Duration = 100, Pos = new Point(0, 0), Element = t, IsFront = false });
+			if (p != null)
             {
 				LoadMapToInGameMap(MapManager.GetMap(map),p,entities);
 			}
@@ -185,8 +190,7 @@ namespace Raycasting_Engine
 			IsReady = false;
 			//drawMap2D();
 			//DrawPayer();
-			//Canvas.Width = 722;
-			//Canvas.Height = 500;
+
 			//canvas.Children.Clear();
 			//RGeometry.DrawRectangle(canvas, 0, 250, 722, 250, 722, 500, 0, 500, Brushes.Aqua, Brushes.Transparent);
 			if (player.GridX == finishzone.X && player.GridY == finishzone.Y && HUD.Inventory.Items.Contains(key))
@@ -435,9 +439,11 @@ namespace Raycasting_Engine
 				//renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO - entity.Height), new Point(r * 9 + MoveRight + (entity.Width / 2), lineH + lineO), new Point(r * 9 + MoveRight - (entity.Width / 2), lineH + lineO), Brushes.Green, entityH));
 
 			}
-			//sorting items in order of height: back to fron rendering of objects
-			renderingList = renderingList.OrderBy(x => x.Value.Min(z => { if (z is RenderEntity) return (z as RenderEntity).originalWallHeight; else return z.Height; })).ToDictionary(z => z.Key, y => y.Value);
-			RenderGame render = new RenderGame(canvas, HUD, renderingList, (bool ready) => { IsReady = ready; });
+            //sorting items in order of height: back to fron rendering of objects
+            //if (renderingList.Count == 1) { MessageBox.Show("dsdsds"); }
+			renderer.DoRender(
+				renderingList.OrderBy(x => x.Value.Min(z => { if (z is RenderEntity) return (z as RenderEntity).originalWallHeight; else return z.Height; })).ToDictionary(z => z.Key, y => y.Value));
+			renderingList.Clear();
 		}
 		float sign(PointF p1, PointF p2, PointF p3)
 		{

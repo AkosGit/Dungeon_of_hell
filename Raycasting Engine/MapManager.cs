@@ -450,7 +450,7 @@ namespace Raycasting_Engine
 
         public Rock() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
         {
-            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall 1.jpg";
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall_1.jpg";
         }
     }
     //between map
@@ -460,7 +460,7 @@ namespace Raycasting_Engine
 
         public Between1() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
         {
-            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall 3.jpg";
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall_3.jpg";
         }
     }
     public class Between2 : MapObject
@@ -468,7 +468,7 @@ namespace Raycasting_Engine
 
         public Between2() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
         {
-            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall 4.jpg";
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall_4.jpg";
         }
     }
     public class Between3 : MapObject
@@ -476,7 +476,7 @@ namespace Raycasting_Engine
 
         public Between3() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
         {
-            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall 5 .jpg";
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall_5_.jpg";
         }
     }
     public class Between4 : MapObject
@@ -484,7 +484,7 @@ namespace Raycasting_Engine
 
         public Between4() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
         {
-            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall 8.jpg";
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall_8.jpg";
         }
     }
     public class BrickBetween : MapObject
@@ -492,7 +492,7 @@ namespace Raycasting_Engine
 
         public BrickBetween() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
         {
-            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Brick-lava wall 8.jpg";
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Brick-lava_wall_8.jpg";
         }
     }
     public class BrickBetween2 : MapObject
@@ -500,7 +500,7 @@ namespace Raycasting_Engine
 
         public BrickBetween2() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
         {
-            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Brick-lava wall 2.jpg";
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Brick-lava_wall_2.jpg";
         }
     }
     public class WoodBetween : MapObject
@@ -508,7 +508,7 @@ namespace Raycasting_Engine
 
         public WoodBetween() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
         {
-            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wood-lava Wall 1.jpg";
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wood-lava Wall_1.jpg";
         }
     }
     public class WoodBetween2 : MapObject
@@ -516,7 +516,7 @@ namespace Raycasting_Engine
 
         public WoodBetween2() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
         {
-            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wood-lava Wall 2.jpg";
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wood-lava Wall_2.jpg";
         }
     }
     //uni walls
@@ -526,7 +526,7 @@ namespace Raycasting_Engine
 
         public InBetweenUni() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
         {
-            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall 2.jpg";
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wall_2.jpg";
         }
     }
     public class Window : MapObject
@@ -534,7 +534,7 @@ namespace Raycasting_Engine
 
         public Window() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
         {
-            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Window Wall .jpg";
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Window_Wall_.jpg";
         }
     }
     public class Wood : MapObject
@@ -542,14 +542,14 @@ namespace Raycasting_Engine
 
         public Wood() : base(0, 0, Color.FromArgb(255, 130, 160, 255), true)
         {
-            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wood Wall.jpg";
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Wood_Wall.jpg";
         }
     }
     public class Brick : MapObject
     {
         public Brick() : base(0, 0, Color.FromArgb(255, 226, 107, 139), true)
         {
-            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Brick Wall.jpg";
+            this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Walls\\Brick_Wall.jpg";
         }
     }
     public class Air : MapObject
@@ -561,6 +561,7 @@ namespace Raycasting_Engine
         public Door() : base(0, 0, Color.FromArgb(255, 123, 70, 23), true, true)
         {
             this.image = $"{GlobalSettings.Settings.AssetsPath}img\\Door.jpg";
+
         }
 
     }

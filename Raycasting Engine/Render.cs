@@ -23,18 +23,100 @@ namespace Raycasting_Engine
 		public PointCollection p;
 
 	}
+	//overlay can be added to two queues with duration
+	public class Overlay
+    {
+		public int Duration;
+		public UIElement Element;
+		//left up
+		public Point Pos;
+		public bool IsFront;
+    }
 	public class RenderGame
     {
 		Canvas canvas;
 		UI HUD;
 		Action<bool> Isready;
-		public RenderGame(Canvas canvas, UI HUD, Dictionary<GameObject, List<RenderObject>> renderlist, Action<bool> Isready)
+		Dictionary<string, Bitmap> images;
+		Overlay currentOverlayFront;
+		Overlay currentOverlayBack;
+		Queue<Overlay> frontOverlay;
+		Queue<Overlay> backOverlay;
+		const int WIDTH = 722;
+		const int HEIGHT = 500;
+		public RenderGame(Canvas canvas, UI HUD, Action<bool> Isready)
         {
 			this.canvas = canvas;
 			this.HUD = HUD;
 			this.Isready = Isready;
-			DoRender(renderlist);
-        }
+			images = new Dictionary<string, Bitmap>();
+			frontOverlay = new Queue<Overlay>();
+			backOverlay = new Queue<Overlay>();
+			currentOverlayBack = new Overlay { Duration = 0 };
+			currentOverlayFront = new Overlay { Duration = 0 };
+		}
+		public void AddOverlay(Overlay overlay)
+		{
+            if (overlay.IsFront)
+            {
+				frontOverlay.Enqueue(overlay);
+            }
+            else
+            {
+				backOverlay.Enqueue(overlay);
+            }
+		}
+		public void AddSubtitles(string text)
+        {
+			StackPanel stackOuter = new StackPanel();
+			StackPanel stackInner = new StackPanel();
+			stackOuter.Width = WIDTH;
+			//stackInner.Background= new SolidColorBrush(Color.FromArgb((byte)0.47, 94, 0, 12));
+			stackInner.Background = new SolidColorBrush(Colors.Blue);
+			TextBlock textBlock2 = new TextBlock();
+			textBlock2.Margin = new Thickness(5);
+			textBlock2.Text = text;
+			textBlock2.FontSize = 25;
+			textBlock2.HorizontalAlignment = HorizontalAlignment.Center;
+			textBlock2.VerticalAlignment = VerticalAlignment.Center;
+			stackInner.VerticalAlignment = VerticalAlignment.Center;
+			stackInner.HorizontalAlignment = HorizontalAlignment.Center;
+			textBlock2.Foreground = new SolidColorBrush(Colors.Black);
+			stackInner.Children.Add(textBlock2);
+			stackOuter.Children.Add(stackInner);
+			Point p = new Point();
+			p.X = 0;
+			p.Y = HEIGHT - 100;
+			AddOverlay(new Overlay {IsFront=false, Duration=200, Element=stackOuter, Pos=p });
+		}
+		void displayOverlays()
+        {
+            if (currentOverlayBack.Duration == 0 && backOverlay.Count!=0)
+            {
+				currentOverlayBack = backOverlay.Dequeue();
+
+			}
+			if (currentOverlayFront.Duration == 0 && frontOverlay.Count != 0)
+			{
+				currentOverlayFront = frontOverlay.Dequeue();
+
+			}
+			//inprogress
+			if (currentOverlayBack.Duration != 0) {
+				currentOverlayBack.Duration--;
+				canvas.Children.Add(currentOverlayBack.Element);
+				Canvas.SetLeft(currentOverlayBack.Element, currentOverlayBack.Pos.X);
+				Canvas.SetTop(currentOverlayBack.Element, currentOverlayBack.Pos.Y);
+			}
+			//inprogress
+			if (currentOverlayFront.Duration != 0)
+			{
+				currentOverlayFront.Duration--;
+				canvas.Children.Add(currentOverlayFront.Element);
+				Canvas.SetLeft(currentOverlayFront.Element, currentOverlayFront.Pos.X);
+				Canvas.SetTop(currentOverlayFront.Element, currentOverlayFront.Pos.Y);
+			}
+		}
 		public void RenderItem()
 		{
 			Brush Selected = HUD.Inventory.SelectedItem.Holding;
@@ -69,13 +151,24 @@ namespace Raycasting_Engine
 				RGeometry.DrawRectangle(canvas, pos, canvas.ActualHeight, pos, canvas.Height - itemh, pos + itemw, canvas.Height - itemh, pos + itemw, canvas.Height, Selected, Brushes.Transparent);
 			}
 		}
-		async void DoRender(Dictionary<GameObject, List<RenderObject>> renderingList)
+		public async void DoRender(Dictionary<GameObject, List<RenderObject>> renderingList)
 		{
 			Color shadow = Color.FromArgb(50, 0, 0, 0);
 			List<Task<System.Drawing.Bitmap>> tasks = new List<Task<System.Drawing.Bitmap>>();
 			List<PointCollection> points = new List<PointCollection>();
 			List<Brush> shadows = new List<Brush>();
 			List<GameObject> objs = new List<GameObject>();
+			//if not presenet in images dict add it
+			var mapPaths = renderingList.Where(z => (z.Key is MapObject) && !images.ContainsKey(((MapObject)z.Key).image)).Select(z => ((MapObject)z.Key).image).Distinct().ToList();
+			var enitityPaths = renderingList.Where(z => (z.Key is EntityObject) && !images.ContainsKey(((EntityObject)z.Key).textures[((EntityObject)z.Key).actualTexture])).Select(z => ((EntityObject)z.Key).textures[((EntityObject)z.Key).actualTexture]).Distinct().ToList();
+			foreach (var item in mapPaths)
+			{
+				images.Add(item, new Bitmap(item));
+			}
+			foreach (var item in enitityPaths)
+			{
+				images.Add(item, new Bitmap(item));
+			}
 			foreach (var item in renderingList)
 			{
 				//Seperate each visible side of obj
@@ -86,7 +179,7 @@ namespace Raycasting_Engine
 					if (item.Key is MapObject)
 					{
 						string texture = ((MapObject)item.Key).image;
-						RenderResult r = RenderSide(item.Key, SideA, Side.horizontal, texture);
+						RenderResult r = RenderSide(item.Key, SideA, Side.horizontal, images[texture].Clone(new System.Drawing.Rectangle(0, 0, images[texture].Width, images[texture].Height), images[texture].PixelFormat));
 						tasks.Add(r.task);
 						points.Add(r.p);
 						shadows.Add(Brushes.Transparent);
@@ -94,7 +187,8 @@ namespace Raycasting_Engine
 					}
 					else if (item.Key is EntityObject)
 					{
-						RenderResult r = RenderSide(item.Key, SideA, Side.horizontal, ((EntityObject)item.Key).textures[((EntityObject)item.Key).actualTexture]);
+						var texture = ((EntityObject)item.Key).textures[((EntityObject)item.Key).actualTexture];
+						RenderResult r = RenderSide(item.Key, SideA, Side.horizontal, images[texture].Clone(new System.Drawing.Rectangle(0, 0, images[texture].Width, images[texture].Height), images[texture].PixelFormat));
 						tasks.Add(r.task);
 						points.Add(r.p);
 						shadows.Add(Brushes.Transparent);
@@ -106,7 +200,7 @@ namespace Raycasting_Engine
 					if (item.Key is MapObject)
 					{
 						string texture = ((MapObject)item.Key).image;
-						RenderResult r = (RenderSide(item.Key, SideB, Side.vertical, texture));
+						RenderResult r = (RenderSide(item.Key, SideB, Side.vertical, images[texture].Clone(new System.Drawing.Rectangle(0, 0, images[texture].Width, images[texture].Height), images[texture].PixelFormat)));
 						tasks.Add(r.task);
 						points.Add(r.p);
 						shadows.Add(new SolidColorBrush(shadow));
@@ -121,7 +215,7 @@ namespace Raycasting_Engine
 			{
 				//apply image to brush
 				ImageBrush imgbrush = new ImageBrush();
-				((ImageBrush)imgbrush).Stretch = Stretch.Fill;
+				//((ImageBrush)imgbrush).Stretch = Stretch.None;
 				((ImageBrush)imgbrush).ImageSource = RUtils.ImageSourceFromBitmap(tasks[i].Result);
 				//draw polygon
 				Polygon myPolygon = new Polygon();
@@ -152,17 +246,22 @@ namespace Raycasting_Engine
 				}
 				canvas.Children.Add(myPolygon);
 				canvas.Children.Add(myPolygon2);
-				tasks[i].Result.Dispose();
+
+				tasks[i].Result.Dispose();				
 			}
 			RenderItem();
+			displayOverlays();
 			Isready?.Invoke(true);
 			tasks.Clear();
 			points.Clear();
 			objs.Clear();
+			images.Clear();
+			shadows.Clear();
+			enitityPaths.Clear();
+			mapPaths.Clear();
 		}
-		System.Drawing.Bitmap MakeImage(string texture, double percentVisible, PointCollection myPointCollection, List<RenderObject> render, bool IsWall)
+		System.Drawing.Bitmap MakeImage(Bitmap s, double percentVisible, PointCollection myPointCollection, List<RenderObject> render, bool IsWall)
 		{
-			Bitmap s = new Bitmap(texture);
             if (!IsWall)
             {
 				return s;
@@ -172,6 +271,7 @@ namespace Raycasting_Engine
 			cropRect.Width = with;
 			cropRect.Height = s.Height;
 			Bitmap bit = new Bitmap(with, s.Height);
+			//if left side is not visible so texturing dosent start from the left side
 			using (Graphics gdi = Graphics.FromImage(bit))
 			{
 				//if left side is not visible so texturing dosent start from the left side
@@ -191,34 +291,18 @@ namespace Raycasting_Engine
 					gdi.DrawImage(s, -cropRect.X, -cropRect.Y);
 				}
 			}
-			//a new bitmap is required to flip the image back
-			Bitmap bit2 = new Bitmap(bit.Width, bit.Height);
-			using (Graphics gdi = Graphics.FromImage(bit2))
-			{
-				if (render.First().ScreenP1.X == 0 && percentVisible < 0.8)
-				{
-					float centerX = bit.Width / 2F;
-					float centerY = bit.Height / 2F;
-					gdi.TranslateTransform(centerX, centerY);
-					gdi.RotateTransform(180.0F);
-					gdi.TranslateTransform(-centerX, -centerY);
-					gdi.DrawImage(bit, 0, 0);
-				}
-				else
-				{
-					gdi.DrawImage(bit, 0, 0);
-				}
-
-			}
-			bit.Dispose();
 			//Transform by 4 corners
+			if (render.First().ScreenP1.X == 0 && percentVisible < 0.8)
+			{
+				bit.RotateFlip(RotateFlipType.Rotate180FlipNone);
+			}
 			Rendering.FreeTransform transform = new Rendering.FreeTransform();
-			transform.Bitmap = bit2;
-			bit2.Dispose();
+			transform.Bitmap = bit;
+			bit.Dispose();
 			transform.FourCorners = RUtils.PointsToPointF(myPointCollection);
-			return transform.Bitmap;
-		}
-		RenderResult RenderSide(GameObject obj,List<RenderObject> render, Side side, string texture)
+			return transform.Bitmap;		
+			}
+		RenderResult RenderSide(GameObject obj,List<RenderObject> render, Side side, Bitmap texture)
 		{
 			Color shadow = Color.FromArgb(50, 0, 0, 0);
 			double percentVisible;
@@ -248,15 +332,28 @@ namespace Raycasting_Engine
 			Point Point2 = new Point(render.Last().ScreenP2.X, render.Last().ScreenP2.Y);
 			Point Point3 = new Point(render.Last().ScreenP3.X, render.Last().ScreenP3.Y);
 			Point Point4 = new Point(render.First().ScreenP4.X, render.First().ScreenP4.Y);
-
+			//StackPanel stack = new StackPanel();
+			//stack.Width = 100;
+			//stack.Height = 20;
+			//TextBlock textBlock2 = new TextBlock();
+			//textBlock2.Text = "dfdffffffffffff";
+			//textBlock2.FontSize = 25;
+			//textBlock2.HorizontalAlignment = HorizontalAlignment.Center;
+			//textBlock2.VerticalAlignment = VerticalAlignment.Center;
+			//textBlock2.Foreground = new SolidColorBrush(Colors.Black);
+			//stack.Children.Add(textBlock2);
+			//canvas.Children.Add(stack);
+			//Canvas.SetLeft(stack, Point2.X);
+			//Canvas.SetTop(stack, Point2.Y);
 			PointCollection myPointCollection = new PointCollection();
 			myPointCollection.Add(Point1);
 			myPointCollection.Add(Point2);
 			myPointCollection.Add(Point3);
 			myPointCollection.Add(Point4);
-			var copy=render.Select(x => (RenderObject)x.Clone()).ToList();
+			var RenderCopy=render.Select(x => (RenderObject)x.Clone()).ToList();
 			render.Clear();
-			Task<System.Drawing.Bitmap> task = Task.Run(() => { return MakeImage((string)RUtils.DeepCopy(texture), percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), copy, (obj is MapObject)); });
+			Task<System.Drawing.Bitmap> task = Task.Run(() => { return MakeImage(texture, percentVisible, (PointCollection)RUtils.DeepCopy(myPointCollection), RenderCopy, (obj is MapObject)); });
+			
 			return new RenderResult() { p = myPointCollection, task = task };
 		}
     }
