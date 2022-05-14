@@ -288,7 +288,7 @@ namespace Raycasting_Engine
             enemy6.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(enemy6);
 
-            Enemy enemy7 = new Enemy(14, 5, map1.MapS, "Szoftver fejlesztés", 360, 240);
+            Enemy enemy7 = new Enemy(14, 5, map1.MapS, "Szoftver fejlesztés2", 360, 240);
             enemy7.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_stand.png");
             enemy7.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_1.png");
             enemy7.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\Enemy\\Enemy_Walk_2.png");
@@ -297,9 +297,7 @@ namespace Raycasting_Engine
             enemy7.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(enemy7);
 
-            Props health2 = new Props(1, 2, map1.MapS, "Medkit", 120, 230, PropType.heal);
-            health2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\medkit.png");
-            entities.Add(health2);
+            entities.Add(Props.MakeMedkit(1, 2));
 
             Props redKey = new Props(14, 12, map1.MapS, "YellowKey", 100, 150, PropType.key);
             redKey.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\KeyCard_2.png");
@@ -422,14 +420,8 @@ namespace Raycasting_Engine
             enemy8.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\enemyDead.png");
             entities.Add(enemy8);
 
-            Props health1 = new Props(1, 13, map1.MapS, "Medkit1", 120, 230, PropType.heal);
-            health1.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\medkit.png");
-            entities.Add(health1);
-
-            Props health2 = new Props(14, 14, map1.MapS, "Medkit2", 120, 230, PropType.heal);
-            health2.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\medkit.png");
-            entities.Add(health2);
-
+            entities.Add(Props.MakeMedkit(1, 13));
+            entities.Add(Props.MakeMedkit(14, 14));
 
             Props redKey = new Props(1, 3, map1.MapS, "YellowKey", 100, 150, PropType.key);
             redKey.textures.Add($"{GlobalSettings.Settings.AssetsPath}img\\KeyCard_3.png");
