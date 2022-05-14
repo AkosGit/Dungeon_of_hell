@@ -306,6 +306,7 @@ namespace Raycasting_Engine
             entities.Add(redKey);
 
             entities.Add(Props.MakeKredit(2, 13));
+            entities.Add(Props.MakeAmmoBox(13, 6));
             entities.Add(Props.MakeProp(2, 2, "bottle_3"));
             entities.Add(Props.MakeProp(4, 5, "bottle_1"));
             entities.Add(Props.MakeProp(10, 7, "bottle_2"));
@@ -435,6 +436,7 @@ namespace Raycasting_Engine
             entities.Add(redKey);
 
             entities.Add(Props.MakeKredit(2, 13));
+            entities.Add(Props.MakeAmmoBox(13, 6));
             entities.Add(Props.MakeProp(2, 2, "bottle_3"));
             entities.Add(Props.MakeProp(6, 5, "bottle_1"));
             entities.Add(Props.MakeProp(10, 7, "bottle_2"));
