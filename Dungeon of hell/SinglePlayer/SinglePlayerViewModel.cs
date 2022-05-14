@@ -176,23 +176,25 @@ namespace Dungeon_of_hell.SinglePlayer
 				foreach (string item in files)
 				{
 					string path = item.Replace(".json", "");
-					if (item.Contains("pistol"))
-					{
-						Pistol pistol = (Pistol)ObjectManager.Read(path, typeof(Pistol));
-						game.HUD.Inventory.AddItem(pistol);
+					if(item.Contains("pistol") || item.Contains("shotgun"))
+                    {
+						if (item.Contains("pistol"))
+						{
+							Pistol pistol = (Pistol)ObjectManager.Read(path, typeof(Pistol));
+							game.HUD.Inventory.AddItem(pistol);
 
-					}
-					if (item.Contains("shotgun"))
-					{
-						game.HUD.Inventory.AddItem((Shotgun)ObjectManager.Read(path, typeof(Shotgun)));
+						}
+						if (item.Contains("shotgun"))
+						{
+							game.HUD.Inventory.AddItem((Shotgun)ObjectManager.Read(path, typeof(Shotgun)));
 
+						}
 					}
-					if (item.Contains("RedKey") || item.Contains("BlueKey") || item.Contains("YellowKey"))
-					{
+                    else
+                    {
 						Item i = (Item)ObjectManager.Read(path, typeof(Item));
 						i.UpdateBrushes();
 						game.HUD.Inventory.AddItem(i);
-
 					}
 				}
 				game.HUD.Inventory.SelectItem(game.HUD.Inventory.GetItemByIndex(0));
