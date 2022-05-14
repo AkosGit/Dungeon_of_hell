@@ -388,7 +388,13 @@ namespace Raycasting_Engine
 							if ((entity as Enemy).IsEnemyDead) { (entity as Enemy).EnemyIsDead(); player.Credit += (entity as Enemy).Credit; HUD.UpdateCredit(player.Credit); }
 							if (!(entity as Enemy).IsActive) (entity as Enemy).Activate();
 							else (entity as Enemy).Move(new Rendering.Vector(new PointF((float)entity.X, (float)entity.Y), new PointF((float)player.X, (float)player.Y)), map, mapX, mapY);
-							if ((entity as Enemy).CanShoot) if(player.Hit()) PayerWindowActionHelperHurt();
+							if ((entity as Enemy).CanShoot) if (player.Hit()) renderer.AddOverlay(new Overlay()
+							{
+								Element = RGeometry.GiveRectangle(500, 720, 0, 0, new SolidColorBrush(Color.FromArgb((byte)175, (byte)136, (byte)8, (byte)8))),
+								Pos = new Point(0, 0),
+								Duration = 2
+							});
+							//PayerWindowActionHelperHurt();
 						}
 					}
 					renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(PlaceOnScreenX - (entity.Width / 2) / (500 / entityH), (entityH + entityO) - entity.Height / (500 / entityH)), new Point(PlaceOnScreenX + (entity.Width / 2) / (500 / entityH), (entityH + entityO) - entity.Height / (500 / entityH)), new Point(PlaceOnScreenX + (entity.Width / 2) / (500 / entityH), entityH + entityO), new Point(PlaceOnScreenX - (entity.Width / 2) / (500 / entityH), entityH + entityO), Brushes.Green, entityH));
@@ -402,7 +408,13 @@ namespace Raycasting_Engine
 						{
 							Player.Heal();
 							entities.Remove(entity);
-							PayerWindowActionHelperHeal();
+							renderer.AddOverlay(new Overlay() 
+							{ 
+								Element = RGeometry.GiveRectangle(500, 720, 0, 0, new SolidColorBrush(Color.FromArgb((byte)175, (byte)108, (byte)125, (byte)67))),
+								Pos = new Point(0, 0),
+								Duration = 2 
+							});
+							//PayerWindowActionHelperHeal();
 						}
 
 						if ((entity as Props).Type == PropType.ammo)
