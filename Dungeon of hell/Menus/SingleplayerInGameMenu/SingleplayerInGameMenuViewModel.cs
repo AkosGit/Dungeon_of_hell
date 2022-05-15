@@ -63,9 +63,9 @@ namespace Dungeon_of_hell
                     ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "save\\Props\\" + item.Name, item);
                 }
                 ObjectManager.Write(GlobalSettings.Settings.AssetsPath + "\\save\\" + "Player", GetViewProperty<Player>("Singleplayer", "Player"));
-                RemoveView("Singleplayer");
                 ChangePrimaryView("MainMenu");
                 ClearSecondView();
+                RemoveView("Singleplayer");
                 RemoveView("SingleplayerInGameMenu");
             });
         }
