@@ -93,7 +93,16 @@ namespace Raycasting_Engine
 			mapY = map.MapY;
 			mapS = map.MapS;
 			Mapname = map.MapName;
+			int kredit = map.Player.Credit;
+			int health = map.Player.Health;
+			if (player != null)
+			{
+				kredit = player.Credit;
+				health = player.Health;
+			}
 			this.player = map.Player;
+			player.Credit = kredit;
+			player.Health = health;
 			entities = map.EntityMap.ToList();
 			finishzone = map.FinishZone;
 			key = map.Key;
