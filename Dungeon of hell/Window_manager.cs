@@ -121,7 +121,8 @@ namespace Dungeon_of_hell
             IViewModel v = viewModels[GetindexByName(viewname)];
             viewModels.Remove(v);
             Application.Current.Resources.Remove(v.ViewId);
-            AddView(v, v.viewType);
+            AddView((IViewModel)Activator.CreateInstance(v.GetType()), v.viewType);
+            ChangePrimaryView(v.Name);
         }
         public IViewModel GetView(string viewname)
         {

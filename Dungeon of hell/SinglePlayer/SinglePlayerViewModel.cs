@@ -26,9 +26,9 @@ namespace Dungeon_of_hell.SinglePlayer
 
 		//for saving
 		public bool LoadSave { get; set; }
-		public Player Player { get { return game.Player; }}
-		public List<Item> Items { get { return game.HUD.Inventory.items; }}
-		public List<Enemy> Enemys { get { return game.entities.Where(z=> !(z is Props)).Select(y=>((Enemy)y)).ToList(); } }
+		public Player Player { get { return game.Player; } }
+		public List<Item> Items { get { return game.HUD.Inventory.items; } }
+		public List<Enemy> Enemys { get { return game.entities.Where(z => !(z is Props)).Select(y => ((Enemy)y)).ToList(); } }
 		public List<Props> Props { get { return game.entities.Where(z => z is Props).Select(y => ((Props)y)).ToList(); } }
 
 		protected SPMain game;
@@ -39,7 +39,7 @@ namespace Dungeon_of_hell.SinglePlayer
 		private Canvas hud;
 		public ObservableCollection<Binding> binds;
 		public Canvas HUD { get { return hud; } set { SetProperty(ref hud, value); } }
-		public Canvas Canvas { get { return canvas; } set { SetProperty(ref canvas, value); } } 
+		public Canvas Canvas { get { return canvas; } set { SetProperty(ref canvas, value); } }
 		public SinglePlayerViewModel(bool load)
 		{
 			Name = "Singleplayer";
@@ -47,12 +47,24 @@ namespace Dungeon_of_hell.SinglePlayer
 			SetDefaults();
 			StartGame();
 		}
+		public SinglePlayerViewModel()
+		{
+			Name = "Singleplayer";
+			LoadSave = false;
+			SetDefaults(true);
+			StartGame();
+		}
 		public override void KeyDown(object sender, KeyEventArgs e)
 		{
+			if (e.Key == Key.U)
+			{
+				game.IsWin = true;
+			}
 			ObservableCollection<Binding> sb = GetViewProperty<ObservableCollection<Binding>>("Settings", "SingleplayerBindings");
-			if (e.Key == Key.Escape) {
+			if (e.Key == Key.Escape)
+			{
 				timer1.Stop();
-				ChangeSecondaryView("SingleplayerInGameMenu"); 
+				ChangeSecondaryView("SingleplayerInGameMenu");
 			}
 			else if (game.HUD.Inventory.InvKeys.Contains(e.Key))
 			{
@@ -82,7 +94,7 @@ namespace Dungeon_of_hell.SinglePlayer
 						if (k.Usecase is EntityActions)
 						{
 							game.Player.Move(k.key, game.map, game.mapX, game.mapY, (EntityActions)binds.FirstOrDefault(x => x.key == k.key).Usecase);
-							
+
 							if (game.HUD.Inventory.SelectedItem is FireArm)
 							{
 								((FireArm)game.HUD.Inventory.SelectedItem).Walking();
@@ -122,12 +134,11 @@ namespace Dungeon_of_hell.SinglePlayer
 					Audio_player.StopAll();
 					if (game.Player.Credit < 62)
 					{
-						MessageBox.Show($"You have only {game.Player.Credit}, you need 62 credits to complete this semester!");
+						ChangePrimaryView("MainMenu");
 						ResetView("Singleplayer");
-						ChangePrimaryView("Singleplayer");
 					}
-                    else
-                    {
+					else
+					{
 						AddView(new WinViewModel(game.Player.Credit), typeof(WinView));
 						ChangePrimaryView("Win"); ;
 					}
@@ -135,7 +146,7 @@ namespace Dungeon_of_hell.SinglePlayer
 			}, Application.Current.Dispatcher);
 			timer1.Start();
 		}
-		private void SetDefaults()
+		private void SetDefaults(bool IsFucked = false)
 		{
 			canvas = new Canvas();
 			hud = new Canvas();
@@ -143,10 +154,10 @@ namespace Dungeon_of_hell.SinglePlayer
 			hud.Height = 722;
 			hud.Background = Brushes.DarkRed;
 			string map = "map1";
-			Player p=null;
+			Player p = null;
 			List<EntityObject> entities = new List<EntityObject>();
 			if (LoadSave)
-            {
+			{
 				if (File.Exists(GlobalSettings.Settings.AssetsPath + "\\save\\" + "Player.json"))
 				{
 					p = (Player)ObjectManager.Read(GlobalSettings.Settings.AssetsPath + "\\save\\" + "Player", typeof(Player));
@@ -171,15 +182,15 @@ namespace Dungeon_of_hell.SinglePlayer
 			Canvas.Width = 722;
 			Canvas.Height = 500;
 			Canvas.Background = Brushes.Gray;
-            if (LoadSave)
-            {
+			if (LoadSave)
+			{
 				game.HUD.Inventory.items.Clear();
 				string[] files = Directory.GetFiles(GlobalSettings.Settings.AssetsPath + "\\save\\Items");
 				foreach (string item in files)
 				{
 					string path = item.Replace(".json", "");
-					if(item.Contains("pistol") || item.Contains("shotgun"))
-                    {
+					if (item.Contains("pistol") || item.Contains("shotgun"))
+					{
 						if (item.Contains("pistol"))
 						{
 							Pistol pistol = (Pistol)ObjectManager.Read(path, typeof(Pistol));
@@ -192,8 +203,8 @@ namespace Dungeon_of_hell.SinglePlayer
 
 						}
 					}
-                    else
-                    {
+					else
+					{
 						Item i = (Item)ObjectManager.Read(path, typeof(Item));
 						i.UpdateBrushes();
 						game.HUD.Inventory.AddItem(i);
@@ -202,6 +213,21 @@ namespace Dungeon_of_hell.SinglePlayer
 				game.HUD.Inventory.SelectItem(game.HUD.Inventory.GetItemByIndex(0));
 			}
 			game.HUD.UpdateAmmo();
+			if (IsFucked) game.renderer.AddSubtitles("You hadn't got enough credits. You need atleast 62 credits to complete this semester!");
+			else
+			{
+				string forward = bindings.Where(x => x.Usecase == EntityActions.Forward).First().Message;
+				string back = bindings.Where(x => x.Usecase == EntityActions.Backwards).First().Message;
+				string left = bindings.Where(x => x.Usecase == EntityActions.Left).First().Message;
+				string right = bindings.Where(x => x.Usecase == EntityActions.Right).First().Message;
+				string shoot = bindings.Where(x => x.Usecase == EntityActions.Shoot).First().Message;
+				string reload = bindings.Where(x => x.Usecase == EntityActions.Reload).First().Message;
+				game.renderer.AddSubtitles($"You can go forward with {forward} and backwards with {back}");
+				game.renderer.AddSubtitles($"Left is {left} and right is {right}.");
+				game.renderer.AddSubtitles($"You can shoot with {shoot} and reload with {reload}.");
+				game.renderer.AddSubtitles($"Your objective is to get credits by eliminating your subjects");
+				game.renderer.AddSubtitles($"You need to collect a key and bring it back to the spawn\n on each level inorder to get to the next one.");
+			}
 		}
 		public override void WhenSwitchedTo()
 		{

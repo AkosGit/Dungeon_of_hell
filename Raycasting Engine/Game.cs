@@ -53,7 +53,7 @@ namespace Raycasting_Engine
 		protected Point finishzone;
 		protected Item key;
 		List<Utils.Binding> binds;
-		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string map,Player p, List<EntityObject> entities, List<Utils.Binding> binds)
+		public Game(Canvas canvas, Canvas hud, int Inventoryslots, Item defitem, string map, Player p, List<EntityObject> entities, List<Utils.Binding> binds)
 		{
 			this.binds = binds;
 			MapManager = new MapManager();
@@ -61,23 +61,12 @@ namespace Raycasting_Engine
 			renderer = new RenderGame(canvas, HUD, (bool isready) => { IsReady = isready; });
 			TextBlock t = new TextBlock();
 			this.canvas = canvas;
-            string forward = binds.Where(x => x.Usecase == EntityActions.Forward).First().Message;
-            string back = binds.Where(x => x.Usecase == EntityActions.Backwards).First().Message;
-            string left = binds.Where(x => x.Usecase == EntityActions.Left).First().Message;
-            string right = binds.Where(x => x.Usecase == EntityActions.Right).First().Message;
-            string shoot = binds.Where(x => x.Usecase == EntityActions.Shoot).First().Message;
-            string reload = binds.Where(x => x.Usecase == EntityActions.Reload).First().Message;
-			renderer.AddSubtitles($"You can go forward with {forward} and backwards with {back}");
-			renderer.AddSubtitles($"Left is {left} and right is {right}.");
-			renderer.AddSubtitles($"You can shoot with {shoot} and reload with {reload}.");
-			renderer.AddSubtitles($"Your objective is to get credits by eliminating your subjects");
-			renderer.AddSubtitles($"You need to collect a key and bring it back to the spawn\n on each level inorder to get to the next one.");
 			if (p != null)
-            {
-				LoadMapToInGameMap(MapManager.GetMap(map),p,entities);
+			{
+				LoadMapToInGameMap(MapManager.GetMap(map), p, entities);
 			}
-            else
-            {
+			else
+			{
 				LoadMapToInGameMap(MapManager.GetMap(map));
 			}
 
@@ -269,7 +258,7 @@ namespace Raycasting_Engine
 		#region 3D
 		void drawRays3D()
 		{
-			int mx, r,my, mp, dof, mpH, mpV; double rx, ry, xo, yo, ra,disT;
+			int mx, r, my, mp, dof, mpH, mpV; double rx, ry, xo, yo, ra, disT;
 			bool typeH, typeV;
 			yo = 0;
 			xo = 0;
@@ -414,53 +403,54 @@ namespace Raycasting_Engine
 					renderingList[entity].Add(new RenderEntity(entity.X, entity.Y, Side.horizontal, new Point(PlaceOnScreenX - (entity.Width / 2) / (500 / entityH), (entityH + entityO) - entity.Height / (500 / entityH)), new Point(PlaceOnScreenX + (entity.Width / 2) / (500 / entityH), (entityH + entityO) - entity.Height / (500 / entityH)), new Point(PlaceOnScreenX + (entity.Width / 2) / (500 / entityH), entityH + entityO), new Point(PlaceOnScreenX - (entity.Width / 2) / (500 / entityH), entityH + entityO), Brushes.Green, entityH));
 
 				}
-				if (entity is Props)
+			}
+			foreach (Props entity in entities.Where(x => x is Props).Select(y => y as Props).ToList())
+			{
+				if (entity.IsHere(player.GridX, player.GridY))
 				{
-					if (entity.IsHere(player.GridX, player.GridY))
+					if (entity.Type == PropType.heal)
 					{
-						if ((entity as Props).Type == PropType.heal)
+						Player.Heal();
+						Audio_player.Play("pickup");
+						entities.Remove(entity);
+						renderer.AddOverlay(new Overlay()
 						{
-							Player.Heal();
-							Audio_player.Play("pickup");
-							entities.Remove(entity);
-							renderer.AddOverlay(new Overlay() 
-							{ 
-								Element = RGeometry.GiveRectangle(500, 720, 0, 0, new SolidColorBrush(Color.FromArgb((byte)175, (byte)108, (byte)125, (byte)67))),
-								Pos = new Point(0, 0),
-								Duration = 2 
-							});
-							//PayerWindowActionHelperHeal();
-						}
+							Element = RGeometry.GiveRectangle(500, 720, 0, 0, new SolidColorBrush(Color.FromArgb((byte)175, (byte)108, (byte)125, (byte)67))),
+							Pos = new Point(0, 0),
+							Duration = 2
+						});
+						//PayerWindowActionHelperHeal();
+					}
 
-						if ((entity as Props).Type == PropType.ammo)
+					if (entity.Type == PropType.ammo)
+					{
+						Audio_player.Play("pickup");
+						foreach (Item item in HUD.Inventory.Items)
 						{
-							Audio_player.Play("pickup");
-							foreach (Item item in HUD.Inventory.Items)
+							if (item is FireArm)
 							{
-								if (item is FireArm)
-								{
-									(item as FireArm).Ammo += 30;
-									entities.Remove(entity);
-								}
+								(item as FireArm).Ammo += 30;
+								entities.Remove(entity);
 							}
 						}
-						if ((entity as Props).Type == PropType.key)
-						{
-							Audio_player.Play("pickup");
-							HUD.Inventory.AddItem(key);
-							entities.Remove(entity);
-						}
-						if ((entity as Props).Type == PropType.kredit)
-						{
-							Audio_player.Play("pickup");
-							player.Credit += (entity as Props).Credit;
-							HUD.UpdateCredit(player.Credit);
-							entities.Remove(entity);
-						}
+					}
+					if (entity.Type == PropType.key)
+					{
+						Audio_player.Play("pickup");
+						HUD.Inventory.AddItem(key);
+						entities.Remove(entity);
+					}
+					if (entity.Type == PropType.kredit)
+					{
+						Audio_player.Play("pickup");
+						player.Credit += entity.Credit;
+						HUD.UpdateCredit(player.Credit);
+						entities.Remove(entity);
 					}
 				}
+
 			}
-            //sorting items in order of height: back to fron rendering of objects
+			//sorting items in order of height: back to fron rendering of objects
 			renderer.DoRender(
 				renderingList.OrderBy(x => x.Value.Min(z => { if (z is RenderEntity) return (z as RenderEntity).originalWallHeight; else return z.Height; })).ToDictionary(z => z.Key, y => y.Value));
 			renderingList.Clear();
